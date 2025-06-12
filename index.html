@@ -40,30 +40,30 @@
     <meta name="rating" content="general">
     
     <!-- ===== PWA MANIFEST & APP CONFIGURATION ===== -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SmartFinanceAI">
     <meta name="application-name" content="SmartFinanceAI">
     <meta name="msapplication-TileColor" content="#1e1b4b">
-    <meta name="msapplication-config" content="/browserconfig.xml">
+    <meta name="msapplication-config" content="./browserconfig.xml">
     <meta name="theme-color" content="#8b5cf6" id="theme-color-meta">
     <meta name="color-scheme" content="dark light">
     
     <!-- ===== ICONS & BRANDING ===== -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/icons/icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/icons/icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/icons/icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/icons/icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="/icons/icon-57x57.png">
+    <link rel="icon" type="image/x-icon" href="./public/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="./public/icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/icon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./public/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./public/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="./public/icons/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="./public/icons/icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./public/icons/icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="./public/icons/icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./public/icons/icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="./public/icons/icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="./public/icons/icon-57x57.png">
     
     <!-- ===== SOCIAL MEDIA META TAGS (OPEN GRAPH) ===== -->
     <meta property="og:title" content="SmartFinanceAI - Global Personal Finance Operating System">
@@ -98,302 +98,505 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://api.exchangerate-api.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="preload" href="/src/styles/main.css" as="style">
-    <link rel="preload" href="/src/utils/app-shell.js" as="script">
-    <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./src/styles/main.css" as="style">
+    <link rel="preload" href="./src/utils/app-shell.js" as="script">
+    <link rel="preload" href="./public/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
     
     <!-- ===== FONTS ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- ===== STYLESHEETS ===== -->
-    <link rel="stylesheet" href="/src/styles/main.css">
+    <!-- ===== STYLESHEETS - FIXED PATHS ===== -->
+    <link rel="stylesheet" href="./src/styles/main.css">
+    <link rel="stylesheet" href="./src/styles/components.css">
+    <link rel="stylesheet" href="./src/styles/themes.css">
+    <link rel="stylesheet" href="./src/styles/animations.css">
+    <link rel="stylesheet" href="./src/styles/responsive.css">
     
-    <!-- ===== SCHEMA.ORG STRUCTURED DATA ===== -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "SmartFinanceAI",
-        "applicationCategory": "BusinessApplication",
-        "applicationSubCategory": "Personal Finance",
-        "operatingSystem": "Any",
-        "description": "Global Personal Finance Operating System with AI-powered coaching and multi-country support",
-        "url": "https://smartfinanceai.com",
-        "downloadUrl": "https://smartfinanceai.com",
-        "softwareVersion": "1.0.0",
-        "datePublished": "2024-01-01",
-        "dateModified": "2024-01-01",
-        "author": {
-            "@type": "Organization",
-            "name": "SmartFinanceAI",
-            "url": "https://smartfinanceai.com"
-        },
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD",
-            "category": "Freemium"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.8",
-            "ratingCount": "10000"
-        },
-        "featureList": [
-            "AI Financial Coaching",
-            "Multi-Currency Support", 
-            "Budget Management",
-            "Goal Tracking",
-            "Bank Statement Import",
-            "Investment Tracking",
-            "Family Collaboration",
-            "Advanced Analytics",
-            "Security & Privacy"
-        ]
-    }
-    </script>
-    
-    <!-- ===== GLOBAL CONFIGURATION ===== -->
-    <script>
-        // Global app configuration
-        window.SmartFinanceConfig = {
-            version: '1.0.0',
-            environment: 'production',
-            supportedCountries: ['NZ', 'AU', 'UK', 'US', 'CA'],
-            defaultCountry: 'US',
-            defaultCurrency: 'USD',
-            defaultLocale: 'en-US',
-            features: {
-                aiCoaching: true,
-                multiCurrency: true,
-                familySharing: true,
-                offlineMode: true,
-                biometricAuth: true,
-                darkMode: true
-            },
-            security: {
-                encryptionEnabled: true,
-                biometricSupported: !!window.PublicKeyCredential,
-                webAuthnSupported: !!window.PublicKeyCredential
-            },
-            api: {
-                baseUrl: 'https://api.smartfinanceai.com',
-                version: 'v1',
-                timeout: 30000
-            }
-        };
+    <!-- ===== EMBEDDED GLASSMORPHISM STYLES (FALLBACK) ===== -->
+    <style>
+        /* ===== CRITICAL INLINE STYLES FOR IMMEDIATE RENDERING ===== */
         
-        // Detect user's country and set theme
-        function detectUserCountry() {
-            try {
-                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const locale = navigator.language || 'en-US';
-                
-                // Simple country detection based on timezone and locale
-                if (timezone.includes('Auckland') || timezone.includes('Wellington')) return 'NZ';
-                if (timezone.includes('Sydney') || timezone.includes('Melbourne')) return 'AU';
-                if (timezone.includes('London') || locale.startsWith('en-GB')) return 'UK';
-                if (timezone.includes('Toronto') || timezone.includes('Vancouver') || locale.startsWith('en-CA')) return 'CA';
-                
-                return 'US'; // Default
-            } catch (error) {
-                return 'US';
-            }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        // Set country-specific theme
-        function setCountryTheme() {
-            const country = localStorage.getItem('userCountry') || detectUserCountry();
-            const countryThemes = {
-                'NZ': '#047857',
-                'AU': '#d97706', 
-                'UK': '#dc2626',
-                'US': '#2563eb',
-                'CA': '#dc2626'
-            };
+        :root {
+            /* Brand Colors */
+            --brand-primary: #8b5cf6;
+            --brand-secondary: #3b82f6;
+            --brand-accent: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #ef4444;
             
-            const themeColor = countryThemes[country] || '#8b5cf6';
-            document.getElementById('theme-color-meta').content = themeColor;
-            document.documentElement.style.setProperty('--country-theme-color', themeColor);
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
             
-            localStorage.setItem('userCountry', country);
-            window.SmartFinanceConfig.userCountry = country;
+            /* Glass Morphism Effects */
+            --glass-subtle: rgba(255, 255, 255, 0.05);
+            --glass-light: rgba(255, 255, 255, 0.08);
+            --glass-medium: rgba(255, 255, 255, 0.12);
+            --glass-strong: rgba(255, 255, 255, 0.15);
+            --glass-border-light: rgba(255, 255, 255, 0.15);
+            --glass-border-medium: rgba(255, 255, 255, 0.2);
+            
+            /* Text Colors */
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-tertiary: rgba(255, 255, 255, 0.65);
         }
         
-        // Initialize theme
-        setCountryTheme();
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
         
-        // Performance monitoring
-        window.SmartFinancePerf = {
-            navigationStart: performance.now(),
-            marks: {},
-            mark: function(name) {
-                this.marks[name] = performance.now();
-            }
-        };
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
         
-        window.SmartFinancePerf.mark('html-parsed');
-    </script>
-</head>
-
-<body class="bg-gradient-animated min-h-screen font-primary text-white overflow-x-hidden">
-    <!-- ===== LOADING SCREEN ===== -->
-    <div id="loading-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-primary">
-        <div class="text-center">
-            <!-- Logo -->
-            <div class="w-20 h-20 mx-auto mb-6 bg-glass-light backdrop-blur-xl rounded-2xl flex items-center justify-center border border-glass-border-light">
-                <div class="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-                    <span class="text-2xl font-bold text-white">S</span>
-                </div>
-            </div>
-            
-            <!-- Loading Animation -->
-            <div class="relative">
-                <div class="w-16 h-16 mx-auto mb-4">
-                    <div class="absolute inset-0 border-4 border-glass-border-light rounded-full"></div>
-                    <div class="absolute inset-0 border-4 border-brand-accent rounded-full border-t-transparent animate-spin"></div>
-                </div>
-                <h2 class="text-xl font-semibold mb-2">SmartFinanceAI</h2>
-                <p class="text-sm text-gray-300">Loading your financial intelligence...</p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- ===== OFFLINE INDICATOR ===== -->
-    <div id="offline-indicator" class="fixed top-0 left-0 right-0 z-40 bg-warning text-center py-2 px-4 transform -translate-y-full transition-transform duration-300">
-        <span class="text-sm font-medium">📡 You're offline. Some features may be limited.</span>
-    </div>
-    
-    <!-- ===== MAIN APP CONTAINER ===== -->
-    <div id="app" class="min-h-screen relative">
-        <!-- ===== NAVIGATION HEADER ===== -->
-        <nav id="main-nav" class="navbar fixed top-0 left-0 right-0 z-30 transform -translate-y-full transition-transform duration-300">
-            <div class="navbar-container">
-                <!-- Brand Logo -->
-                <a href="/" class="navbar-brand">
-                    <div class="navbar-logo">
-                        <span>S</span>
-                    </div>
-                    <span class="hidden sm:inline">SmartFinanceAI</span>
-                </a>
-                
-                <!-- Desktop Navigation -->
-                <ul class="navbar-nav hidden md:flex">
-                    <li><a href="/dashboard" class="nav-link" data-route="dashboard">
-                        <span>📊</span> Dashboard
-                    </a></li>
-                    <li><a href="/accounts" class="nav-link" data-route="accounts">
-                        <span>🏦</span> Accounts
-                    </a></li>
-                    <li><a href="/budget" class="nav-link" data-route="budget">
-                        <span>💰</span> Budget
-                    </a></li>
-                    <li><a href="/goals" class="nav-link" data-route="goals">
-                        <span>🎯</span> Goals
-                    </a></li>
-                    <li><a href="/ai-coach" class="nav-link" data-route="ai-coach">
-                        <span>🤖</span> AI Coach
-                    </a></li>
-                </ul>
-                
-                <!-- User Actions -->
-                <div class="flex items-center gap-2">
-                    <button id="privacy-toggle" class="btn btn-ghost btn-sm" title="Toggle Privacy Mode">
-                        <span>👁️</span>
-                    </button>
-                    <button id="theme-toggle" class="btn btn-ghost btn-sm" title="Toggle Theme">
-                        <span>🌙</span>
-                    </button>
-                    <button id="country-selector" class="btn btn-ghost btn-sm" title="Change Country">
-                        <span id="country-flag">🇺🇸</span>
-                    </button>
-                    <button class="mobile-nav-toggle md:hidden">
-                        <span>☰</span>
-                    </button>
-                </div>
-            </div>
-        </nav>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
         
-        <!-- ===== MAIN CONTENT AREA ===== -->
-        <main id="main-content" class="pt-20 min-h-screen">
-            <!-- Content will be dynamically loaded here -->
-            <div id="route-container" class="container mx-auto px-4 py-8">
-                <!-- Initial welcome screen -->
-                <div id="welcome-screen" class="max-w-4xl mx-auto text-center">
-                    <div class="mb-8">
-                        <h1 class="text-5xl font-black mb-4 text-gradient-primary">
-                            Welcome to SmartFinanceAI
-                        </h1>
-                        <p class="text-xl text-secondary mb-8">
-                            Your Global Personal Finance Operating System
-                        </p>
-                        <p class="text-lg text-tertiary max-w-2xl mx-auto">
-                            Transform how you manage money through intelligent automation, 
-                            AI-powered coaching, and seamless multi-country support.
-                        </p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                        <div class="card glass-premium text-center p-6">
-                            <div class="text-4xl mb-4">🤖</div>
-                            <h3 class="text-lg font-semibold mb-2">AI Financial Coach</h3>
-                            <p class="text-sm text-tertiary">Personalized insights and recommendations based on your unique financial situation.</p>
-                        </div>
-                        
-                        <div class="card glass-premium text-center p-6">
-                            <div class="text-4xl mb-4">🌍</div>
-                            <h3 class="text-lg font-semibold mb-2">Global Support</h3>
-                            <p class="text-sm text-tertiary">Multi-currency, multi-country banking integration with local compliance.</p>
-                        </div>
-                        
-                        <div class="card glass-premium text-center p-6">
-                            <div class="text-4xl mb-4">👥</div>
-                            <h3 class="text-lg font-semibold mb-2">Family Collaboration</h3>
-                            <p class="text-sm text-tertiary">Seamless money management for individuals, couples, and families.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <button id="get-started-btn" class="btn btn-primary btn-lg btn-glow">
-                            🚀 Get Started
-                        </button>
-                        <button id="learn-more-btn" class="btn btn-secondary btn-lg">
-                            📖 Learn More
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </main>
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-bg);
+            animation: fadeOut 1s ease-out 2s forwards;
+        }
         
-        <!-- ===== BOTTOM NAVIGATION (MOBILE) ===== -->
-        <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 md:hidden bg-glass-medium backdrop-blur-xl border-t border-glass-border-light z-30">
-            <div class="flex justify-around py-2">
-                <a href="/dashboard" class="nav-link-mobile" data-route="dashboard">
-                    <span class="text-xl">📊</span>
-                    <span class="text-xs">Dashboard</span>
-                </a>
-                <a href="/budget" class="nav-link-mobile" data-route="budget">
-                    <span class="text-xl">💰</span>
-                    <span class="text-xs">Budget</span>
-                </a>
-                <a href="/goals" class="nav-link-mobile" data-route="goals">
-                    <span class="text-xl">🎯</span>
-                    <span class="text-xs">Goals</span>
-                </a>
-                <a href="/ai-coach" class="nav-link-mobile" data-route="ai-coach">
-                    <span class="text-xl">🤖</span>
-                    <span class="text-xs">AI Coach</span>
-                </a>
-                <a href="/settings" class="nav-link-mobile" data-route="settings">
-                    <span class="text-xl">⚙️</span>
-                    <span class="text-xs">Settings</span>
-                </a>
-            </div>
-        </nav>
-    </div>
-    
-    <!-- ===== ERROR BOUNDARY ===== -->
-    <div id="error-boundary" class="fixed inset-0 z-50 hidden bg-danger text-white flex items-center justify-center p-4">
-        <div class="card max-w-md text-center">
-            <h2 class="text-xl font-bold mb-4">Oops! Something went wrong</h2>
-            <p class="mb-4" id="error-message">An unexpecte
+        @keyframes fadeOut {
+            to { opacity: 0; pointer-events: none; }
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: var(--glass-light);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--glass-border-light);
+            padding: 1rem 0;
+            animation: slideDown 0.8s ease-out 0.5s both;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+        
+        .navbar-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4); }
+            50% { box-shadow: 0 12px 32px rgba(139, 92, 246, 0.6); }
+        }
+        
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-light);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .nav-link:hover::before {
+            left: 0;
+        }
+        
+        .nav-link:hover {
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px rgba(139, 92, 246, 0.6);
+        }
+        
+        .btn-secondary {
+            background: var(--glass-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border-light);
+            color: var(--text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--glass-strong);
+            transform: translateY(-2px);
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+        }
+        
+        .btn-ghost:hover {
+            background: var(--glass-light);
+            color: var(--text-primary);
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+        }
+        
+        .btn-glow {
+            position: relative;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--glass-light);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+        }
+        
+        .glass-premium {
+            background: linear-gradient(135deg, 
+                rgba(139, 92, 246, 0.15) 0%, 
+                rgba(59, 130, 246, 0.15) 50%, 
+                rgba(147, 51, 234, 0.15) 100%);
+            border: 1px solid var(--glass-border-medium);
+        }
+        
+        /* Typography */
+        .text-gradient-primary {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            from { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.8)); }
+        }
+        
+        .text-5xl {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            line-height: 1.2;
+            font-weight: 800;
+        }
+        
+        .text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+        
+        .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+        
+        .text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        
+        .font-black {
+            font-weight: 900;
+        }
+        
+        .font-semibold {
+            font-weight: 600;
+        }
+        
+        /* Layout Utilities */
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .max-w-4xl {
+            max-width: 56rem;
+        }
+        
+        .max-w-2xl {
+            max-width: 42rem;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .flex-col {
+            flex-direction: column;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        .justify-center {
+            justify-content: center;
+        }
+        
+        .justify-around {
+            justify-content: space-around;
+        }
+        
+        .gap-2 {
+            gap: 0.5rem;
+        }
+        
+        .gap-4 {
+            gap: 1rem;
+        }
+        
+        .gap-6 {
+            gap: 1.5rem;
+        }
+        
+        .grid {
+            display: grid;
+        }
+        
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+        
+        .pt-20 {
+            padding-top: 5rem;
+        }
+        
+        .px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        .py-8 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        
+        .py-2 {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        .p-6 {
+            padding: 1.5rem;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+        
+        .mb-12 {
+            margin-bottom: 3rem;
+        }
+        
+        .min-h-screen {
+            min-height: 100vh;
+        }
+        
+        .w-20 {
+            width: 5rem;
+        }
+        
+        .h-20 {
+            height: 5rem;
+        }
+        
+        .w-16 {
+            width: 4rem;
+        }
+        
+        .h-16 {
+            height: 4rem;
+        }
+        
+        .w-12 {
+            width: 3rem;
+        }
+        
+        .h-12 {
+            height: 3rem;
+        }
+        
+        .rounded-2xl {
+            border-radius: 1rem;
+        }
+        
+        .rounded-xl {
+            border-radius: 0.75rem;
+        }
+        
+        .border {
+            border-width: 1px;
+        }
+        
+        .border-t {
+            border-top-width: 1px;
+        }
+        
+        .border-4 {
+            border-width: 4px;
+        }
+        
+        .border-t-transparent {
+            border-top-color: tra
