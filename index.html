@@ -1,832 +1,141 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="theme-dark">
+<html lang="en">
 <head>
-    <!-- ===== BASIC META TAGS ===== -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
-    <!-- ===== SECURITY HEADERS ===== -->
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-        font-src 'self' https://fonts.gstatic.com;
-        img-src 'self' data: blob: https:;
-        connect-src 'self' https://api.exchangerate-api.com https://api.openai.com wss:;
-        worker-src 'self' blob:;
-        frame-src 'none';
-        object-src 'none';
-        base-uri 'self';">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Permissions-Policy" content="
-        camera=(),
-        microphone=(),
-        geolocation=(self),
-        payment=(self),
-        publickey-credentials-get=(self)">
-    
-    <!-- ===== PRIMARY META INFORMATION ===== -->
-    <title>SmartFinanceAI - Global Personal Finance Operating System</title>
-    <meta name="description" content="Intelligent money management with AI coaching, multi-country support, and collaborative features for individuals, couples, and families worldwide. Transform how you manage money through intelligent automation.">
-    <meta name="keywords" content="personal finance, budgeting, AI financial coach, multi-currency, banking, investment tracking, global finance management, SaaS">
-    <meta name="author" content="SmartFinanceAI">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <meta name="language" content="English">
-    <meta name="revisit-after" content="7 days">
-    <meta name="rating" content="general">
-    
-    <!-- ===== PWA MANIFEST & APP CONFIGURATION ===== -->
-    <link rel="manifest" href="./manifest.json">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SmartFinanceAI">
-    <meta name="application-name" content="SmartFinanceAI">
-    <meta name="msapplication-TileColor" content="#1e1b4b">
-    <meta name="msapplication-config" content="./browserconfig.xml">
-    <meta name="theme-color" content="#8b5cf6" id="theme-color-meta">
-    <meta name="color-scheme" content="dark light">
-    
-    <!-- ===== ICONS & BRANDING ===== -->
-    <link rel="icon" type="image/x-icon" href="./public/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="./public/icons/icon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/icon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./public/icons/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="./public/icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="./public/icons/icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="./public/icons/icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="./public/icons/icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="./public/icons/icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="./public/icons/icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="./public/icons/icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="57x57" href="./public/icons/icon-57x57.png">
-    
-    <!-- ===== SOCIAL MEDIA META TAGS (OPEN GRAPH) ===== -->
-    <meta property="og:title" content="SmartFinanceAI - Global Personal Finance Operating System">
-    <meta property="og:description" content="Intelligent money management with AI coaching, multi-country support, and collaborative features. Transform how you manage money through intelligent automation.">
-    <meta property="og:image" content="https://smartfinanceai.com/images/social-share.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="SmartFinanceAI Dashboard Preview">
-    <meta property="og:url" content="https://smartfinanceai.com">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="SmartFinanceAI">
-    <meta property="og:locale" content="en_US">
-    
-    <!-- ===== TWITTER CARD META TAGS ===== -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@SmartFinanceAI">
-    <meta name="twitter:creator" content="@SmartFinanceAI">
-    <meta name="twitter:title" content="SmartFinanceAI - Global Personal Finance Operating System">
-    <meta name="twitter:description" content="Intelligent money management with AI coaching, multi-country support, and collaborative features for individuals, couples, and families worldwide.">
-    <meta name="twitter:image" content="https://smartfinanceai.com/images/twitter-card.png">
-    <meta name="twitter:image:alt" content="SmartFinanceAI App Interface">
-    
-    <!-- ===== FINANCIAL APP SPECIFIC META TAGS ===== -->
-    <meta name="financial-app-type" content="personal-finance-manager">
-    <meta name="supported-currencies" content="USD,EUR,GBP,AUD,CAD,NZD,JPY">
-    <meta name="supported-countries" content="US,UK,AU,CA,NZ">
-    <meta name="security-features" content="end-to-end-encryption,biometric-auth,zero-knowledge">
-    <meta name="privacy-compliant" content="GDPR,CCPA,PCI-DSS">
-    
-    <!-- ===== PERFORMANCE & PRELOADING ===== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://api.exchangerate-api.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <link rel="preload" href="./src/styles/main.css" as="style">
-    <link rel="preload" href="./src/utils/app-shell.js" as="script">
-    <link rel="preload" href="./public/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin>
-    
-    <!-- ===== FONTS ===== -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- ===== STYLESHEETS - FIXED PATHS ===== -->
-    <link rel="stylesheet" href="./src/styles/main.css">
-    <link rel="stylesheet" href="./src/styles/components.css">
-    <link rel="stylesheet" href="./src/styles/themes.css">
-    <link rel="stylesheet" href="./src/styles/animations.css">
-    <link rel="stylesheet" href="./src/styles/responsive.css">
-    
-    <!-- ===== COMPLETE EMBEDDED STYLES ===== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFinanceAI - Debug Test</title>
     <style>
-        /* ===== CRITICAL INLINE STYLES FOR IMMEDIATE RENDERING ===== */
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            /* Brand Colors */
-            --brand-primary: #8b5cf6;
-            --brand-secondary: #3b82f6;
-            --brand-accent: #10b981;
-            --brand-warning: #f59e0b;
-            --brand-danger: #ef4444;
-            
-            /* Gradients */
-            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-            --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            
-            /* Glass Morphism Effects */
-            --glass-subtle: rgba(255, 255, 255, 0.05);
-            --glass-light: rgba(255, 255, 255, 0.08);
-            --glass-medium: rgba(255, 255, 255, 0.12);
-            --glass-strong: rgba(255, 255, 255, 0.15);
-            --glass-border-light: rgba(255, 255, 255, 0.15);
-            --glass-border-medium: rgba(255, 255, 255, 0.2);
-            
-            /* Text Colors */
-            --text-primary: rgba(255, 255, 255, 0.95);
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --text-tertiary: rgba(255, 255, 255, 0.65);
-        }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--gradient-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
             min-height: 100vh;
-            overflow-x: hidden;
         }
         
-        /* Animated Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
-            z-index: -1;
-            animation: float 20s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(120deg); }
-            66% { transform: translateY(10px) rotate(240deg); }
-        }
-        
-        /* Loading Screen */
-        #loading-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gradient-bg);
-            animation: fadeOut 1s ease-out 2s forwards;
-        }
-        
-        @keyframes fadeOut {
-            to { opacity: 0; pointer-events: none; }
-        }
-        
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 30;
-            background: var(--glass-light);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--glass-border-light);
-            padding: 1rem 0;
-            animation: slideDown 0.8s ease-out 0.5s both;
-        }
-        
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-        
-        .navbar-container {
-            max-width: 1200px;
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
         }
         
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 700;
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            color: white;
             text-decoration: none;
-            color: var(--text-primary);
+            border-radius: 10px;
+            margin: 10px;
             transition: transform 0.3s ease;
         }
         
-        .navbar-brand:hover {
-            transform: scale(1.05);
-        }
-        
-        .navbar-logo {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4); }
-            50% { box-shadow: 0 12px 32px rgba(139, 92, 246, 0.6); }
-        }
-        
-        .navbar-nav {
-            display: flex;
-            list-style: none;
-            gap: 0.5rem;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--glass-light);
-            transition: left 0.3s ease;
-            z-index: -1;
-        }
-        
-        .nav-link:hover::before {
-            left: 0;
-        }
-        
-        .nav-link:hover {
-            color: var(--text-primary);
+        .btn:hover {
             transform: translateY(-2px);
         }
         
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .btn:hover::before {
-            left: 100%;
-        }
-        
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 16px 32px rgba(139, 92, 246, 0.6);
-        }
-        
-        .btn-secondary {
-            background: var(--glass-medium);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border-light);
-            color: var(--text-primary);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--glass-strong);
-            transform: translateY(-2px);
-        }
-        
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid transparent;
-        }
-        
-        .btn-ghost:hover {
-            background: var(--glass-light);
-            color: var(--text-primary);
-        }
-        
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-        }
-        
-        .btn-lg {
-            padding: 1rem 2rem;
-            font-size: 1.125rem;
-        }
-        
-        /* Cards */
-        .card {
-            background: var(--glass-light);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border-light);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
-        }
-        
-        .glass-premium {
-            background: linear-gradient(135deg, 
-                rgba(139, 92, 246, 0.15) 0%, 
-                rgba(59, 130, 246, 0.15) 50%, 
-                rgba(147, 51, 234, 0.15) 100%);
-            border: 1px solid var(--glass-border-medium);
-        }
-        
-        /* Typography */
-        .text-gradient-primary {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: textGlow 3s ease-in-out infinite alternate;
-        }
-        
-        @keyframes textGlow {
-            from { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5)); }
-            to { filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.8)); }
-        }
-        
-        .text-5xl {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            line-height: 1.2;
-            font-weight: 800;
-        }
-        
-        .text-xl {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-        }
-        
-        .text-lg {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
-        }
-        
-        .text-sm {
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-        }
-        
-        .font-black {
-            font-weight: 900;
-        }
-        
-        .font-semibold {
-            font-weight: 600;
-        }
-        
-        /* Layout Utilities */
-        .container {
-            width: 100%;
-            margin: 0 auto;
-            padding: 0 1rem;
-            max-width: 1200px;
-        }
-        
-        .mx-auto {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .max-w-4xl {
-            max-width: 56rem;
-        }
-        
-        .max-w-2xl {
-            max-width: 42rem;
-        }
-        
-        .text-center {
-            text-align: center;
-        }
-        
-        .flex {
-            display: flex;
-        }
-        
-        .flex-col {
-            flex-direction: column;
-        }
-        
-        .items-center {
-            align-items: center;
-        }
-        
-        .justify-center {
-            justify-content: center;
-        }
-        
-        .justify-around {
-            justify-content: space-around;
-        }
-        
-        .gap-2 {
-            gap: 0.5rem;
-        }
-        
-        .gap-4 {
-            gap: 1rem;
-        }
-        
-        .gap-6 {
-            gap: 1.5rem;
-        }
-        
-        .grid {
-            display: grid;
-        }
-        
-        .grid-cols-1 {
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-        }
-        
-        .pt-20 {
-            padding-top: 5rem;
-        }
-        
-        .px-4 {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-        
-        .py-8 {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-        
-        .py-2 {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-        }
-        
-        .p-6 {
-            padding: 1.5rem;
-        }
-        
-        .mb-4 {
-            margin-bottom: 1rem;
-        }
-        
-        .mb-8 {
-            margin-bottom: 2rem;
-        }
-        
-        .mb-12 {
-            margin-bottom: 3rem;
-        }
-        
-        .min-h-screen {
-            min-height: 100vh;
-        }
-        
-        .w-20 {
-            width: 5rem;
-        }
-        
-        .h-20 {
-            height: 5rem;
-        }
-        
-        .w-16 {
-            width: 4rem;
-        }
-        
-        .h-16 {
-            height: 4rem;
-        }
-        
-        .w-12 {
-            width: 3rem;
-        }
-        
-        .h-12 {
-            height: 3rem;
-        }
-        
-        .rounded-2xl {
-            border-radius: 1rem;
-        }
-        
-        .rounded-xl {
-            border-radius: 0.75rem;
-        }
-        
-        .border {
-            border-width: 1px;
-        }
-        
-        .border-t {
-            border-top-width: 1px;
-        }
-        
-        .border-4 {
-            border-width: 4px;
-        }
-        
-        .border-t-transparent {
-            border-top-color: transparent;
-        }
-        
-        .rounded-full {
-            border-radius: 9999px;
-        }
-        
-        .absolute {
-            position: absolute;
-        }
-        
-        .relative {
-            position: relative;
-        }
-        
-        .fixed {
-            position: fixed;
-        }
-        
-        .inset-0 {
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-        }
-        
-        .top-0 {
-            top: 0;
-        }
-        
-        .bottom-0 {
-            bottom: 0;
-        }
-        
-        .left-0 {
-            left: 0;
-        }
-        
-        .right-0 {
-            right: 0;
-        }
-        
-        .z-50 {
-            z-index: 50;
-        }
-        
-        .z-40 {
-            z-index: 40;
-        }
-        
-        .z-30 {
-            z-index: 30;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .text-white {
-            color: rgb(255 255 255);
-        }
-        
-        .text-gray-300 {
-            color: rgb(209 213 219);
-        }
-        
-        .overflow-x-hidden {
-            overflow-x: hidden;
-        }
-        
-        .animate-spin {
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Responsive Design */
-        @media (min-width: 640px) {
-            .sm\:inline {
-                display: inline;
-            }
-            .sm\:flex-row {
-                flex-direction: row;
-            }
-        }
-        
-        @media (min-width: 768px) {
-            .md\:flex {
-                display: flex;
-            }
-            .md\:hidden {
-                display: none;
-            }
-            .md\:grid-cols-3 {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .navbar-nav {
-                display: none;
-            }
-        }
-        
-        /* Mobile Navigation */
-        .nav-link-mobile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0.5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-link-mobile:hover {
-            color: var(--text-primary);
-        }
-        
-        .mobile-nav-toggle {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Background Colors */
-        .bg-glass-light {
-            background: var(--glass-light);
-        }
-        
-        .bg-glass-medium {
-            background: var(--glass-medium);
-        }
-        
-        .bg-gradient-primary {
-            background: var(--gradient-primary);
-        }
-        
-        .bg-gradient-animated {
-            background: var(--gradient-bg);
-        }
-        
-        .backdrop-blur-xl {
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-        }
-        
-        /* Font Classes */
-        .font-primary {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        .debug-info {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            font-size: 14px;
         }
     </style>
-    
-    <!-- ===== SCHEMA.ORG STRUCTURED DATA ===== -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "SmartFinanceAI",
-        "applicationCategory": "BusinessApplication",
-        "applicationSubCategory": "Personal Finance",
-        "operatingSystem": "Any",
-        "description": "Global Personal Finance Operating System with AI-powered coaching and multi-country support",
-        "url": "https://smartfinanceai.com",
-        "downloadUrl": "https://smartfinanceai.com",
-        "softwareVersion": "1.0.0",
-        "datePublished": "2024-01-01",
-        "dateModified": "2024-01-01",
-        "author": {
-            "@type": "Organization",
-            "name": "SmartFinanceAI",
-            "url": "https://smartfinanceai.com"
-        },
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD",
-            "category": "Freemium"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.8",
-            "ratingCount": "10000"
-        },
-        "featureList": [
-            "AI Financial Coaching",
-            "Multi-Currency Support", 
-            "Budget Management",
-            "Goal Tracking",
-            "Bank Statement Import",
-            "Investment Tracking",
-            "Family Collaboration",
-            "Advanced Analytics",
-            "Security & Privacy"
-        ]
-    }
-    </script>
-    
-    <!-- ===== GLOBAL CONFIGURATION ===== -->
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 SmartFinanceAI</h1>
+        
+        <div class="card">
+            <h2>Debug Test - Can You See This?</h2>
+            <p>If you can see this content, then the HTML is loading correctly and the issue is with the CSS files.</p>
+        </div>
+        
+        <div class="card">
+            <h3>Quick Navigation Test</h3>
+            <a href="./src/core/dashboard.html" class="btn">📊 Dashboard</a>
+            <a href="./src/auth/login.html" class="btn">🔐 Login</a>
+            <a href="./src/core/accounts.html" class="btn">🏦 Accounts</a>
+        </div>
+        
+        <div class="debug-info">
+            <h4>🔍 Debug Information:</h4>
+            <p><strong>Current URL:</strong> <span id="current-url"></span></p>
+            <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+            <p><strong>Screen Size:</strong> <span id="screen-size"></span></p>
+            <p><strong>CSS Files Loading:</strong> <span id="css-status">Checking...</span></p>
+            <p><strong>JavaScript Working:</strong> ✅ Yes (you can see this message)</p>
+        </div>
+        
+        <div class="card">
+            <h3>What to Check Next:</h3>
+            <ol style="text-align: left;">
+                <li>Open Browser Developer Tools (F12)</li>
+                <li>Check Console tab for red error messages</li>
+                <li>Check Network tab for failed file loads (404 errors)</li>
+                <li>Look for CSS files: main.css, components.css, etc.</li>
+                <li>Report back what errors you see!</li>
+            </ol>
+        </div>
+    </div>
+
     <script>
-        // Global app configuration
-        window.SmartFinanceConfig = {
-            version: '1.0.0',
-            environment: 'production',
-            supportedCountries: ['NZ', 'AU', 'UK', 'US', 'CA'],
-            defaultCountry: 'US',
-            defaultCurrency: 'USD',
-            defaultLocale: 'en-US',
-            features: {
-                aiCoaching: true,
-                multiCurrency: true,
-                familySharing: true,
-                offlineMode: true,
-                biometricAuth: true,
-                darkMode: true
-            },
-            security: {
-                encryptionEnabled: true,
-                biometricSupported: !!window.PublicKeyCredential,
-                webAuthnSupported: !!window.PublicKeyCredential
-            },
-            api: {
-                baseUrl: 'https://api.smartfinanceai.com',
+        // Debug information
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('user-agent').textContent = navigator.userAgent.substring(0, 100) + '...';
+        document.getElementById('screen-size').textContent = screen.width + 'x' + screen.height;
+        
+        // Check if CSS files are loading
+        const cssFiles = [
+            './src/styles/main.css',
+            './src/styles/components.css',
+            './src/styles/themes.css'
+        ];
+        
+        let cssStatus = '';
+        cssFiles.forEach(file => {
+            fetch(file)
+                .then(response => {
+                    if (response.ok) {
+                        cssStatus += '✅ ' + file + ' loaded\n';
+                    } else {
+                        cssStatus += '❌ ' + file + ' failed (' + response.status + ')\n';
+                    }
+                })
+                .catch(error => {
+                    cssStatus += '❌ ' + file + ' error: ' + error.message + '\n';
+                })
+                .finally(() => {
+                    document.getElementById('css-status').innerHTML = cssStatus.replace(/\n/g, '<br>');
+                });
+        });
+        
+        console.log('🔍 SmartFinanceAI Debug Test Loaded');
+        console.log('📍 Current URL:', window.location.href);
+        console.log('📁 Expected CSS path:', window.location.origin + window.location.pathname.replace('index.html', '') + 'src/styles/main.css');
+    </script>
+</body>
+</html>
