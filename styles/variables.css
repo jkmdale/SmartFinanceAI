@@ -1,0 +1,338 @@
+/* 🎨 SmartFinanceAI - CSS Custom Properties & Variables
+ * Global design system variables for consistent theming
+ * Part of: src/styles/variables.css
+ */
+
+:root {
+  /* === BRAND COLORS === */
+  --brand-primary: #8b5cf6;        /* Primary Purple */
+  --brand-secondary: #3b82f6;      /* Secondary Blue */
+  --brand-accent: #10b981;         /* Success Green */
+  --brand-warning: #f59e0b;        /* Warning Amber */
+  --brand-danger: #ef4444;         /* Error Red */
+  --brand-info: #06b6d4;           /* Info Cyan */
+  
+  /* === GRADIENT DEFINITIONS === */
+  --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+  --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+  --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+  --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  --gradient-info: linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%);
+  
+  /* === RAINBOW GRADIENTS === */
+  --gradient-rainbow: linear-gradient(135deg, 
+    #8b5cf6 0%, #3b82f6 25%, #10b981 50%, #f59e0b 75%, #ef4444 100%);
+  --gradient-sunset: linear-gradient(135deg, 
+    #f97316 0%, #ef4444 25%, #ec4899 50%, #8b5cf6 75%, #3b82f6 100%);
+  --gradient-ocean: linear-gradient(135deg, 
+    #0ea5e9 0%, #06b6d4 25%, #10b981 50%, #059669 75%, #047857 100%);
+
+  /* === MAIN BACKGROUNDS === */
+  --bg-primary: linear-gradient(135deg, 
+    #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+  --bg-secondary: linear-gradient(135deg, 
+    #1e1b4b 0%, #312e81 25%, #4338ca 50%, #312e81 75%, #1e1b4b 100%);
+  --bg-tertiary: linear-gradient(135deg, 
+    #312e81 0%, #4338ca 25%, #4f46e5 50%, #4338ca 75%, #312e81 100%);
+  
+  /* === ANIMATED BACKGROUNDS === */
+  --bg-animated: radial-gradient(circle at 20% 50%, 
+    rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, 
+    rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, 
+    rgba(16, 185, 129, 0.3) 0%, transparent 50%),
+    linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  
+  /* === COUNTRY-SPECIFIC BACKGROUNDS === */
+  --bg-nz: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #059669 100%);
+  --bg-au: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #f59e0b 100%);
+  --bg-uk: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #dc2626 100%);
+  --bg-us: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #3b82f6 100%);
+  --bg-ca: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #ef4444 100%);
+
+  /* === GLASS EFFECTS === */
+  --glass-subtle: rgba(255, 255, 255, 0.05);
+  --glass-light: rgba(255, 255, 255, 0.08);
+  --glass-medium: rgba(255, 255, 255, 0.12);
+  --glass-strong: rgba(255, 255, 255, 0.15);
+  --glass-intense: rgba(255, 255, 255, 0.20);
+  
+  /* === GLASS BORDERS === */
+  --glass-border-subtle: rgba(255, 255, 255, 0.1);
+  --glass-border-light: rgba(255, 255, 255, 0.15);
+  --glass-border-medium: rgba(255, 255, 255, 0.2);
+  --glass-border-strong: rgba(255, 255, 255, 0.25);
+  
+  /* === PREMIUM GLASS GRADIENTS === */
+  --glass-premium: linear-gradient(135deg, 
+    rgba(139, 92, 246, 0.15) 0%, 
+    rgba(59, 130, 246, 0.15) 50%, 
+    rgba(147, 51, 234, 0.15) 100%);
+  --glass-success: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.15) 0%, 
+    rgba(5, 150, 105, 0.15) 50%, 
+    rgba(4, 120, 87, 0.15) 100%);
+  --glass-warning: linear-gradient(135deg, 
+    rgba(245, 158, 11, 0.15) 0%, 
+    rgba(217, 119, 6, 0.15) 50%, 
+    rgba(180, 83, 9, 0.15) 100%);
+  --glass-danger: linear-gradient(135deg, 
+    rgba(239, 68, 68, 0.15) 0%, 
+    rgba(220, 38, 38, 0.15) 50%, 
+    rgba(185, 28, 28, 0.15) 100%);
+
+  /* === FONT FAMILIES === */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+                  'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', 
+               Consolas, 'Courier New', monospace;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* === FONT WEIGHTS === */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+  
+  /* === LINE HEIGHTS === */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* === TEXT COLORS === */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.65);
+  --text-quaternary: rgba(255, 255, 255, 0.5);
+  --text-disabled: rgba(255, 255, 255, 0.3);
+  
+  --text-success: #10b981;
+  --text-warning: #f59e0b;
+  --text-danger: #ef4444;
+  --text-info: #06b6d4;
+
+  /* === SPACING SCALE === */
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.25rem;    /* 20px */
+  --space-6: 1.5rem;     /* 24px */
+  --space-8: 2rem;       /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+
+  /* === BORDER RADIUS === */
+  --radius-sm: 0.25rem;     /* 4px */
+  --radius-md: 0.375rem;    /* 6px */
+  --radius-lg: 0.5rem;      /* 8px */
+  --radius-xl: 0.75rem;     /* 12px */
+  --radius-2xl: 1rem;       /* 16px */
+  --radius-3xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;    /* Full rounded */
+
+  /* === SHADOWS === */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+  /* === GLASS SHADOWS === */
+  --shadow-glass-sm: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-glass-md: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-glass-lg: 0 12px 48px rgba(0, 0, 0, 0.4);
+  --shadow-glass-xl: 0 20px 64px rgba(0, 0, 0, 0.5);
+
+  /* === Z-INDEX SCALE === */
+  --z-auto: auto;
+  --z-0: 0;
+  --z-10: 10;
+  --z-20: 20;
+  --z-30: 30;
+  --z-40: 40;
+  --z-50: 50;
+  --z-modal: 1000;
+  --z-popover: 1010;
+  --z-tooltip: 1020;
+  --z-notification: 1030;
+  --z-overlay: 1040;
+  --z-max: 2147483647;
+
+  /* === BREAKPOINTS === */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* === ANIMATIONS === */
+  --duration-75: 75ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-300: 300ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
+
+  /* === EASING FUNCTIONS === */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* === BLUR VALUES === */
+  --blur-sm: 4px;
+  --blur-md: 8px;
+  --blur-lg: 16px;
+  --blur-xl: 24px;
+  --blur-2xl: 40px;
+  --blur-3xl: 64px;
+
+  /* === CURRENCY SPECIFIC === */
+  --currency-positive: var(--brand-accent);
+  --currency-negative: var(--brand-danger);
+  --currency-neutral: var(--text-secondary);
+  --currency-pending: var(--brand-warning);
+
+  /* === FINANCIAL HEALTH COLORS === */
+  --health-excellent: #10b981;    /* Green */
+  --health-good: #84cc16;         /* Lime */
+  --health-fair: #f59e0b;         /* Amber */
+  --health-poor: #f97316;         /* Orange */
+  --health-critical: #ef4444;     /* Red */
+
+  /* === GOAL PRIORITY COLORS === */
+  --priority-critical: var(--brand-danger);
+  --priority-high: var(--brand-warning);
+  --priority-medium: var(--brand-info);
+  --priority-low: var(--text-tertiary);
+
+  /* === ACCOUNT TYPE COLORS === */
+  --account-checking: #3b82f6;    /* Blue */
+  --account-savings: #10b981;     /* Green */
+  --account-credit: #ef4444;      /* Red */
+  --account-investment: #8b5cf6;  /* Purple */
+  --account-loan: #f59e0b;        /* Amber */
+
+  /* === CATEGORY COLORS === */
+  --category-food: #f97316;       /* Orange */
+  --category-transport: #3b82f6;  /* Blue */
+  --category-shopping: #ec4899;   /* Pink */
+  --category-bills: #6b7280;      /* Gray */
+  --category-entertainment: #8b5cf6; /* Purple */
+  --category-health: #10b981;     /* Green */
+  --category-education: #06b6d4;  /* Cyan */
+  --category-travel: #f59e0b;     /* Amber */
+  --category-income: #84cc16;     /* Lime */
+  --category-other: #64748b;      /* Slate */
+
+  /* === TRANSITIONS === */
+  --transition-fast: all var(--duration-150) var(--ease-out);
+  --transition-normal: all var(--duration-200) var(--ease-out);
+  --transition-slow: all var(--duration-300) var(--ease-out);
+  --transition-transform: transform var(--duration-200) var(--ease-out);
+  --transition-opacity: opacity var(--duration-200) var(--ease-out);
+  --transition-colors: color var(--duration-200) var(--ease-out), 
+                      background-color var(--duration-200) var(--ease-out), 
+                      border-color var(--duration-200) var(--ease-out);
+
+  /* === BACKDROP FILTER === */
+  --backdrop-blur-sm: blur(4px);
+  --backdrop-blur-md: blur(8px);
+  --backdrop-blur-lg: blur(16px);
+  --backdrop-blur-xl: blur(24px);
+  --backdrop-blur-2xl: blur(40px);
+  --backdrop-blur-3xl: blur(64px);
+
+  /* === FILTER EFFECTS === */
+  --filter-brightness-50: brightness(0.5);
+  --filter-brightness-75: brightness(0.75);
+  --filter-brightness-90: brightness(0.9);
+  --filter-brightness-110: brightness(1.1);
+  --filter-brightness-125: brightness(1.25);
+  --filter-brightness-150: brightness(1.5);
+
+  /* === PRIVACY MODE === */
+  --privacy-blur: blur(8px);
+  --privacy-opacity: 0.3;
+  --privacy-transition: filter var(--duration-300) var(--ease-out),
+                       opacity var(--duration-300) var(--ease-out);
+}
+
+/* === DARK THEME VARIATIONS === */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Enhanced dark mode contrast */
+    --text-primary: rgba(255, 255, 255, 0.98);
+    --text-secondary: rgba(255, 255, 255, 0.85);
+    --glass-light: rgba(255, 255, 255, 0.12);
+    --glass-medium: rgba(255, 255, 255, 0.18);
+  }
+}
+
+/* === LIGHT THEME OVERRIDE === */
+[data-theme="light"] {
+  --bg-primary: linear-gradient(135deg, 
+    #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%);
+  --text-primary: rgba(15, 23, 42, 0.95);
+  --text-secondary: rgba(15, 23, 42, 0.8);
+  --text-tertiary: rgba(15, 23, 42, 0.65);
+  --glass-light: rgba(0, 0, 0, 0.05);
+  --glass-medium: rgba(0, 0, 0, 0.08);
+}
+
+/* === HIGH CONTRAST MODE === */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #ffffff;
+    --text-secondary: #e5e5e5;
+    --glass-border-light: rgba(255, 255, 255, 0.3);
+    --glass-border-medium: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-75: 1ms;
+    --duration-100: 1ms;
+    --duration-150: 1ms;
+    --duration-200: 1ms;
+    --duration-300: 1ms;
+    --duration-500: 1ms;
+    --duration-700: 1ms;
+    --duration-1000: 1ms;
+    
+    --transition-fast: none;
+    --transition-normal: none;
+    --transition-slow: none;
+    --transition-transform: none;
+    --transition-opacity: none;
+    --transition-colors: none;
+  }
+}
+
+/* === PRINT STYLES === */
+@media print {
+  :root {
+    --bg-primary: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --glass-light: transparent;
+    --glass-medium: transparent;
+    --shadow-glass-md: none;
+  }
+}

@@ -1,0 +1,91 @@
+/* 🖨️ SmartFinanceAI - Print Styles
+ * Optimized print styles for financial reports and statements
+ * Part of: src/styles/print.css
+ */
+
+@media print {
+  /* === RESET FOR PRINT === */
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* === PAGE SETUP === */
+  @page {
+    margin: 2cm;
+    size: A4;
+    
+    @top-center {
+      content: "SmartFinanceAI Financial Report";
+      font-family: var(--font-primary);
+      font-size: 10pt;
+      color: #666;
+    }
+    
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: var(--font-primary);
+      font-size: 9pt;
+      color: #666;
+    }
+    
+    @bottom-left {
+      content: "Generated: " attr(data-print-date);
+      font-family: var(--font-primary);
+      font-size: 9pt;
+      color: #666;
+    }
+  }
+
+  /* === BODY AND LAYOUT === */
+  body {
+    font-family: var(--font-primary) !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    color: black !important;
+    background: white !important;
+  }
+
+  .app-container,
+  .main-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  /* === HIDE NON-PRINTABLE ELEMENTS === */
+  .no-print,
+  .print-hidden,
+  nav,
+  .navbar,
+  .sidebar,
+  .mobile-nav,
+  .notification,
+  .modal,
+  .tooltip,
+  .dropdown,
+  .btn:not(.print-btn),
+  button:not(.print-btn),
+  .pagination,
+  .tabs,
+  .tab-content:not(.active),
+  .accordion-content:not(.open),
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  .form-actions,
+  .privacy-toggle,
+  .theme-toggle,
+  .settings-panel,
+  .help-panel,
+  .search-box,
+  .filter-controls,
+  .sort-controls,
+  .action-buttons,

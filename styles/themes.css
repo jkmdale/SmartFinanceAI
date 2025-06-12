@@ -1,0 +1,209 @@
+/* 🎨 SmartFinanceAI - Theme System
+ * Dynamic theme switching and customization
+ * Part of: src/styles/themes.css
+ */
+
+/* === BASE THEME SYSTEM === */
+.theme-transition {
+  transition: 
+    background-color var(--duration-300) var(--ease-out),
+    color var(--duration-300) var(--ease-out),
+    border-color var(--duration-300) var(--ease-out),
+    box-shadow var(--duration-300) var(--ease-out);
+}
+
+/* === DARK THEME (DEFAULT) === */
+[data-theme="dark"],
+:root {
+  --theme-bg-primary: var(--bg-primary);
+  --theme-bg-secondary: var(--bg-secondary);
+  --theme-surface: var(--glass-light);
+  --theme-surface-hover: var(--glass-medium);
+  --theme-border: var(--glass-border-light);
+  --theme-text-primary: var(--text-primary);
+  --theme-text-secondary: var(--text-secondary);
+  --theme-shadow: var(--shadow-glass-md);
+}
+
+/* === LIGHT THEME === */
+[data-theme="light"] {
+  --theme-bg-primary: linear-gradient(135deg, 
+    #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%);
+  --theme-bg-secondary: linear-gradient(135deg, 
+    #e2e8f0 0%, #cbd5e1 25%, #94a3b8 50%, #cbd5e1 75%, #e2e8f0 100%);
+  --theme-surface: rgba(255, 255, 255, 0.8);
+  --theme-surface-hover: rgba(255, 255, 255, 0.9);
+  --theme-border: rgba(0, 0, 0, 0.1);
+  --theme-text-primary: rgba(15, 23, 42, 0.95);
+  --theme-text-secondary: rgba(15, 23, 42, 0.8);
+  --theme-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  /* Light theme specific glass effects */
+  --glass-light: rgba(255, 255, 255, 0.7);
+  --glass-medium: rgba(255, 255, 255, 0.8);
+  --glass-strong: rgba(255, 255, 255, 0.9);
+  --glass-border-light: rgba(0, 0, 0, 0.08);
+  --glass-border-medium: rgba(0, 0, 0, 0.12);
+}
+
+/* === AUTO THEME (FOLLOWS SYSTEM) === */
+[data-theme="auto"] {
+  --theme-bg-primary: var(--bg-primary);
+  --theme-surface: var(--glass-light);
+  --theme-text-primary: var(--text-primary);
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="auto"] {
+    --theme-bg-primary: linear-gradient(135deg, 
+      #f8fafc 0%, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%, #f8fafc 100%);
+    --theme-surface: rgba(255, 255, 255, 0.8);
+    --theme-text-primary: rgba(15, 23, 42, 0.95);
+    --glass-light: rgba(255, 255, 255, 0.7);
+  }
+}
+
+/* === COUNTRY-SPECIFIC THEMES === */
+[data-theme="nz"] {
+  --theme-bg-primary: var(--bg-nz);
+  --theme-accent: #059669; /* New Zealand Green */
+  --brand-primary: #059669;
+}
+
+[data-theme="au"] {
+  --theme-bg-primary: var(--bg-au);
+  --theme-accent: #f59e0b; /* Australian Gold */
+  --brand-primary: #f59e0b;
+}
+
+[data-theme="uk"] {
+  --theme-bg-primary: var(--bg-uk);
+  --theme-accent: #dc2626; /* British Red */
+  --brand-primary: #dc2626;
+}
+
+[data-theme="us"] {
+  --theme-bg-primary: var(--bg-us);
+  --theme-accent: #3b82f6; /* American Blue */
+  --brand-primary: #3b82f6;
+}
+
+[data-theme="ca"] {
+  --theme-bg-primary: var(--bg-ca);
+  --theme-accent: #ef4444; /* Canadian Red */
+  --brand-primary: #ef4444;
+}
+
+/* === HIGH CONTRAST THEME === */
+[data-theme="high-contrast"] {
+  --theme-bg-primary: #000000;
+  --theme-bg-secondary: #1a1a1a;
+  --theme-surface: #333333;
+  --theme-surface-hover: #404040;
+  --theme-border: #666666;
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #e0e0e0;
+  --theme-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+  
+  /* High contrast specific overrides */
+  --glass-light: rgba(255, 255, 255, 0.15);
+  --glass-medium: rgba(255, 255, 255, 0.25);
+  --glass-border-light: rgba(255, 255, 255, 0.3);
+  --brand-primary: #00ff00;
+  --brand-secondary: #0080ff;
+  --brand-accent: #00ff80;
+  --brand-danger: #ff4040;
+  --brand-warning: #ffff00;
+}
+
+/* === COLORBLIND-FRIENDLY THEMES === */
+[data-theme="protanopia"] {
+  --brand-primary: #0066cc;    /* Blue instead of purple */
+  --brand-accent: #009966;     /* Blue-green instead of green */
+  --brand-danger: #cc6600;     /* Orange instead of red */
+  --brand-warning: #ffcc00;    /* Yellow */
+  
+  --currency-positive: #009966;
+  --currency-negative: #cc6600;
+  --health-excellent: #009966;
+  --health-critical: #cc6600;
+}
+
+[data-theme="deuteranopia"] {
+  --brand-primary: #0066cc;    /* Blue */
+  --brand-accent: #0099cc;     /* Cyan instead of green */
+  --brand-danger: #cc6600;     /* Orange instead of red */
+  --brand-warning: #ffcc00;    /* Yellow */
+  
+  --currency-positive: #0099cc;
+  --currency-negative: #cc6600;
+  --health-excellent: #0099cc;
+  --health-critical: #cc6600;
+}
+
+[data-theme="tritanopia"] {
+  --brand-primary: #cc0066;    /* Magenta instead of purple */
+  --brand-accent: #009900;     /* Green */
+  --brand-danger: #cc3300;     /* Red */
+  --brand-warning: #cc6600;    /* Orange instead of yellow */
+  
+  --currency-positive: #009900;
+  --currency-negative: #cc3300;
+  --health-excellent: #009900;
+  --health-critical: #cc3300;
+}
+
+/* === SEASONAL THEMES === */
+[data-theme="spring"] {
+  --theme-bg-primary: linear-gradient(135deg, 
+    #065f46 0%, #059669 25%, #10b981 50%, #34d399 75%, #6ee7b7 100%);
+  --brand-primary: #10b981;
+  --brand-accent: #34d399;
+}
+
+[data-theme="summer"] {
+  --theme-bg-primary: linear-gradient(135deg, 
+    #7c2d12 0%, #ea580c 25%, #f97316 50%, #fb923c 75%, #fdba74 100%);
+  --brand-primary: #f97316;
+  --brand-accent: #fb923c;
+}
+
+[data-theme="autumn"] {
+  --theme-bg-primary: linear-gradient(135deg, 
+    #92400e 0%, #d97706 25%, #f59e0b 50%, #fbbf24 75%, #fde047 100%);
+  --brand-primary: #f59e0b;
+  --brand-accent: #fbbf24;
+}
+
+[data-theme="winter"] {
+  --theme-bg-primary: linear-gradient(135deg, 
+    #1e3a8a 0%, #1d4ed8 25%, #3b82f6 50%, #60a5fa 75%, #93c5fd 100%);
+  --brand-primary: #3b82f6;
+  --brand-accent: #60a5fa;
+}
+
+/* === PREMIUM THEMES === */
+[data-theme="premium-gold"] {
+  --theme-bg-primary: linear-gradient(135deg, 
+    #451a03 0%, #92400e 25%, #d97706 50%, #f59e0b 75%, #fbbf24 100%);
+  --brand-primary: #f59e0b;
+  --brand-accent: #fbbf24;
+  --glass-premium: linear-gradient(135deg, 
+    rgba(251, 191, 36, 0.15) 0%, 
+    rgba(245, 158, 11, 0.15) 50%, 
+    rgba(217, 119, 6, 0.15) 100%);
+}
+
+[data-theme="premium-platinum"] {
+  --theme-bg-primary: linear-gradient(135deg, 
+    #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+  --brand-primary: #64748b;
+  --brand-accent: #94a3b8;
+  --glass-premium: linear-gradient(135deg, 
+    rgba(148, 163, 184, 0.15) 0%, 
+    rgba(100, 116, 139, 0.15) 50%, 
+    rgba(71, 85, 105, 0.15) 100%);
+}
+
+[data-theme="premium-diamond"] {
+  --theme-bg-primary: linear-gradient(135deg,
