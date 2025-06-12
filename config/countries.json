@@ -1,0 +1,290 @@
+{
+  "NZ": {
+    "name": "New Zealand",
+    "currency": "NZD",
+    "locale": "en-NZ",
+    "dateFormat": "DD/MM/YYYY",
+    "numberFormat": "1,234.56",
+    "taxYear": {
+      "start": "April",
+      "end": "March"
+    },
+    "emergencyFundMonths": 3,
+    "banks": [
+      {
+        "name": "ANZ New Zealand",
+        "csvFormat": "ANZ_NZ",
+        "logo": "/images/banks/anz-nz.png",
+        "website": "https://www.anz.co.nz"
+      },
+      {
+        "name": "ASB Bank",
+        "csvFormat": "ASB_NZ",
+        "logo": "/images/banks/asb.png",
+        "website": "https://www.asb.co.nz"
+      },
+      {
+        "name": "Bank of New Zealand",
+        "csvFormat": "BNZ_NZ",
+        "logo": "/images/banks/bnz.png",
+        "website": "https://www.bnz.co.nz"
+      },
+      {
+        "name": "Kiwibank",
+        "csvFormat": "KIWIBANK_NZ",
+        "logo": "/images/banks/kiwibank.png",
+        "website": "https://www.kiwibank.co.nz"
+      },
+      {
+        "name": "Westpac New Zealand",
+        "csvFormat": "WESTPAC_NZ",
+        "logo": "/images/banks/westpac-nz.png",
+        "website": "https://www.westpac.co.nz"
+      },
+      {
+        "name": "TSB Bank",
+        "csvFormat": "TSB_NZ",
+        "logo": "/images/banks/tsb.png",
+        "website": "https://www.tsb.co.nz"
+      }
+    ],
+    "regulations": {
+      "maxCashTransaction": 10000,
+      "reportingCurrency": "NZD",
+      "financialYear": "april-march",
+      "retirementScheme": "KiwiSaver"
+    },
+    "defaultGoals": {
+      "emergencyFund": {
+        "multiplier": 3,
+        "description": "3 months of expenses recommended in New Zealand"
+      },
+      "houseDeposit": {
+        "percentage": 0.20,
+        "description": "20% deposit typically required"
+      }
+    }
+  },
+  "AU": {
+    "name": "Australia",
+    "currency": "AUD",
+    "locale": "en-AU",
+    "dateFormat": "DD/MM/YYYY",
+    "numberFormat": "1,234.56",
+    "taxYear": {
+      "start": "July",
+      "end": "June"
+    },
+    "emergencyFundMonths": 3,
+    "banks": [
+      {
+        "name": "Commonwealth Bank",
+        "csvFormat": "CBA_AU",
+        "logo": "/images/banks/commbank.png",
+        "website": "https://www.commbank.com.au"
+      },
+      {
+        "name": "Westpac Banking Corporation",
+        "csvFormat": "WESTPAC_AU",
+        "logo": "/images/banks/westpac-au.png",
+        "website": "https://www.westpac.com.au"
+      },
+      {
+        "name": "ANZ Australia",
+        "csvFormat": "ANZ_AU",
+        "logo": "/images/banks/anz-au.png",
+        "website": "https://www.anz.com.au"
+      },
+      {
+        "name": "National Australia Bank",
+        "csvFormat": "NAB_AU",
+        "logo": "/images/banks/nab.png",
+        "website": "https://www.nab.com.au"
+      }
+    ],
+    "regulations": {
+      "maxCashTransaction": 10000,
+      "reportingCurrency": "AUD",
+      "financialYear": "july-june",
+      "retirementScheme": "Superannuation"
+    },
+    "defaultGoals": {
+      "emergencyFund": {
+        "multiplier": 3,
+        "description": "3 months of expenses recommended in Australia"
+      },
+      "houseDeposit": {
+        "percentage": 0.20,
+        "description": "20% deposit typically required"
+      }
+    }
+  },
+  "US": {
+    "name": "United States",
+    "currency": "USD",
+    "locale": "en-US",
+    "dateFormat": "MM/DD/YYYY",
+    "numberFormat": "1,234.56",
+    "taxYear": {
+      "start": "January",
+      "end": "December"
+    },
+    "emergencyFundMonths": 6,
+    "banks": [
+      {
+        "name": "JPMorgan Chase",
+        "csvFormat": "CHASE_US",
+        "logo": "/images/banks/chase.png",
+        "website": "https://www.chase.com"
+      },
+      {
+        "name": "Bank of America",
+        "csvFormat": "BOA_US",
+        "logo": "/images/banks/bank-of-america.png",
+        "website": "https://www.bankofamerica.com"
+      },
+      {
+        "name": "Wells Fargo",
+        "csvFormat": "WELLS_FARGO_US",
+        "logo": "/images/banks/wells-fargo.png",
+        "website": "https://www.wellsfargo.com"
+      },
+      {
+        "name": "Citibank",
+        "csvFormat": "CITI_US",
+        "logo": "/images/banks/citi.png",
+        "website": "https://www.citibank.com"
+      }
+    ],
+    "regulations": {
+      "maxCashTransaction": 10000,
+      "reportingCurrency": "USD",
+      "financialYear": "january-december",
+      "retirementScheme": "401(k)"
+    },
+    "defaultGoals": {
+      "emergencyFund": {
+        "multiplier": 6,
+        "description": "6 months of expenses recommended in United States"
+      },
+      "houseDeposit": {
+        "percentage": 0.20,
+        "description": "20% deposit typically required"
+      }
+    }
+  },
+  "GB": {
+    "name": "United Kingdom",
+    "currency": "GBP",
+    "locale": "en-GB",
+    "dateFormat": "DD/MM/YYYY",
+    "numberFormat": "1,234.56",
+    "taxYear": {
+      "start": "April",
+      "end": "March"
+    },
+    "emergencyFundMonths": 6,
+    "banks": [
+      {
+        "name": "Barclays",
+        "csvFormat": "BARCLAYS_GB",
+        "logo": "/images/banks/barclays.png",
+        "website": "https://www.barclays.co.uk"
+      },
+      {
+        "name": "HSBC UK",
+        "csvFormat": "HSBC_GB",
+        "logo": "/images/banks/hsbc.png",
+        "website": "https://www.hsbc.co.uk"
+      },
+      {
+        "name": "Lloyds Bank",
+        "csvFormat": "LLOYDS_GB",
+        "logo": "/images/banks/lloyds.png",
+        "website": "https://www.lloydsbank.com"
+      },
+      {
+        "name": "NatWest",
+        "csvFormat": "NATWEST_GB",
+        "logo": "/images/banks/natwest.png",
+        "website": "https://www.natwest.com"
+      }
+    ],
+    "regulations": {
+      "maxCashTransaction": 10000,
+      "reportingCurrency": "GBP",
+      "financialYear": "april-march",
+      "retirementScheme": "ISA"
+    },
+    "defaultGoals": {
+      "emergencyFund": {
+        "multiplier": 6,
+        "description": "6 months of expenses recommended in United Kingdom"
+      },
+      "houseDeposit": {
+        "percentage": 0.10,
+        "description": "10% deposit minimum, 20% recommended"
+      }
+    }
+  },
+  "CA": {
+    "name": "Canada",
+    "currency": "CAD",
+    "locale": "en-CA",
+    "dateFormat": "DD/MM/YYYY",
+    "numberFormat": "1,234.56",
+    "taxYear": {
+      "start": "January",
+      "end": "December"
+    },
+    "emergencyFundMonths": 6,
+    "banks": [
+      {
+        "name": "Royal Bank of Canada",
+        "csvFormat": "RBC_CA",
+        "logo": "/images/banks/rbc.png",
+        "website": "https://www.rbc.com"
+      },
+      {
+        "name": "TD Canada Trust",
+        "csvFormat": "TD_CA",
+        "logo": "/images/banks/td.png",
+        "website": "https://www.td.com"
+      },
+      {
+        "name": "Scotiabank",
+        "csvFormat": "SCOTIA_CA",
+        "logo": "/images/banks/scotiabank.png",
+        "website": "https://www.scotiabank.com"
+      },
+      {
+        "name": "Bank of Montreal",
+        "csvFormat": "BMO_CA",
+        "logo": "/images/banks/bmo.png",
+        "website": "https://www.bmo.com"
+      },
+      {
+        "name": "CIBC",
+        "csvFormat": "CIBC_CA",
+        "logo": "/images/banks/cibc.png",
+        "website": "https://www.cibc.com"
+      }
+    ],
+    "regulations": {
+      "maxCashTransaction": 10000,
+      "reportingCurrency": "CAD",
+      "financialYear": "january-december",
+      "retirementScheme": "RRSP"
+    },
+    "defaultGoals": {
+      "emergencyFund": {
+        "multiplier": 6,
+        "description": "6 months of expenses recommended in Canada"
+      },
+      "houseDeposit": {
+        "percentage": 0.20,
+        "description": "20% deposit recommended to avoid CMHC insurance"
+      }
+    }
+  }
+}

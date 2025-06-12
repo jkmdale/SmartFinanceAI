@@ -1,0 +1,442 @@
+/**
+ * End-to-End Tests for SmartFinanceAI Complete Workflows
+ * Tests real browser interactions and full user journeys
+ */
+
+import { test, expect } from '@playwright/test';
+
+test.describe('SmartFinanceAI E2E Workflows', () => {
+  let testUser;
+
+  test.beforeEach(async ({ page }) => {
+    testUser = {
+      email: `e2e.test.${Date.now()}@example.com`,
+      password: 'E2ETestPassword123!',
+      firstName: 'E2E',
+      lastName: 'Test',
+      country: 'NZ'
+    };
+
+    // Start each test from the homepage
+    await page.goto('/');
+  });
+
+  test.describe('New User Complete Journey', () => {
+    test('should complete full registration to first transaction workflow', async ({ page }) => {
+      // Step 1: Navigate to registration
+      await page.click('[data-testid="register-button"]');
+      await expect(page).toHaveURL('/register');
+
+      // Step 2: Fill registration form
+      await page.fill('input[name="email"]', testUser.email);
+      await page.fill('input[name="password"]', testUser.password);
+      await page.fill('input[name="confirmPassword"]', testUser.password);
+      await page.fill('input[name="firstName"]', testUser.firstName);
+      await page.fill('input[name="lastName"]', testUser.lastName);
+      await page.check('input[name="agreeToTerms"]');
+
+      // Step 3: Submit registration
+      await page.click('button[type="submit"]');
+      await expect(page).toHaveURL('/onboarding/welcome');
+
+      // Step 4: Welcome screen
+      await expect(page.locator('[data-testid="welcome-title"]')).toContainText('Welcome to SmartFinanceAI');
+      await page.click('[data-testid="get-started"]');
+      await expect(page).toHaveURL('/onboarding/country-selection');
+
+      // Step 5: Country selection
+      await page.selectOption('select[name="country"]', testUser.country);
+      await page.click('[data-testid="continue"]');
+      await expect(page).toHaveURL('/onboarding/profile-setup');
+
+      // Step 6: Profile setup
+      await page.selectOption('select[name="riskTolerance"]', 'moderate');
+      await page.check('input[value="emergency"]'); // Select emergency fund goal
+      await page.fill('input[name="monthlyIncome"]', '5000');
+      await page.click('[data-testid="profile-continue"]');
+      await expect(page).toHaveURL('/onboarding/account-wizard');
+
+      // Step 7: Add first account
+      await page.fill('input[name="accountName"]', 'My Checking');
+      await page.selectOption('select[name="accountType"]', 'checking');
+      await page.selectOption('select[name="bank"]', 'ANZ');
+      await page.fill('input[name="currentBalance"]', '5000');
+      await page.click('[data-testid="add-account"]');
+
+      // Verify account was added
+      await expect(page.locator('[data-testid="account-list"]')).toContainText('My Checking');
+
+      // Step 8: Complete onboarding
+      await page.click('[data-testid="finish-onboarding"]');
+      await expect(page).toHaveURL('/dashboard');
+
+      // Step 9: Verify dashboard loaded with data
+      await expect(page.locator('[data-testid="account-balance"]')).toBeVisible();
+      await expect(page.locator('[data-testid="account-balance"]')).toContainText('$5,000.00');
+
+      // Step 10: Add first transaction
+      await page.click('[data-testid="add-transaction"]');
+      await expect(page.locator('[data-testid="transaction-modal"]')).toBeVisible();
+
+      await page.fill('input[name="description"]', 'Grocery Shopping');
+      await page.fill('input[name="amount"]', '85.50');
+      await page.selectOption('select[name="category"]', 'groceries');
+      await page.selectOption('select[name="account"]', 'My Checking');
+
+      await page.click('[data-testid="save-transaction"]');
+
+      // Verify transaction appears in recent transactions
+      await expect(page.locator('[data-testid="recent-transactions"]')).toContainText('Grocery Shopping');
+      await expect(page.locator('[data-testid="recent-transactions"]')).toContainText('-$85.50');
+
+      // Verify account balance updated
+      await expect(page.locator('[data-testid="account-balance"]')).toContainText('$4,914.50');
+    });
+
+    test('should handle onboarding interruption and resume', async ({ page }) => {
+      // Start registration
+      await page.click('[data-testid="register-button"]');
+      await page.fill('input[name="email"]', testUser.email);
+      await page.fill('input[name="password"]', testUser.password);
+      await page.fill('input[name="confirmPassword"]', testUser.password);
+      await page.fill('input[name="firstName"]', testUser.firstName);
+      await page.fill('input[name="lastName"]', testUser.lastName);
+      await page.check('input[name="agreeToTerms"]');
+      await page.click('button[type="submit"]');
+
+      // Go through partial onboarding
+      await page.click('[data-testid="get-started"]');
+      await page.selectOption('select[name="country"]', testUser.country);
+      await page.click('[data-testid="continue"]');
+
+      // Fill partial profile data
+      await page.selectOption('select[name="riskTolerance"]', 'moderate');
+      
+      // Simulate browser close/refresh
+      await page.reload();
+
+      // Should resume onboarding at correct step
+      await expect(page).toHaveURL('/onboarding/profile-setup');
+      
+      // Previous selections should be preserved
+      await expect(page.locator('select[name="riskTolerance"]')).toHaveValue('moderate');
+    });
+  });
+
+  test.describe('Daily Financial Management Workflows', () => {
+    test.beforeEach(async ({ page }) => {
+      // Set up authenticated user with existing data
+      await page.addInitScript(() => {
+        localStorage.setItem('auth_token', 'valid-test-token');
+        localStorage.setItem('user_data', JSON.stringify({
+          id: 1,
+          email: 'existing@example.com',
+          firstName: 'Existing',
+          lastName: 'User',
+          country: 'NZ',
+          currency: 'NZD'
+        }));
+        localStorage.setItem('onboarding_completed', 'true');
+      });
+
+      await page.goto('/dashboard');
+    });
+
+    test('should complete expense tracking and budget review workflow', async ({ page }) => {
+      // Verify dashboard loads
+      await expect(page.locator('[data-testid="dashboard-title"]')).toBeVisible();
+
+      // Add multiple transactions
+      const transactions = [
+        { description: 'Coffee Shop', amount: '4.50', category: 'food_dining' },
+        { description: 'Gas Station', amount: '65.00', category: 'transport' },
+        { description: 'Movie Tickets', amount: '28.00', category: 'entertainment' }
+      ];
+
+      for (const transaction of transactions) {
+        await page.click('[data-testid="add-transaction"]');
+        await page.fill('input[name="description"]', transaction.description);
+        await page.fill('input[name="amount"]', transaction.amount);
+        await page.selectOption('select[name="category"]', transaction.category);
+        await page.click('[data-testid="save-transaction"]');
+        
+        // Wait for transaction to appear
+        await expect(page.locator('[data-testid="recent-transactions"]')).toContainText(transaction.description);
+      }
+
+      // Navigate to budget page
+      await page.click('[data-testid="budget-link"]');
+      await expect(page).toHaveURL('/budget');
+
+      // Verify budget categories show spending
+      await expect(page.locator('[data-category="food_dining"]')).toContainText('$4.50');
+      await expect(page.locator('[data-category="transport"]')).toContainText('$65.00');
+      await expect(page.locator('[data-category="entertainment"]')).toContainText('$28.00');
+
+      // Adjust budget allocations
+      await page.fill('input[data-category="food_dining"]', '500');
+      await page.fill('input[data-category="transport"]', '400');
+      await page.click('[data-testid="save-budget"]');
+
+      // Verify success message
+      await expect(page.locator('[data-testid="success-message"]')).toContainText('Budget updated successfully');
+
+      // Check budget progress indicators
+      await expect(page.locator('[data-testid="budget-progress"]')).toBeVisible();
+      await expect(page.locator('[data-category="food_dining"] [data-testid="progress-bar"]')).toBeVisible();
+    });
+
+    test('should complete CSV import workflow', async ({ page }) => {
+      // Navigate to CSV import
+      await page.click('[data-testid="import-transactions"]');
+      await expect(page).toHaveURL('/csv-import/upload');
+
+      // Upload CSV file
+      const csvContent = `Date,Description,Amount,Balance
+2025-06-10,"Supermarket",-125.50,4874.50
+2025-06-09,"Salary",3000.00,5000.00
+2025-06-08,"Coffee Shop",-4.50,2000.00`;
+
+      await page.setInputFiles('input[type="file"]', {
+        name: 'bank-statement.csv',
+        mimeType: 'text/csv',
+        buffer: Buffer.from(csvContent)
+      });
+
+      await page.click('[data-testid="upload-csv"]');
+      await expect(page).toHaveURL('/csv-import/preview');
+
+      // Verify transaction preview
+      await expect(page.locator('[data-testid="transaction-preview"]')).toBeVisible();
+      await expect(page.locator('[data-testid="preview-table"]')).toContainText('Supermarket');
+      await expect(page.locator('[data-testid="preview-table"]')).toContainText('Salary');
+      await expect(page.locator('[data-testid="preview-table"]')).toContainText('Coffee Shop');
+
+      // Check import summary
+      await expect(page.locator('[data-testid="import-summary"]')).toContainText('3 transactions to import');
+      await expect(page.locator('[data-testid="import-summary"]')).toContainText('0 duplicates detected');
+
+      // Adjust categorization
+      await page.selectOption('[data-transaction="0"] select[name="category"]', 'groceries');
+      await page.selectOption('[data-transaction="1"] select[name="category"]', 'income');
+      await page.selectOption('[data-transaction="2"] select[name="category"]', 'food_dining');
+
+      // Confirm import
+      await page.click('[data-testid="confirm-import"]');
+      await expect(page).toHaveURL('/transactions');
+
+      // Verify transactions were imported
+      await expect(page.locator('[data-testid="transaction-list"]')).toContainText('Supermarket');
+      await expect(page.locator('[data-testid="transaction-list"]')).toContainText('Salary');
+      await expect(page.locator('[data-testid="transaction-list"]')).toContainText('Coffee Shop');
+    });
+
+    test('should manage financial goals workflow', async ({ page }) => {
+      // Navigate to goals
+      await page.click('[data-testid="goals-link"]');
+      await expect(page).toHaveURL('/goals');
+
+      // Create new goal using template
+      await page.click('[data-testid="add-goal"]');
+      await page.click('[data-template="emergency"]');
+
+      // Fill goal details
+      await page.fill('input[name="goalName"]', 'Emergency Fund');
+      await page.fill('input[name="targetAmount"]', '15000');
+      await page.fill('input[name="targetDate"]', '2025-12-31');
+      await page.fill('input[name="monthlyContribution"]', '500');
+
+      await page.click('[data-testid="save-goal"]');
+
+      // Verify goal created
+      await expect(page.locator('[data-testid="goal-list"]')).toContainText('Emergency Fund');
+      await expect(page.locator('[data-testid="goal-list"]')).toContainText('$15,000');
+
+      // Add contribution to goal
+      await page.click('[data-goal="1"] [data-testid="contribute"]');
+      await page.fill('input[name="contributionAmount"]', '1000');
+      await page.selectOption('select[name="fromAccount"]', 'My Checking');
+      await page.click('[data-testid="confirm-contribution"]');
+
+      // Verify goal progress updated
+      await expect(page.locator('[data-goal="1"] [data-testid="progress-percentage"]')).toContainText('6.7%');
+      await expect(page.locator('[data-goal="1"] [data-testid="current-amount"]')).toContainText('$1,000');
+
+      // Test goal timeline optimization
+      await page.click('[data-goal="1"] [data-testid="optimize"]');
+      await expect(page.locator('[data-testid="optimization-modal"]')).toBeVisible();
+      
+      await expect(page.locator('[data-testid="recommended-contribution"]')).toBeVisible();
+      await expect(page.locator('[data-testid="projected-completion"]')).toBeVisible();
+
+      await page.click('[data-testid="apply-optimization"]');
+      
+      // Verify optimized contribution schedule
+      await expect(page.locator('[data-goal="1"] [data-testid="monthly-contribution"]')).not.toContainText('$500');
+    });
+  });
+
+  test.describe('Couples Account Workflows', () => {
+    test('should create couples account and share financial data', async ({ page, context }) => {
+      // Set up primary user
+      await page.addInitScript(() => {
+        localStorage.setItem('auth_token', 'primary-user-token');
+        localStorage.setItem('user_data', JSON.stringify({
+          id: 1,
+          email: 'primary@example.com',
+          firstName: 'Primary',
+          lastName: 'User',
+          accountType: 'individual'
+        }));
+      });
+
+      await page.goto('/settings');
+
+      // Upgrade to couples account
+      await page.click('[data-testid="upgrade-couples"]');
+      await expect(page.locator('[data-testid="couples-upgrade-modal"]')).toBeVisible();
+
+      await page.click('[data-testid="confirm-upgrade"]');
+
+      // Send partner invitation
+      await page.click('[data-testid="invite-partner"]');
+      await page.fill('input[name="partnerEmail"]', 'partner@example.com');
+      await page.fill('input[name="partnerName"]', 'Partner User');
+      await page.click('[data-testid="send-invitation"]');
+
+      // Verify invitation sent
+      await expect(page.locator('[data-testid="invitation-status"]')).toContainText('Invitation sent');
+
+      // Simulate partner accepting invitation in new context
+      const partnerPage = await context.newPage();
+      await partnerPage.addInitScript(() => {
+        localStorage.setItem('auth_token', 'partner-user-token');
+        localStorage.setItem('user_data', JSON.stringify({
+          id: 2,
+          email: 'partner@example.com',
+          firstName: 'Partner',
+          lastName: 'User'
+        }));
+      });
+
+      await partnerPage.goto('/invitation/accept?token=mock-invitation-token');
+      await partnerPage.click('[data-testid="accept-invitation"]');
+
+      // Back to primary user - verify partner joined
+      await page.reload();
+      await expect(page.locator('[data-testid="partner-status"]')).toContainText('Partner User');
+
+      // Create shared goal
+      await page.click('[data-testid="goals-link"]');
+      await page.click('[data-testid="add-shared-goal"]');
+      
+      await page.fill('input[name="goalName"]', 'House Deposit');
+      await page.fill('input[name="targetAmount"]', '100000');
+      await page.check('input[name="shareWithPartner"]');
+      await page.click('[data-testid="save-goal"]');
+
+      // Verify shared goal created
+      await expect(page.locator('[data-testid="shared-goal-indicator"]')).toBeVisible();
+
+      // Partner should see the shared goal
+      await partnerPage.goto('/goals');
+      await expect(partnerPage.locator('[data-testid="goal-list"]')).toContainText('House Deposit');
+      await expect(partnerPage.locator('[data-testid="shared-goal-indicator"]')).toBeVisible();
+    });
+  });
+
+  test.describe('Mobile Responsive Workflows', () => {
+    test('should work correctly on mobile devices', async ({ page }) => {
+      // Set mobile viewport
+      await page.setViewportSize({ width: 375, height: 667 });
+
+      // Set up user
+      await page.addInitScript(() => {
+        localStorage.setItem('auth_token', 'mobile-user-token');
+        localStorage.setItem('user_data', JSON.stringify({
+          id: 1,
+          email: 'mobile@example.com',
+          firstName: 'Mobile',
+          lastName: 'User'
+        }));
+        localStorage.setItem('onboarding_completed', 'true');
+      });
+
+      await page.goto('/dashboard');
+
+      // Test mobile navigation
+      await expect(page.locator('[data-testid="mobile-nav-toggle"]')).toBeVisible();
+      await page.click('[data-testid="mobile-nav-toggle"]');
+      await expect(page.locator('[data-testid="mobile-nav-menu"]')).toBeVisible();
+
+      // Navigate using mobile menu
+      await page.click('[data-testid="mobile-nav-budget"]');
+      await expect(page).toHaveURL('/budget');
+
+      // Test mobile transaction form
+      await page.click('[data-testid="add-transaction-mobile"]');
+      await expect(page.locator('[data-testid="transaction-modal"]')).toBeVisible();
+
+      // Form should be optimized for mobile
+      const form = page.locator('[data-testid="transaction-form"]');
+      await expect(form).toHaveCSS('width', '100%');
+
+      await page.fill('input[name="description"]', 'Mobile Transaction');
+      await page.fill('input[name="amount"]', '25.00');
+      
+      // Test mobile-optimized category selector
+      await page.click('[data-testid="category-selector-mobile"]');
+      await expect(page.locator('[data-testid="category-grid"]')).toBeVisible();
+      await page.click('[data-category="food_dining"]');
+
+      await page.click('[data-testid="save-transaction"]');
+
+      // Verify transaction added
+      await expect(page.locator('[data-testid="recent-transactions"]')).toContainText('Mobile Transaction');
+    });
+
+    test('should support touch gestures', async ({ page }) => {
+      await page.setViewportSize({ width: 375, height: 667 });
+
+      await page.addInitScript(() => {
+        localStorage.setItem('auth_token', 'touch-user-token');
+        localStorage.setItem('user_data', JSON.stringify({
+          id: 1,
+          email: 'touch@example.com'
+        }));
+        localStorage.setItem('onboarding_completed', 'true');
+      });
+
+      await page.goto('/transactions');
+
+      // Test swipe to delete transaction
+      const transaction = page.locator('[data-testid="transaction-1"]');
+      await transaction.hover();
+      
+      // Simulate swipe left
+      await transaction.dragTo(page.locator('[data-testid="delete-zone"]'));
+      
+      await expect(page.locator('[data-testid="delete-confirm"]')).toBeVisible();
+      await page.click('[data-testid="confirm-delete"]');
+
+      // Verify transaction deleted
+      await expect(transaction).not.toBeVisible();
+    });
+  });
+
+  test.describe('Accessibility and Performance', () => {
+    test('should be accessible to screen readers', async ({ page }) => {
+      await page.addInitScript(() => {
+        localStorage.setItem('auth_token', 'a11y-user-token');
+        localStorage.setItem('user_data', JSON.stringify({
+          id: 1,
+          email: 'accessibility@example.com'
+        }));
+        localStorage.setItem('onboarding_completed', 'true');
+      });
+
+      await page.goto('/dashboard');
+
+      // Check for proper ARIA labels
+      await expect(page.locator('[data-testid="account-balance"]')).toHaveAttribute('aria-label');
+      await expect(page.

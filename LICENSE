@@ -1,0 +1,99 @@
+MIT License
+
+Copyright (c) 2025 SmartFinanceAI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+
+IMPORTANT NOTICES:
+
+1. FINANCIAL DATA SECURITY:
+   This software handles sensitive financial information. Users and contributors
+   must ensure compliance with applicable financial regulations including but
+   not limited to:
+   - PCI DSS (Payment Card Industry Data Security Standard)
+   - GDPR (General Data Protection Regulation)
+   - CCPA (California Consumer Privacy Act)
+   - Local financial privacy laws
+
+2. NO FINANCIAL ADVICE:
+   This software is for informational and organizational purposes only. It does
+   not constitute financial advice, investment recommendations, or professional
+   financial services. Users should consult with qualified financial advisors
+   for personal financial decisions.
+
+3. AI AND MACHINE LEARNING:
+   AI-powered features in this software are tools to assist with financial
+   analysis and should not be relied upon as the sole basis for financial
+   decisions. Results may vary and accuracy is not guaranteed.
+
+4. THIRD-PARTY INTEGRATIONS:
+   This software may integrate with third-party financial institutions and
+   services. Users are responsible for compliance with the terms of service
+   and privacy policies of such third parties.
+
+5. BANKING INTEGRATION:
+   Features that connect to banking systems require appropriate security
+   measures and may be subject to additional regulatory requirements in
+   different jurisdictions.
+
+6. EXPORT RESTRICTIONS:
+   This software may be subject to export control laws and regulations.
+   Users are responsible for compliance with applicable export laws.
+
+7. CRYPTOCURRENCY:
+   Any cryptocurrency-related features are experimental and subject to high
+   volatility and regulatory uncertainty. Use at your own risk.
+
+8. MULTI-COUNTRY COMPLIANCE:
+   This software is designed to operate in multiple countries. Users must
+   ensure compliance with local laws and regulations in their jurisdiction.
+
+================================================================================
+
+ATTRIBUTION REQUIREMENTS:
+
+If you use this software in a commercial product or service, you must:
+
+1. Include this license notice in your documentation
+2. Provide clear attribution to SmartFinanceAI in your product
+3. Not use the SmartFinanceAI name or trademarks without permission
+4. Comply with all applicable financial regulations
+
+================================================================================
+
+DISCLAIMER OF WARRANTIES:
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHORS DISCLAIM ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+USERS ACKNOWLEDGE THAT FINANCIAL SOFTWARE CARRIES INHERENT RISKS AND
+AGREE TO USE THIS SOFTWARE AT THEIR OWN RISK. THE AUTHORS SHALL NOT BE
+LIABLE FOR ANY FINANCIAL LOSSES, DATA BREACHES, OR SECURITY INCIDENTS
+THAT MAY RESULT FROM THE USE OF THIS SOFTWARE.
+
+================================================================================
+
+For questions about licensing, please contact: legal@smartfinanceai.com

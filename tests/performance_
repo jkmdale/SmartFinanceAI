@@ -1,0 +1,396 @@
+/**
+ * Performance and Load Tests for SmartFinanceAI
+ * Tests application performance under various load conditions
+ */
+
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { performance } from 'perf_hooks';
+
+describe('SmartFinanceAI Performance Tests', () => {
+  let mockConsole;
+  let performanceMarks = [];
+  let performanceMeasures = [];
+
+  beforeEach(() => {
+    // Mock performance API
+    global.performance = {
+      now: () => Date.now(),
+      mark: (name) => {
+        performanceMarks.push({ name, time: Date.now() });
+      },
+      measure: (name, startMark, endMark) => {
+        const start = performanceMarks.find(m => m.name === startMark);
+        const end = performanceMarks.find(m => m.name === endMark);
+        const duration = end ? end.time - start.time : 0;
+        performanceMeasures.push({ name, duration });
+        return { duration };
+      },
+      getEntriesByType: (type) => {
+        if (type === 'measure') return performanceMeasures;
+        if (type === 'mark') return performanceMarks;
+        return [];
+      }
+    };
+
+    // Mock console for performance logging
+    mockConsole = {
+      log: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      time: vi.fn(),
+      timeEnd: vi.fn()
+    };
+    global.console = mockConsole;
+
+    // Reset performance tracking
+    performanceMarks = [];
+    performanceMeasures = [];
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('Application Load Performance', () => {
+    it('should load initial application within performance budget', async () => {
+      const loadStart = performance.now();
+
+      // Simulate application initialization
+      const { initializeApp } = await mockAppInitialization();
+      
+      await initializeApp();
+      
+      const loadEnd = performance.now();
+      const loadTime = loadEnd - loadStart;
+
+      // Performance budget: 2 seconds for initial load
+      expect(loadTime).toBeLessThan(2000);
+      
+      // Check for performance marks
+      expect(performanceMarks.some(m => m.name === 'app-init-start')).toBe(true);
+      expect(performanceMarks.some(m => m.name === 'app-init-end')).toBe(true);
+    });
+
+    it('should lazy load non-critical components efficiently', async () => {
+      const { lazyLoadComponent } = await mockLazyLoading();
+
+      // Test lazy loading of reports component
+      const reportsLoadStart = performance.now();
+      await lazyLoadComponent('reports');
+      const reportsLoadEnd = performance.now();
+
+      // Lazy loaded components should load quickly
+      expect(reportsLoadEnd - reportsLoadStart).toBeLessThan(500);
+
+      // Test lazy loading of charts component
+      const chartsLoadStart = performance.now();
+      await lazyLoadComponent('charts');
+      const chartsLoadEnd = performance.now();
+
+      expect(chartsLoadEnd - chartsLoadStart).toBeLessThan(800);
+    });
+
+    it('should optimize bundle size and loading', async () => {
+      const { getBundleMetrics } = await mockBundleAnalysis();
+      
+      const metrics = await getBundleMetrics();
+
+      // Initial bundle should be under 500KB gzipped
+      expect(metrics.initialBundle.gzippedSize).toBeLessThan(500 * 1024);
+      
+      // Individual chunks should be under 200KB
+      metrics.chunks.forEach(chunk => {
+        expect(chunk.gzippedSize).toBeLessThan(200 * 1024);
+      });
+
+      // Critical CSS should be under 50KB
+      expect(metrics.criticalCSS.size).toBeLessThan(50 * 1024);
+    });
+  });
+
+  describe('Data Processing Performance', () => {
+    it('should handle large transaction datasets efficiently', async () => {
+      const largeDataset = generateMockTransactions(10000);
+      const { processTransactions } = await mockDataProcessing();
+
+      const processStart = performance.now();
+      const processedData = await processTransactions(largeDataset);
+      const processEnd = performance.now();
+
+      // Should process 10k transactions in under 1 second
+      expect(processEnd - processStart).toBeLessThan(1000);
+      
+      // Should return all transactions
+      expect(processedData.length).toBe(10000);
+      
+      // Should categorize transactions
+      expect(processedData.every(t => t.category)).toBe(true);
+    });
+
+    it('should efficiently calculate budget analytics', async () => {
+      const transactions = generateMockTransactions(5000);
+      const { calculateBudgetAnalytics } = await mockBudgetCalculations();
+
+      const calcStart = performance.now();
+      const analytics = await calculateBudgetAnalytics(transactions);
+      const calcEnd = performance.now();
+
+      // Budget calculations should complete in under 300ms
+      expect(calcEnd - calcStart).toBeLessThan(300);
+
+      // Should return complete analytics
+      expect(analytics.categoryBreakdown).toBeDefined();
+      expect(analytics.monthlyTrends).toBeDefined();
+      expect(analytics.budgetVariance).toBeDefined();
+    });
+
+    it('should optimize goal progress calculations', async () => {
+      const goals = generateMockGoals(100);
+      const transactions = generateMockTransactions(1000);
+      const { calculateGoalProgress } = await mockGoalCalculations();
+
+      const calcStart = performance.now();
+      const progress = await calculateGoalProgress(goals, transactions);
+      const calcEnd = performance.now();
+
+      // Goal calculations should complete quickly
+      expect(calcEnd - calcStart).toBeLessThan(200);
+
+      // Should calculate progress for all goals
+      expect(progress.length).toBe(100);
+      expect(progress.every(p => typeof p.percentage === 'number')).toBe(true);
+    });
+  });
+
+  describe('Memory Usage and Garbage Collection', () => {
+    it('should manage memory efficiently with large datasets', async () => {
+      const { trackMemoryUsage } = await mockMemoryTracking();
+      
+      const initialMemory = await trackMemoryUsage();
+      
+      // Load large dataset
+      const largeDataset = generateMockTransactions(50000);
+      const { loadTransactions } = await mockDataLoading();
+      await loadTransactions(largeDataset);
+
+      const peakMemory = await trackMemoryUsage();
+      
+      // Clean up dataset
+      largeDataset.length = 0;
+      
+      // Force garbage collection (in real environment)
+      if (global.gc) global.gc();
+      
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const finalMemory = await trackMemoryUsage();
+
+      // Memory should be released after cleanup
+      expect(finalMemory.usedJSHeapSize).toBeLessThan(peakMemory.usedJSHeapSize * 1.1);
+      
+      // Should not have excessive memory growth
+      expect(peakMemory.usedJSHeapSize - initialMemory.usedJSHeapSize).toBeLessThan(100 * 1024 * 1024); // 100MB
+    });
+
+    it('should prevent memory leaks in event listeners', async () => {
+      const { createComponent, destroyComponent, trackEventListeners } = await mockComponentLifecycle();
+
+      const initialListeners = await trackEventListeners();
+
+      // Create and destroy components multiple times
+      for (let i = 0; i < 100; i++) {
+        const component = await createComponent('transaction-form');
+        await destroyComponent(component);
+      }
+
+      const finalListeners = await trackEventListeners();
+
+      // Should not accumulate event listeners
+      expect(finalListeners.count).toBeLessThanOrEqual(initialListeners.count + 5);
+    });
+
+    it('should optimize IndexedDB operations', async () => {
+      const { openDatabase, storeData, retrieveData } = await mockIndexedDBOperations();
+
+      const db = await openDatabase();
+      const testData = generateMockTransactions(1000);
+
+      // Test bulk insert performance
+      const insertStart = performance.now();
+      await storeData(db, 'transactions', testData);
+      const insertEnd = performance.now();
+
+      // Should insert 1000 records in under 500ms
+      expect(insertEnd - insertStart).toBeLessThan(500);
+
+      // Test query performance
+      const queryStart = performance.now();
+      const retrievedData = await retrieveData(db, 'transactions', { limit: 100 });
+      const queryEnd = performance.now();
+
+      // Should query in under 50ms
+      expect(queryEnd - queryStart).toBeLessThan(50);
+      expect(retrievedData.length).toBeLessThanOrEqual(100);
+    });
+  });
+
+  describe('UI Rendering Performance', () => {
+    it('should render large lists efficiently with virtual scrolling', async () => {
+      const { VirtualList } = await mockVirtualScrolling();
+      
+      const items = generateMockTransactions(10000);
+      const virtualList = new VirtualList({
+        items,
+        itemHeight: 60,
+        containerHeight: 600
+      });
+
+      const renderStart = performance.now();
+      const renderedItems = virtualList.getVisibleItems();
+      const renderEnd = performance.now();
+
+      // Should render visible items quickly
+      expect(renderEnd - renderStart).toBeLessThan(16); // 60fps budget
+
+      // Should only render visible items
+      expect(renderedItems.length).toBeLessThanOrEqual(12); // ~600px / 60px per item
+      
+      // Test scroll performance
+      const scrollStart = performance.now();
+      virtualList.scrollTo(5000); // Scroll to middle
+      const scrollRenderedItems = virtualList.getVisibleItems();
+      const scrollEnd = performance.now();
+
+      expect(scrollEnd - scrollStart).toBeLessThan(16);
+      expect(scrollRenderedItems.length).toBeLessThanOrEqual(12);
+    });
+
+    it('should optimize chart rendering performance', async () => {
+      const { renderChart } = await mockChartRendering();
+      
+      const chartData = generateMockChartData(1000);
+
+      const renderStart = performance.now();
+      const chart = await renderChart({
+        type: 'line',
+        data: chartData,
+        options: { responsive: true }
+      });
+      const renderEnd = performance.now();
+
+      // Chart should render in under 200ms
+      expect(renderEnd - renderStart).toBeLessThan(200);
+
+      // Test chart update performance
+      const updateData = generateMockChartData(1000);
+      
+      const updateStart = performance.now();
+      chart.updateData(updateData);
+      const updateEnd = performance.now();
+
+      // Chart updates should be fast
+      expect(updateEnd - updateStart).toBeLessThan(50);
+    });
+
+    it('should implement efficient DOM updates', async () => {
+      const { DOMManager } = await mockDOMOperations();
+      
+      const domManager = new DOMManager();
+      const container = document.createElement('div');
+      
+      // Test batch DOM updates
+      const updates = generateMockDOMUpdates(500);
+      
+      const updateStart = performance.now();
+      domManager.batchUpdate(container, updates);
+      const updateEnd = performance.now();
+
+      // Batch updates should be efficient
+      expect(updateEnd - updateStart).toBeLessThan(100);
+
+      // Test individual update performance
+      const singleUpdateStart = performance.now();
+      domManager.updateElement(container.firstChild, { textContent: 'Updated' });
+      const singleUpdateEnd = performance.now();
+
+      expect(singleUpdateEnd - singleUpdateStart).toBeLessThan(5);
+    });
+  });
+
+  describe('Network and API Performance', () => {
+    it('should implement efficient API caching', async () => {
+      const { APICache } = await mockAPICache();
+      
+      const cache = new APICache();
+      const apiCall = '/api/transactions?page=1';
+
+      // First call - cache miss
+      const firstCallStart = performance.now();
+      const firstResponse = await cache.get(apiCall, async () => {
+        return new Promise(resolve => {
+          setTimeout(() => resolve({ data: generateMockTransactions(100) }), 100);
+        });
+      });
+      const firstCallEnd = performance.now();
+
+      expect(firstCallEnd - firstCallStart).toBeGreaterThan(90); // Network delay
+
+      // Second call - cache hit
+      const secondCallStart = performance.now();
+      const secondResponse = await cache.get(apiCall, async () => {
+        return new Promise(resolve => {
+          setTimeout(() => resolve({ data: generateMockTransactions(100) }), 100);
+        });
+      });
+      const secondCallEnd = performance.now();
+
+      expect(secondCallEnd - secondCallStart).toBeLessThan(10); // Cache retrieval
+      expect(secondResponse).toEqual(firstResponse);
+    });
+
+    it('should optimize bundle loading with code splitting', async () => {
+      const { loadChunk } = await mockCodeSplitting();
+
+      // Test loading different feature chunks
+      const features = ['reports', 'goals', 'budget', 'settings'];
+      const loadTimes = [];
+
+      for (const feature of features) {
+        const loadStart = performance.now();
+        await loadChunk(feature);
+        const loadEnd = performance.now();
+        
+        loadTimes.push(loadEnd - loadStart);
+      }
+
+      // Each chunk should load quickly
+      loadTimes.forEach(time => {
+        expect(time).toBeLessThan(300);
+      });
+
+      // Average load time should be reasonable
+      const avgLoadTime = loadTimes.reduce((a, b) => a + b, 0) / loadTimes.length;
+      expect(avgLoadTime).toBeLessThan(200);
+    });
+
+    it('should handle concurrent API requests efficiently', async () => {
+      const { makeAPIRequest } = await mockAPIRequests();
+
+      const requests = [
+        '/api/accounts',
+        '/api/transactions',
+        '/api/goals',
+        '/api/budget',
+        '/api/user/profile'
+      ];
+
+      const concurrentStart = performance.now();
+      const responses = await Promise.all(
+        requests.map(url => makeAPIRequest(url))
+      );
+      const concurrentEnd = performance.now();
+
+      // Concurrent requests should be faster than sequential
+      expect(concurrentEnd - concurrentStart).toBeLessThan(500);
+      expect(responses.length).toBe(5);
+      expect(responses.every(r => r.success)).toBe

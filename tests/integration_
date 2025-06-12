@@ -1,0 +1,468 @@
+/**
+ * Integration Tests for Complete User Flows
+ * SmartFinanceAI - Global SaaS Platform
+ */
+
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { JSDOM } from 'jsdom';
+
+// Mock browser environment
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+  url: 'https://smartfinanceai.com',
+  pretendToBeVisual: true,
+  resources: 'usable'
+});
+
+global.window = dom.window;
+global.document = dom.window.document;
+global.navigator = dom.window.navigator;
+global.localStorage = dom.window.localStorage;
+global.sessionStorage = dom.window.sessionStorage;
+
+describe('Complete User Journey Integration Tests', () => {
+  let testUser;
+  let mockAPI;
+
+  beforeEach(() => {
+    // Reset DOM
+    document.body.innerHTML = '';
+    
+    // Mock test user
+    testUser = {
+      email: 'integration.test@example.com',
+      password: 'TestPassword123!',
+      firstName: 'Integration',
+      lastName: 'Test',
+      country: 'NZ',
+      currency: 'NZD'
+    };
+
+    // Mock API responses
+    mockAPI = {
+      register: vi.fn(),
+      login: vi.fn(),
+      getProfile: vi.fn(),
+      updateProfile: vi.fn(),
+      getAccounts: vi.fn(),
+      addAccount: vi.fn(),
+      getTransactions: vi.fn(),
+      addTransaction: vi.fn(),
+      getGoals: vi.fn(),
+      addGoal: vi.fn(),
+      getBudget: vi.fn(),
+      updateBudget: vi.fn()
+    };
+
+    global.fetch = vi.fn();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  describe('New User Registration and Onboarding Flow', () => {
+    it('should complete full registration and onboarding process', async () => {
+      // Step 1: User visits registration page
+      await loadPage('/register');
+      
+      expect(document.querySelector('form')).toBeDefined();
+      expect(document.querySelector('input[type="email"]')).toBeDefined();
+      expect(document.querySelector('input[type="password"]')).toBeDefined();
+
+      // Step 2: User fills registration form
+      const emailInput = document.querySelector('input[type="email"]');
+      const passwordInput = document.querySelector('input[type="password"]');
+      const submitButton = document.querySelector('button[type="submit"]');
+
+      emailInput.value = testUser.email;
+      passwordInput.value = testUser.password;
+
+      // Mock successful registration
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          success: true,
+          user: { id: 1, email: testUser.email },
+          token: 'mock-jwt-token'
+        })
+      });
+
+      // Step 3: Submit registration
+      submitButton.click();
+      await waitForNavigation();
+
+      // Should redirect to onboarding
+      expect(window.location.pathname).toBe('/onboarding/welcome');
+
+      // Step 4: Complete onboarding welcome
+      await loadPage('/onboarding/welcome');
+      const getStartedButton = document.querySelector('[data-testid="get-started"]');
+      getStartedButton.click();
+      await waitForNavigation();
+
+      expect(window.location.pathname).toBe('/onboarding/country-selection');
+
+      // Step 5: Select country
+      await loadPage('/onboarding/country-selection');
+      const countrySelect = document.querySelector('select[name="country"]');
+      countrySelect.value = testUser.country;
+      
+      const continueButton = document.querySelector('[data-testid="continue"]');
+      continueButton.click();
+      await waitForNavigation();
+
+      expect(window.location.pathname).toBe('/onboarding/profile-setup');
+
+      // Step 6: Complete profile setup
+      await loadPage('/onboarding/profile-setup');
+      
+      const firstNameInput = document.querySelector('input[name="firstName"]');
+      const lastNameInput = document.querySelector('input[name="lastName"]');
+      
+      firstNameInput.value = testUser.firstName;
+      lastNameInput.value = testUser.lastName;
+
+      const profileContinue = document.querySelector('[data-testid="profile-continue"]');
+      profileContinue.click();
+      await waitForNavigation();
+
+      expect(window.location.pathname).toBe('/onboarding/account-wizard');
+
+      // Step 7: Set up first account
+      await loadPage('/onboarding/account-wizard');
+      
+      const accountNameInput = document.querySelector('input[name="accountName"]');
+      const accountTypeSelect = document.querySelector('select[name="accountType"]');
+      const bankSelect = document.querySelector('select[name="bank"]');
+      const balanceInput = document.querySelector('input[name="currentBalance"]');
+
+      accountNameInput.value = 'My Checking Account';
+      accountTypeSelect.value = 'checking';
+      bankSelect.value = 'ANZ';
+      balanceInput.value = '5000';
+
+      const addAccountButton = document.querySelector('[data-testid="add-account"]');
+      addAccountButton.click();
+      await waitForUpdate();
+
+      // Step 8: Complete onboarding
+      const finishButton = document.querySelector('[data-testid="finish-onboarding"]');
+      finishButton.click();
+      await waitForNavigation();
+
+      // Should redirect to dashboard
+      expect(window.location.pathname).toBe('/dashboard');
+      
+      // Verify onboarding completion was stored
+      expect(localStorage.getItem('onboarding_completed')).toBe('true');
+      expect(localStorage.getItem('user_country')).toBe(testUser.country);
+    });
+
+    it('should handle onboarding interruption and resume', async () => {
+      // Start onboarding
+      await loadPage('/onboarding/welcome');
+      
+      // Navigate partway through
+      await loadPage('/onboarding/profile-setup');
+      
+      // Fill partial data
+      const firstNameInput = document.querySelector('input[name="firstName"]');
+      firstNameInput.value = testUser.firstName;
+      
+      // Simulate page refresh/close
+      localStorage.setItem('onboarding_progress', JSON.stringify({
+        step: 'profile-setup',
+        data: { firstName: testUser.firstName }
+      }));
+
+      // User returns to app
+      await loadPage('/dashboard');
+      
+      // Should redirect back to onboarding
+      expect(window.location.pathname).toBe('/onboarding/profile-setup');
+      
+      // Previous data should be restored
+      const restoredFirstName = document.querySelector('input[name="firstName"]');
+      expect(restoredFirstName.value).toBe(testUser.firstName);
+    });
+  });
+
+  describe('Daily User Workflow', () => {
+    beforeEach(async () => {
+      // Set up authenticated user
+      localStorage.setItem('auth_token', 'valid-jwt-token');
+      localStorage.setItem('user_data', JSON.stringify({
+        id: 1,
+        email: testUser.email,
+        country: 'NZ',
+        currency: 'NZD'
+      }));
+      localStorage.setItem('onboarding_completed', 'true');
+    });
+
+    it('should complete typical daily workflow: check dashboard, add transaction, review budget', async () => {
+      // Step 1: User opens app and views dashboard
+      await loadPage('/dashboard');
+      
+      // Mock dashboard data
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          accounts: [
+            { id: 1, name: 'Checking', balance: 5000, currency: 'NZD' },
+            { id: 2, name: 'Savings', balance: 15000, currency: 'NZD' }
+          ],
+          recentTransactions: [
+            { id: 1, description: 'Grocery Store', amount: -85.50, date: '2025-06-12' }
+          ],
+          monthlySpending: 1850.75,
+          monthlyBudget: 2500,
+          goals: [
+            { id: 1, name: 'Emergency Fund', progress: 65, target: 15000 }
+          ]
+        })
+      });
+
+      await waitForUpdate();
+
+      // Verify dashboard content
+      expect(document.querySelector('[data-testid="account-balance"]')).toBeDefined();
+      expect(document.querySelector('[data-testid="recent-transactions"]')).toBeDefined();
+      expect(document.querySelector('[data-testid="budget-overview"]')).toBeDefined();
+
+      // Step 2: Add new transaction
+      const addTransactionButton = document.querySelector('[data-testid="add-transaction"]');
+      addTransactionButton.click();
+      await waitForUpdate();
+
+      // Fill transaction form
+      const descriptionInput = document.querySelector('input[name="description"]');
+      const amountInput = document.querySelector('input[name="amount"]');
+      const categorySelect = document.querySelector('select[name="category"]');
+
+      descriptionInput.value = 'Coffee Shop';
+      amountInput.value = '4.50';
+      categorySelect.value = 'food_dining';
+
+      // Mock successful transaction add
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          success: true,
+          transaction: {
+            id: 2,
+            description: 'Coffee Shop',
+            amount: -4.50,
+            category: 'food_dining',
+            date: '2025-06-12'
+          }
+        })
+      });
+
+      const saveTransactionButton = document.querySelector('[data-testid="save-transaction"]');
+      saveTransactionButton.click();
+      await waitForUpdate();
+
+      // Verify transaction was added
+      expect(document.querySelector('[data-transaction-id="2"]')).toBeDefined();
+
+      // Step 3: Review and update budget
+      const budgetLink = document.querySelector('[data-testid="budget-link"]');
+      budgetLink.click();
+      await waitForNavigation();
+
+      expect(window.location.pathname).toBe('/budget');
+
+      // Mock budget data
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          categories: {
+            food_dining: { budgeted: 400, spent: 245.50, remaining: 154.50 },
+            groceries: { budgeted: 600, spent: 485.30, remaining: 114.70 },
+            entertainment: { budgeted: 200, spent: 125.00, remaining: 75.00 }
+          },
+          totalBudgeted: 2500,
+          totalSpent: 1855.25,
+          totalRemaining: 644.75
+        })
+      });
+
+      await waitForUpdate();
+
+      // Verify budget display
+      expect(document.querySelector('[data-testid="budget-categories"]')).toBeDefined();
+      expect(document.querySelector('[data-category="food_dining"]')).toBeDefined();
+
+      // Update budget allocation
+      const foodBudgetInput = document.querySelector('input[data-category="food_dining"]');
+      foodBudgetInput.value = '450'; // Increase dining budget
+
+      const saveBudgetButton = document.querySelector('[data-testid="save-budget"]');
+      saveBudgetButton.click();
+      await waitForUpdate();
+
+      // Verify budget was updated
+      expect(global.fetch).toHaveBeenCalledWith('/api/budget', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: expect.stringContaining('"food_dining":450')
+      });
+    });
+
+    it('should handle CSV import workflow', async () => {
+      // Navigate to CSV import
+      await loadPage('/csv-import/upload');
+
+      // Mock file upload
+      const fileInput = document.querySelector('input[type="file"]');
+      const mockFile = new File(['Date,Description,Amount\n2025-06-10,Test Transaction,-25.00'], 'bank-statement.csv', {
+        type: 'text/csv'
+      });
+
+      Object.defineProperty(fileInput, 'files', {
+        value: [mockFile],
+        writable: false
+      });
+
+      const uploadButton = document.querySelector('[data-testid="upload-csv"]');
+      uploadButton.click();
+      await waitForUpdate();
+
+      // Should proceed to preview
+      expect(window.location.pathname).toBe('/csv-import/preview');
+
+      // Mock processed transactions
+      const previewData = [
+        {
+          date: '2025-06-10',
+          description: 'Test Transaction',
+          amount: -25.00,
+          category: 'uncategorized',
+          isDuplicate: false
+        }
+      ];
+
+      // Verify preview display
+      expect(document.querySelector('[data-testid="transaction-preview"]')).toBeDefined();
+      expect(document.querySelector('[data-testid="import-summary"]')).toBeDefined();
+
+      // Confirm import
+      const confirmImportButton = document.querySelector('[data-testid="confirm-import"]');
+      confirmImportButton.click();
+      await waitForUpdate();
+
+      // Should redirect to transactions page
+      expect(window.location.pathname).toBe('/transactions');
+    });
+  });
+
+  describe('Goal Management Workflow', () => {
+    beforeEach(async () => {
+      // Set up authenticated user
+      localStorage.setItem('auth_token', 'valid-jwt-token');
+      localStorage.setItem('user_data', JSON.stringify({
+        id: 1,
+        email: testUser.email,
+        country: 'NZ'
+      }));
+    });
+
+    it('should create and track emergency fund goal', async () => {
+      // Navigate to goals page
+      await loadPage('/goals');
+
+      // Create new goal
+      const addGoalButton = document.querySelector('[data-testid="add-goal"]');
+      addGoalButton.click();
+      await waitForUpdate();
+
+      // Select emergency fund template
+      const emergencyTemplate = document.querySelector('[data-template="emergency"]');
+      emergencyTemplate.click();
+      await waitForUpdate();
+
+      // Fill goal details
+      const goalNameInput = document.querySelector('input[name="goalName"]');
+      const targetAmountInput = document.querySelector('input[name="targetAmount"]');
+      const targetDateInput = document.querySelector('input[name="targetDate"]');
+
+      goalNameInput.value = 'Emergency Fund';
+      targetAmountInput.value = '15000';
+      targetDateInput.value = '2025-12-31';
+
+      // Mock successful goal creation
+      global.fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          success: true,
+          goal: {
+            id: 1,
+            name: 'Emergency Fund',
+            targetAmount: 15000,
+            currentAmount: 0,
+            targetDate: '2025-12-31',
+            category: 'emergency'
+          }
+        })
+      });
+
+      const saveGoalButton = document.querySelector('[data-testid="save-goal"]');
+      saveGoalButton.click();
+      await waitForUpdate();
+
+      // Verify goal was created
+      expect(document.querySelector('[data-goal-id="1"]')).toBeDefined();
+
+      // Add contribution to goal
+      const contributeButton = document.querySelector('[data-testid="contribute-1"]');
+      contributeButton.click();
+      await waitForUpdate();
+
+      const contributionInput = document.querySelector('input[name="contributionAmount"]');
+      contributionInput.value = '500';
+
+      const confirmContributionButton = document.querySelector('[data-testid="confirm-contribution"]');
+      confirmContributionButton.click();
+      await waitForUpdate();
+
+      // Verify goal progress updated
+      expect(document.querySelector('[data-testid="goal-progress-1"]')).toBeDefined();
+    });
+  });
+
+  describe('Multi-User (Couples) Workflow', () => {
+    let secondUser;
+
+    beforeEach(() => {
+      secondUser = {
+        email: 'partner@example.com',
+        name: 'Partner User'
+      };
+    });
+
+    it('should share account and goal with partner', async () => {
+      // Set up primary user
+      localStorage.setItem('auth_token', 'valid-jwt-token');
+      localStorage.setItem('user_data', JSON.stringify({
+        id: 1,
+        email: testUser.email,
+        accountType: 'individual'
+      }));
+
+      // Navigate to settings
+      await loadPage('/settings');
+
+      // Upgrade to couples account
+      const upgradeButton = document.querySelector('[data-testid="upgrade-to-couples"]');
+      upgradeButton.click();
+      await waitForUpdate();
+
+      // Send partner invitation
+      const invitePartnerButton = document.querySelector('[data-testid="invite-partner"]');
+      invitePartnerButton.click();
+      await waitForUpdate();
+
+      const partnerEmailInput = document.querySelector('input[name="partnerEmail"]');

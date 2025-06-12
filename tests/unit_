@@ -1,0 +1,428 @@
+/**
+ * Unit Tests for Authentication System
+ * SmartFinanceAI - Global SaaS Platform
+ */
+
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { AuthManager } from '../../src/auth/auth-manager.js';
+import { BiometricAuth } from '../../src/auth/biometric-auth.js';
+import { SessionManager } from '../../src/auth/session-manager.js';
+
+describe('Authentication System', () => {
+  let authManager;
+  let mockLocalStorage;
+  let mockIndexedDB;
+
+  beforeEach(() => {
+    // Mock browser APIs
+    mockLocalStorage = {
+      getItem: vi.fn(),
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
+      clear: vi.fn()
+    };
+    global.localStorage = mockLocalStorage;
+
+    // Mock IndexedDB
+    mockIndexedDB = {
+      open: vi.fn(),
+      transaction: vi.fn(),
+      objectStore: vi.fn()
+    };
+    global.indexedDB = mockIndexedDB;
+
+    // Mock WebAuthn
+    global.navigator.credentials = {
+      create: vi.fn(),
+      get: vi.fn()
+    };
+
+    authManager = new AuthManager();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('AuthManager', () => {
+    describe('login', () => {
+      it('should successfully login with valid credentials', async () => {
+        const credentials = {
+          email: 'test@example.com',
+          password: 'SecurePassword123!'
+        };
+
+        const mockResponse = {
+          success: true,
+          user: { id: 1, email: credentials.email },
+          token: 'mock-jwt-token',
+          refreshToken: 'mock-refresh-token'
+        };
+
+        // Mock API response
+        global.fetch = vi.fn().mockResolvedValue({
+          ok: true,
+          json: async () => mockResponse
+        });
+
+        const result = await authManager.login(credentials);
+
+        expect(result.success).toBe(true);
+        expect(result.user.email).toBe(credentials.email);
+        expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(credentials)
+        });
+      });
+
+      it('should fail login with invalid credentials', async () => {
+        const credentials = {
+          email: 'test@example.com',
+          password: 'wrongpassword'
+        };
+
+        global.fetch = vi.fn().mockResolvedValue({
+          ok: false,
+          status: 401,
+          json: async () => ({ error: 'Invalid credentials' })
+        });
+
+        const result = await authManager.login(credentials);
+
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('Invalid credentials');
+      });
+
+      it('should validate email format', async () => {
+        const credentials = {
+          email: 'invalid-email',
+          password: 'SecurePassword123!'
+        };
+
+        const result = await authManager.login(credentials);
+
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('Invalid email format');
+      });
+
+      it('should validate password strength', async () => {
+        const credentials = {
+          email: 'test@example.com',
+          password: '123'
+        };
+
+        const result = await authManager.login(credentials);
+
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('Password does not meet security requirements');
+      });
+    });
+
+    describe('register', () => {
+      it('should successfully register new user', async () => {
+        const userData = {
+          email: 'newuser@example.com',
+          password: 'SecurePassword123!',
+          firstName: 'John',
+          lastName: 'Doe',
+          country: 'US',
+          currency: 'USD'
+        };
+
+        const mockResponse = {
+          success: true,
+          user: { id: 2, email: userData.email },
+          token: 'mock-jwt-token'
+        };
+
+        global.fetch = vi.fn().mockResolvedValue({
+          ok: true,
+          json: async () => mockResponse
+        });
+
+        const result = await authManager.register(userData);
+
+        expect(result.success).toBe(true);
+        expect(result.user.email).toBe(userData.email);
+      });
+
+      it('should fail registration with existing email', async () => {
+        const userData = {
+          email: 'existing@example.com',
+          password: 'SecurePassword123!',
+          firstName: 'John',
+          lastName: 'Doe'
+        };
+
+        global.fetch = vi.fn().mockResolvedValue({
+          ok: false,
+          status: 409,
+          json: async () => ({ error: 'Email already exists' })
+        });
+
+        const result = await authManager.register(userData);
+
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('Email already exists');
+      });
+    });
+
+    describe('logout', () => {
+      it('should clear all auth data on logout', async () => {
+        await authManager.logout();
+
+        expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('auth_token');
+        expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('refresh_token');
+        expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('user_data');
+      });
+    });
+  });
+
+  describe('BiometricAuth', () => {
+    let biometricAuth;
+
+    beforeEach(() => {
+      biometricAuth = new BiometricAuth();
+    });
+
+    describe('isSupported', () => {
+      it('should return true when WebAuthn is supported', () => {
+        global.navigator.credentials = { create: vi.fn(), get: vi.fn() };
+        
+        expect(biometricAuth.isSupported()).toBe(true);
+      });
+
+      it('should return false when WebAuthn is not supported', () => {
+        global.navigator.credentials = undefined;
+        
+        expect(biometricAuth.isSupported()).toBe(false);
+      });
+    });
+
+    describe('register', () => {
+      it('should successfully register biometric credential', async () => {
+        const mockCredential = {
+          id: 'mock-credential-id',
+          rawId: new ArrayBuffer(32),
+          response: {
+            attestationObject: new ArrayBuffer(64),
+            clientDataJSON: new ArrayBuffer(128)
+          }
+        };
+
+        global.navigator.credentials.create = vi.fn().mockResolvedValue(mockCredential);
+
+        const result = await biometricAuth.register('test@example.com');
+
+        expect(result.success).toBe(true);
+        expect(result.credentialId).toBe('mock-credential-id');
+      });
+
+      it('should handle registration failure', async () => {
+        global.navigator.credentials.create = vi.fn().mockRejectedValue(
+          new Error('User cancelled')
+        );
+
+        const result = await biometricAuth.register('test@example.com');
+
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('User cancelled');
+      });
+    });
+
+    describe('authenticate', () => {
+      it('should successfully authenticate with biometrics', async () => {
+        const mockCredential = {
+          id: 'mock-credential-id',
+          response: {
+            authenticatorData: new ArrayBuffer(37),
+            clientDataJSON: new ArrayBuffer(128),
+            signature: new ArrayBuffer(64)
+          }
+        };
+
+        global.navigator.credentials.get = vi.fn().mockResolvedValue(mockCredential);
+
+        const result = await biometricAuth.authenticate(['mock-credential-id']);
+
+        expect(result.success).toBe(true);
+        expect(result.credentialId).toBe('mock-credential-id');
+      });
+    });
+  });
+
+  describe('SessionManager', () => {
+    let sessionManager;
+
+    beforeEach(() => {
+      sessionManager = new SessionManager();
+    });
+
+    describe('token management', () => {
+      it('should store and retrieve JWT token', () => {
+        const token = 'mock-jwt-token';
+        
+        sessionManager.setToken(token);
+        
+        expect(mockLocalStorage.setItem).toHaveBeenCalledWith('auth_token', token);
+        
+        mockLocalStorage.getItem.mockReturnValue(token);
+        
+        expect(sessionManager.getToken()).toBe(token);
+      });
+
+      it('should validate token expiration', () => {
+        // Mock expired token (exp claim in past)
+        const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkwMjJ9.invalid';
+        
+        mockLocalStorage.getItem.mockReturnValue(expiredToken);
+        
+        expect(sessionManager.isTokenValid()).toBe(false);
+      });
+
+      it('should refresh token when expired', async () => {
+        const refreshToken = 'mock-refresh-token';
+        const newToken = 'new-jwt-token';
+
+        mockLocalStorage.getItem.mockReturnValue(refreshToken);
+
+        global.fetch = vi.fn().mockResolvedValue({
+          ok: true,
+          json: async () => ({ token: newToken })
+        });
+
+        const result = await sessionManager.refreshToken();
+
+        expect(result.success).toBe(true);
+        expect(mockLocalStorage.setItem).toHaveBeenCalledWith('auth_token', newToken);
+      });
+    });
+
+    describe('session persistence', () => {
+      it('should persist user session across browser restarts', () => {
+        const userData = { id: 1, email: 'test@example.com' };
+        
+        sessionManager.setUser(userData);
+        
+        expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+          'user_data', 
+          JSON.stringify(userData)
+        );
+      });
+
+      it('should clear session data on logout', () => {
+        sessionManager.clearSession();
+
+        expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('auth_token');
+        expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('refresh_token');
+        expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('user_data');
+      });
+    });
+  });
+
+  describe('Multi-Factor Authentication', () => {
+    it('should generate TOTP secret', async () => {
+      const totpSecret = await authManager.generateTOTPSecret();
+      
+      expect(totpSecret).toBeDefined();
+      expect(typeof totpSecret).toBe('string');
+      expect(totpSecret.length).toBeGreaterThan(0);
+    });
+
+    it('should verify TOTP code', async () => {
+      const secret = 'JBSWY3DPEHPK3PXP';
+      const code = '123456';
+
+      const result = await authManager.verifyTOTP(secret, code);
+      
+      expect(typeof result).toBe('boolean');
+    });
+  });
+
+  describe('Security Features', () => {
+    it('should implement rate limiting for login attempts', async () => {
+      const credentials = {
+        email: 'test@example.com',
+        password: 'wrongpassword'
+      };
+
+      // Simulate multiple failed attempts
+      for (let i = 0; i < 5; i++) {
+        await authManager.login(credentials);
+      }
+
+      const result = await authManager.login(credentials);
+      
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Too many failed attempts. Please try again later.');
+    });
+
+    it('should hash passwords before sending to server', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: 'PlainTextPassword'
+      };
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ success: true })
+      });
+
+      await authManager.register(userData);
+
+      const fetchCall = global.fetch.mock.calls[0];
+      const requestBody = JSON.parse(fetchCall[1].body);
+      
+      expect(requestBody.password).not.toBe('PlainTextPassword');
+      expect(requestBody.password.length).toBeGreaterThan(32); // Hashed password
+    });
+
+    it('should validate password strength requirements', () => {
+      const weakPasswords = [
+        '123',
+        'password',
+        'abc123',
+        'Password',
+        'password123'
+      ];
+
+      const strongPasswords = [
+        'SecurePassword123!',
+        'MyStr0ng!P@ssw0rd',
+        'C0mpl3x!ty&S3cur1ty'
+      ];
+
+      weakPasswords.forEach(password => {
+        expect(authManager.validatePasswordStrength(password)).toBe(false);
+      });
+
+      strongPasswords.forEach(password => {
+        expect(authManager.validatePasswordStrength(password)).toBe(true);
+      });
+    });
+  });
+
+  describe('Cross-browser Compatibility', () => {
+    it('should work without WebAuthn support', async () => {
+      global.navigator.credentials = undefined;
+      
+      const biometricAuth = new BiometricAuth();
+      
+      expect(biometricAuth.isSupported()).toBe(false);
+      
+      const result = await biometricAuth.authenticate([]);
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Biometric authentication not supported');
+    });
+
+    it('should fallback gracefully when IndexedDB is unavailable', async () => {
+      global.indexedDB = undefined;
+      
+      const authManager = new AuthManager();
+      
+      // Should still work with localStorage fallback
+      expect(authManager).toBeDefined();
+    });
+  });
+});

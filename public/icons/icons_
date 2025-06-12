@@ -1,0 +1,68 @@
+{
+  "iconManifest": {
+    "description": "SmartFinanceAI PWA Icon Requirements",
+    "requiredSizes": [
+      {
+        "size": "72x72",
+        "filename": "icon-72x72.png",
+        "purpose": "maskable any"
+      },
+      {
+        "size": "96x96", 
+        "filename": "icon-96x96.png",
+        "purpose": "maskable any"
+      },
+      {
+        "size": "128x128",
+        "filename": "icon-128x128.png", 
+        "purpose": "maskable any"
+      },
+      {
+        "size": "144x144",
+        "filename": "icon-144x144.png",
+        "purpose": "maskable any"
+      },
+      {
+        "size": "152x152",
+        "filename": "icon-152x152.png",
+        "purpose": "maskable any"
+      },
+      {
+        "size": "192x192",
+        "filename": "icon-192x192.png",
+        "purpose": "maskable any"
+      },
+      {
+        "size": "384x384",
+        "filename": "icon-384x384.png",
+        "purpose": "maskable any"
+      },
+      {
+        "size": "512x512",
+        "filename": "icon-512x512.png",
+        "purpose": "maskable any"
+      }
+    ],
+    "design": {
+      "primary": "#8b5cf6",
+      "secondary": "#3b82f6", 
+      "background": "#0f172a",
+      "symbol": "💰",
+      "style": "glassmorphism gradient with financial symbol"
+    },
+    "files": [
+      "icon-72x72.png",
+      "icon-96x96.png", 
+      "icon-128x128.png",
+      "icon-144x144.png",
+      "icon-152x152.png",
+      "icon-192x192.png",
+      "icon-384x384.png",
+      "icon-512x512.png",
+      "apple-touch-icon.png",
+      "favicon.ico",
+      "favicon-16x16.png",
+      "favicon-32x32.png"
+    ]
+  }
+}

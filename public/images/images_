@@ -1,0 +1,73 @@
+{
+  "imageAssets": {
+    "description": "SmartFinanceAI Static Image Assets",
+    "structure": {
+      "logos": {
+        "smartfinanceai-logo.svg": "Main app logo (vector)",
+        "smartfinanceai-logo.png": "Main app logo (raster)", 
+        "smartfinanceai-wordmark.svg": "Logo with text",
+        "smartfinanceai-icon.svg": "Icon only"
+      },
+      "banks": {
+        "description": "Bank logos for CSV import and account display",
+        "nz": [
+          "anz-nz.png",
+          "asb.png", 
+          "bnz.png",
+          "kiwibank.png",
+          "westpac-nz.png",
+          "tsb.png"
+        ],
+        "au": [
+          "commbank.png",
+          "westpac-au.png", 
+          "anz-au.png",
+          "nab.png"
+        ],
+        "us": [
+          "chase.png",
+          "bank-of-america.png",
+          "wells-fargo.png",
+          "citi.png"
+        ],
+        "uk": [
+          "barclays.png",
+          "hsbc.png",
+          "lloyds.png",
+          "natwest.png"
+        ],
+        "ca": [
+          "rbc.png",
+          "td.png",
+          "scotiabank.png",
+          "bmo.png",
+          "cibc.png"
+        ]
+      },
+      "onboarding": {
+        "welcome-hero.svg": "Welcome screen illustration",
+        "country-flags.svg": "Country selection icons",
+        "setup-complete.svg": "Setup completion illustration",
+        "goal-templates.svg": "Goal template illustrations"
+      },
+      "illustrations": {
+        "empty-state-dashboard.svg": "Empty dashboard state",
+        "empty-state-transactions.svg": "No transactions illustration", 
+        "empty-state-goals.svg": "No goals illustration",
+        "financial-health.svg": "Financial health visualization",
+        "ai-coach.svg": "AI coach illustration"
+      },
+      "backgrounds": {
+        "gradient-bg-1.jpg": "Primary gradient background",
+        "gradient-bg-2.jpg": "Secondary gradient background",
+        "pattern-overlay.png": "Glassmorphism pattern overlay"
+      }
+    },
+    "requirements": {
+      "format": "SVG preferred for scalability, PNG fallbacks",
+      "optimization": "Compressed and optimized for web",
+      "accessibility": "Alt text and ARIA labels required",
+      "responsive": "Multiple sizes for different screen densities"
+    }
+  }
+}
