@@ -1,0 +1,631 @@
+/* 🎭 SmartFinanceAI - Animation System
+ * Smooth, performant animations and micro-interactions
+ * Part of: src/styles/animations.css
+ */
+
+/* === KEYFRAME ANIMATIONS === */
+
+/* Fade animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.1);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+/* Rotation animations */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes wiggle {
+  0%, 7% { transform: rotateZ(0); }
+  15% { transform: rotateZ(-15deg); }
+  20% { transform: rotateZ(10deg); }
+  25% { transform: rotateZ(-10deg); }
+  30% { transform: rotateZ(6deg); }
+  35% { transform: rotateZ(-4deg); }
+  40%, 100% { transform: rotateZ(0); }
+}
+
+/* Slide animations */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Financial specific animations */
+@keyframes countUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes currencyGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--brand-accent);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--brand-accent), 0 0 30px var(--brand-accent);
+  }
+}
+
+@keyframes progressFill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    transform: translate3d(0,0,0);
+  }
+  40%, 43% {
+    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0,-4px,0);
+  }
+}
+
+/* Glass morphism effect animations */
+@keyframes glassShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glassPulse {
+  0%, 100% {
+    backdrop-filter: blur(16px);
+    background: var(--glass-light);
+  }
+  50% {
+    backdrop-filter: blur(24px);
+    background: var(--glass-medium);
+  }
+}
+
+/* Gradient animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes rainbowShift {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* Loading animations */
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes dots {
+  0%, 20% {
+    color: transparent;
+    text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
+  }
+  40% {
+    color: var(--text-primary);
+    text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
+  }
+  60% {
+    text-shadow: 0.25em 0 0 var(--text-primary), 0.5em 0 0 transparent;
+  }
+  80%, 100% {
+    text-shadow: 0.25em 0 0 var(--text-primary), 0.5em 0 0 var(--text-primary);
+  }
+}
+
+/* === ANIMATION UTILITY CLASSES === */
+
+/* Fade utilities */
+.animate-fade-in {
+  animation: fadeIn var(--duration-300) var(--ease-out) forwards;
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--duration-300) var(--ease-out) forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--duration-500) var(--ease-out) forwards;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown var(--duration-500) var(--ease-out) forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft var(--duration-500) var(--ease-out) forwards;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight var(--duration-500) var(--ease-out) forwards;
+}
+
+/* Scale utilities */
+.animate-scale-in {
+  animation: scaleIn var(--duration-300) var(--ease-out) forwards;
+}
+
+.animate-scale-out {
+  animation: scaleOut var(--duration-300) var(--ease-out) forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* Rotation utilities */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spinSlow 3s linear infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 1s ease-in-out;
+}
+
+/* Slide utilities */
+.animate-slide-down {
+  animation: slideDown var(--duration-500) var(--ease-out) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp var(--duration-500) var(--ease-out) forwards;
+}
+
+.animate-slide-left {
+  animation: slideLeft var(--duration-500) var(--ease-out) forwards;
+}
+
+.animate-slide-right {
+  animation: slideRight var(--duration-500) var(--ease-out) forwards;
+}
+
+/* Financial utilities */
+.animate-count-up {
+  animation: countUp var(--duration-700) var(--ease-out) forwards;
+}
+
+.animate-currency-glow {
+  animation: currencyGlow 2s ease-in-out infinite;
+}
+
+.animate-progress-fill {
+  animation: progressFill var(--duration-1000) var(--ease-out) forwards;
+  transform-origin: left center;
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out;
+}
+
+/* Glass utilities */
+.animate-glass-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--glass-light) 0%,
+    var(--glass-medium) 50%,
+    var(--glass-light) 100%
+  );
+  background-size: 200% 100%;
+  animation: glassShimmer 2s ease-in-out infinite;
+}
+
+.animate-glass-pulse {
+  animation: glassPulse 2s ease-in-out infinite;
+}
+
+/* Gradient utilities */
+.animate-gradient {
+  background: var(--gradient-primary);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+.animate-rainbow {
+  animation: rainbowShift 3s linear infinite;
+}
+
+/* Loading utilities */
+.animate-loading {
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+.animate-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--glass-subtle) 25%,
+    var(--glass-light) 50%,
+    var(--glass-subtle) 75%
+  );
+  background-size: 200px 100%;
+  animation: skeleton 1.5s ease-in-out infinite;
+}
+
+.animate-dots::after {
+  content: "...";
+  animation: dots 1.5s ease-in-out infinite;
+}
+
+/* === HOVER ANIMATIONS === */
+.hover-scale:hover {
+  transform: scale(1.05);
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.hover-scale-sm:hover {
+  transform: scale(1.02);
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.hover-scale-lg:hover {
+  transform: scale(1.1);
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  transition: all var(--duration-200) var(--ease-out);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px var(--brand-primary);
+  transition: box-shadow var(--duration-300) var(--ease-out);
+}
+
+.hover-rotate:hover {
+  transform: rotate(5deg);
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+.hover-brightness:hover {
+  filter: brightness(1.1);
+  transition: filter var(--duration-200) var(--ease-out);
+}
+
+/* === FOCUS ANIMATIONS === */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--brand-primary);
+  transition: box-shadow var(--duration-200) var(--ease-out);
+}
+
+.focus-scale:focus {
+  transform: scale(1.02);
+  transition: transform var(--duration-200) var(--ease-out);
+}
+
+/* === STAGGER ANIMATIONS === */
+.stagger-children > * {
+  animation-delay: calc(var(--stagger-delay, 0.1s) * var(--index, 0));
+}
+
+.stagger-fade-in > * {
+  animation: fadeInUp var(--duration-500) var(--ease-out) both;
+  animation-delay: calc(0.1s * var(--index, 0));
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+.animate-gpu {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
+.animate-no-blur {
+  transform: translate3d(0, 0, 0);
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-out,
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-fade-in-left,
+  .animate-fade-in-right,
+  .animate-scale-in,
+  .animate-scale-out,
+  .animate-slide-down,
+  .animate-slide-up,
+  .animate-slide-left,
+  .animate-slide-right,
+  .animate-count-up,
+  .animate-bounce {
+    animation: none;
+  }
+  
+  .animate-pulse,
+  .animate-heartbeat,
+  .animate-spin,
+  .animate-spin-slow,
+  .animate-wiggle,
+  .animate-currency-glow,
+  .animate-glass-shimmer,
+  .animate-glass-pulse,
+  .animate-gradient,
+  .animate-rainbow,
+  .animate-loading,
+  .animate-skeleton {
+    animation: none;
+  }
+  
+  .hover-scale:hover,
+  .hover-scale-sm:hover,
+  .hover-scale-lg:hover,
+  .hover-lift:hover,
+  .hover-rotate:hover {
+    transform: none;
+  }
+}
+
+/* === ANIMATION DELAYS === */
+.delay-75 { animation-delay: 75ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* === ANIMATION DURATIONS === */
+.duration-75 { animation-duration: 75ms; }
+.duration-100 { animation-duration: 100ms; }
+.duration-150 { animation-duration: 150ms; }
+.duration-200 { animation-duration: 200ms; }
+.duration-300 { animation-duration: 300ms; }
+.duration-500 { animation-duration: 500ms; }
+.duration-700 { animation-duration: 700ms; }
+.duration-1000 { animation-duration: 1000ms; }
+
+/* === ANIMATION EASING === */
+.ease-linear { animation-timing-function: linear; }
+.ease-in { animation-timing-function: cubic-bezier(0.4, 0, 1, 1); }
+.ease-out { animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+.ease-in-out { animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* === FINANCIAL CHART ANIMATIONS === */
+.chart-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 2s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.chart-bar {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  animation: growBar var(--duration-700) ease-out forwards;
+}
+
+@keyframes growBar {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.chart-pie-slice {
+  transform-origin: center;
+  animation: rotatePie var(--duration-1000) ease-out forwards;
+}
+
+@keyframes rotatePie {
+  from {
+    transform: rotate(-90deg) scale(0);
+  }
+  to {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+/* === NOTIFICATION ANIMATIONS === */
+.notification-enter {
+  animation: slideLeft var(--duration-300) var(--ease-out) forwards;
+}
+
+.notification-exit {
+  animation: slideRight var(--duration-300) var(--ease-out) forwards;
+}
+
+.notification-shake {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+/* === MODAL ANIMATIONS === */
+.modal-backdrop {
+  animation: fadeIn var(--duration-200) var(--ease-out) forwards;
+}
+
+.modal-content {
+  animation: scaleIn var(--duration-300) var(--ease-out) forwards;
+}
+
+.modal-exit .modal-backdrop {
+  animation: fadeOut var(--duration-200) var(--ease-out) forwards;
+}
+
+.modal-exit .modal-content {
+  animation: scaleOut var(--duration-200) var(--ease-out) forwards;
+}

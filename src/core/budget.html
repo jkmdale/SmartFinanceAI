@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body class="app-page">
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <div class="navbar-logo">💳</div>
+                    <span>SmartFinanceAI</span>
+                </div>
+                
+                <ul class="navbar-nav">
+                    <li><a href="dashboard.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a></li>
+                    <li><a href="accounts.html" class="nav-link">
+                        <span class="nav-icon">🏦</span>
+                        <span class="nav-text">Accounts</span>
+                    </a></li>
+                    <li><a href="transactions.html" class="nav-link">
+                        <span class="nav-icon">💸</span>
+                        <span class="nav-text">Transactions</span>
+                    </a></li>
+                    <li><a href="budget.html" class="nav-link active">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-text">Budget</span>
+                    </a></li>
+                    <li><a href="goals.html" class="nav-link">
+                        <span class="nav-icon">🎯</span>
+                        <span class="nav-text">Goals</span>
+                    </a></li>
+                    <li><a href="reports.html" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">Reports</span>
+                    </a></li>
+                </ul>
+
+                <div class="navbar-user">
+                    <button class="user-menu-toggle" id="user-menu-toggle">
+                        <div class="user-avatar" id="user-avatar">👤</div>
+                        <span class="user-name" id="user-name">User</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1 class="page-title">
+                        <span class="title-icon">📈</span>
+                        Budget Management
+                    </h1>
+                    <p class="page-subtitle">Plan, track, and optimise your spending across all categories</p>
+                </div>
+                
+                <div class="page-actions">
+                    <div class="budget-period-selector">
+                        <select id="budget-period" class="input select">
+                            <option value="current">Current Month</option>
+                            <option value="next">Next Month</option>
+                            <option value="yearly">Yearly View</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-ghost" id="budget-templates">
+                        <span class="btn-icon">📋</span>
+                        <span class="btn-text">Templates</span>
+                    </button>
+                    <button class="btn btn-secondary" id="auto-budget">
+                        <span class="btn-icon">🤖</span>
+                        <span class="btn-text">AI Suggestions</span>
+                    </button>
+                    <button class="btn btn-primary" id="add-category">
+                        <span class="btn-icon">➕</span>
+                        <span class="btn-text">Add Category</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Budget Overview Cards -->
+            <div class="budget-overview">
+                <div class="overview-card budget-status-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon">💰</span>
+                            Monthly Budget Status
+                        </h3>
+                        <div class="budget-health" id="budget-health">
+                            <span class="health-indicator excellent">Excellent</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="budget-summary">
+                            <div class="summary-item income">
+                                <div class="summary-label">Monthly Income</div>
+                                <div class="summary-amount financial-amount positive" data-financial="true">
+                                    <span class="currency-symbol">$</span>
+                                    <span class="amount">4,500.00</span>
+                                </div>
+                            </div>
+                            <div class="summary-item budgeted">

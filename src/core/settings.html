@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/variables.css">
+</head>
+<body>
+    <!-- Main Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="navbar-logo">💡</div>
+                <span>SmartFinanceAI</span>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="dashboard.html" class="nav-link">📊 Dashboard</a></li>
+                <li><a href="accounts.html" class="nav-link">🏦 Accounts</a></li>
+                <li><a href="transactions.html" class="nav-link">💳 Transactions</a></li>
+                <li><a href="budget.html" class="nav-link">📋 Budget</a></li>
+                <li><a href="goals.html" class="nav-link">🎯 Goals</a></li>
+                <li><a href="reports.html" class="nav-link">📈 Reports</a></li>
+                <li><a href="../csv-import/upload.html" class="nav-link">📥 Import</a></li>
+                <li><a href="../ai/coach-panel.html" class="nav-link">🤖 AI Coach</a></li>
+                <li><a href="settings.html" class="nav-link active">⚙️ Settings</a></li>
+            </ul>
+            <button class="mobile-nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1 class="page-title text-gradient-primary">⚙️ Settings</h1>
+                    <p class="page-subtitle">Customize your SmartFinanceAI experience</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-success" id="saveAllSettings">
+                        💾 Save All Changes
+                    </button>
+                    <button class="btn btn-secondary" id="resetSettings">
+                        🔄 Reset to Defaults
+                    </button>
+                </div>
+            </div>
+
+            <div class="settings-layout">
+                <!-- Settings Navigation -->
+                <aside class="settings-sidebar">
+                    <nav class="settings-nav">
+                        <button class="settings-nav-item active" data-section="profile">
+                            👤 Profile & Account
+                        </button>
+                        <button class="settings-nav-item" data-section="preferences">
+                            🎨 Preferences
+                        </button>
+                        <button class="settings-nav-item" data-section="privacy">
+                            🔒 Privacy & Security
+                        </button>
+                        <button class="settings-nav-item" data-section="notifications">
+                            🔔 Notifications
+                        </button>
+                        <button class="settings-nav-item" data-section="subscription">
+                            💎 Subscription
+                        </button>
+                        <button class="settings-nav-item" data-section="data">
+                            📊 Data & Backup
+                        </button>
+                        <button class="settings-nav-item" data-section="integrations">
+                            🔗 Integrations
+                        </button>
+                        <button class="settings-nav-item" data-section="advanced">
+                            🔧 Advanced
+                        </button>
+                    </nav>
+                </aside>
+
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    <!-- Profile & Account Section -->
+                    <section class="settings-section active" id="profile-section">
+                        <div class="section-header">
+                            <h2 class="section-title">👤 Profile & Account</h2>
+                            <p class="section-description">Manage your personal information and account details</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Personal Information -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Personal Information</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" id="firstName" class="input" placeholder="Enter your first name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                            <input type="text" id="lastName" class="input" placeholder="Enter your last name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email" class="form-label">Email Address</label>
+                                            <input type="email" id="email" class="input" placeholder="your.email@example.com">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone" class="form-label">Phone Number</label>
+                                            <input type="tel" id="phone" class="input" placeholder="+1 (555) 123-4567">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Location & Currency -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Location & Currency</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="country" class="form-label">Country</label>
+                                            <select id="country" class="select">
+                                                <option value="NZ">🇳🇿 New Zealand</option>
+                                                <option value="AU">🇦🇺 Australia</option>
+                                                <option value="US">🇺🇸 United States</option>
+                                                <option value="GB">🇬🇧 United Kingdom</option>
+                                                <option value="CA">🇨🇦 Canada</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="currency" class="form-label">Default Currency</label>
+                                            <select id="currency" class="select">
+                                                <option value="NZD">NZD - New Zealand Dollar</option>
+                                                <option value="AUD">AUD - Australian Dollar</option>
+                                                <option value="USD">USD - US Dollar</option>
+                                                <option value="GBP">GBP - British Pound</option>
+                                                <option value="CAD">CAD - Canadian Dollar</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="timezone" class="form-label">Timezone</label>
+                                            <select id="timezone" class="select">
+                                                <option value="Pacific/Auckland">Auckland (NZDT)</option>
+                                                <option value="Australia/Sydney">Sydney (AEDT)</option>
+                                                <option value="America/New_York">New York (EST)</option>
+                                                <option value="Europe/London">London (GMT)</option>
+                                                <option value="America/Toronto">Toronto (EST)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="dateFormat" class="form-label">Date Format</label>
+                                            <select id="dateFormat" class="select">
+                                                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Profile Picture -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Profile Picture</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="profile-picture-section">
+                                        <div class="current-picture">
+                                            <div class="profile-avatar" id="profileAvatar">
+                                                <span class="avatar-initials">JD</span>
+                                            </div>
+                                        </div>
+                                        <div class="picture-controls">
+                                            <button class="btn btn-secondary" id="uploadPicture">
+                                                📸 Upload New Picture
+                                            </button>
+                                            <button class="btn btn-ghost" id="removePicture">
+                                                🗑️ Remove Picture
+                                            </button>
+                                            <input type="file" id="pictureUpload" accept="image/*" style="display: none;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Preferences Section -->
+                    <section class="settings-section" id="preferences-section">
+                        <div class="section-header">
+                            <h2 class="section-title">🎨 Preferences</h2>
+                            <p class="section-description">Customize the look and feel of your application</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Appearance -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Appearance</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="preference-group">
+                                        <label class="preference-label">Theme</label>
+                                        <div class="theme-selector">
+                                            <label class="theme-option">
+                                                <input type="radio" name="theme" value="dark" checked>
+                                                <div class="theme-preview theme-dark">
+                                                    <div class="theme-preview-header"></div>
+                                                    <div class="theme-preview-content"></div>
+                                                </div>
+                                                <span class="theme-name">Dark</span>
+                                            </label>
+                                            <label class="theme-option">
+                                                <input type="radio" name="theme" value="light">
+                                                <div class="theme-preview theme-light">
+                                                    <div class="theme-preview-header"></div>
+                                                    <div class="theme-preview-content"></div>
+                                                </div>
+                                                <span class="theme-name">Light</span>
+                                            </label>
+                                            <label class="theme-option">
+                                                <input type="radio" name="theme" value="auto">
+                                                <div class="theme-preview theme-auto">
+                                                    <div class="theme-preview-header"></div>
+                                                    <div class="theme-preview-content"></div>
+                                                </div>
+                                                <span class="theme-name">Auto</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="preference-group">
+                                        <label class="preference-label">Accent Color</label>
+                                        <div class="color-selector">
+                                            <button class="color-option active" data-color="purple" style="background: #8b5cf6;"></button>
+                                            <button class="color-option" data-color="blue" style="background: #3b82f6;"></button>
+                                            <button class="color-option" data-color="green" style="background: #10b981;"></button>
+                                            <button class="color-option" data-color="orange" style="background: #f59e0b;"></button>
+                                            <button class="color-option" data-color="red" style="background: #ef4444;"></button>
+                                            <button class="color-option" data-color="cyan" style="background: #06b6d4;"></button>
+                                        </div>
+                                    </div>
+                                    <div class="preference-group">
+                                        <label class="preference-label">Animation Level</label>
+                                        <select id="animationLevel" class="select">
+                                            <option value="full">Full Animations</option>
+                                            <option value="reduced">Reduced Animations</option>
+                                            <option value="none">No Animations</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dashboard Preferences -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Dashboard Preferences</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="showBalanceOnLoad" checked>
+                                            <span class="checkbox-mark"></span>
+                                            Show account balances on page load
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="showRecentTransactions" checked>
+                                            <span class="checkbox-mark"></span>
+                                            Display recent transactions on dashboard
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="showBudgetProgress" checked>
+                                            <span class="checkbox-mark"></span>
+                                            Show budget progress indicators
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="showGoalProgress" checked>
+                                            <span class="checkbox-mark"></span>
+                                            Display goal progress on dashboard
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="showAIInsights">
+                                            <span class="checkbox-mark"></span>
+                                            Show AI insights and recommendations
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Number & Currency Display -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Number & Currency Display</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="numberFormat" class="form-label">Number Format</label>
+                                            <select id="numberFormat" class="select">
+                                                <option value="1,234.56">1,234.56</option>
+                                                <option value="1.234,56">1.234,56</option>
+                                                <option value="1 234.56">1 234.56</option>
+                                                <option value="1234.56">1234.56</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="currencyDisplay" class="form-label">Currency Display</label>
+                                            <select id="currencyDisplay" class="select">
+                                                <option value="symbol">$1,234.56</option>
+                                                <option value="code">1,234.56 USD</option>
+                                                <option value="both">$1,234.56 USD</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="decimalPlaces" class="form-label">Decimal Places</label>
+                                            <select id="decimalPlaces" class="select">
+                                                <option value="0">No decimals (1,234)</option>
+                                                <option value="2" selected>Two decimals (1,234.56)</option>
+                                                <option value="auto">Auto (1,234.5 or 1,234.56)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Privacy & Security Section -->
+                    <section class="settings-section" id="privacy-section">
+                        <div class="section-header">
+                            <h2 class="section-title">🔒 Privacy & Security</h2>
+                            <p class="section-description">Manage your security settings and privacy preferences</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Authentication -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Authentication</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="auth-methods">
+                                        <div class="auth-method">
+                                            <div class="auth-method-info">
+                                                <div class="auth-method-icon">👆</div>
+                                                <div class="auth-method-details">
+                                                    <div class="auth-method-name">Biometric Authentication</div>
+                                                    <div class="auth-method-status enabled">Enabled</div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-sm" id="manageBiometric">
+                                                Manage
+                                            </button>
+                                        </div>
+                                        <div class="auth-method">
+                                            <div class="auth-method-info">
+                                                <div class="auth-method-icon">🔑</div>
+                                                <div class="auth-method-details">
+                                                    <div class="auth-method-name">Two-Factor Authentication</div>
+                                                    <div class="auth-method-status disabled">Disabled</div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-primary btn-sm" id="setup2FA">
+                                                Enable
+                                            </button>
+                                        </div>
+                                        <div class="auth-method">
+                                            <div class="auth-method-info">
+                                                <div class="auth-method-icon">📱</div>
+                                                <div class="auth-method-details">
+                                                    <div class="auth-method-name">Trusted Devices</div>
+                                                    <div class="auth-method-status">3 devices</div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-sm" id="manageDevices">
+                                                Manage
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="auth-actions">
+                                        <button class="btn btn-secondary" id="changePassword">
+                                            🔒 Change Password
+                                        </button>
+                                        <button class="btn btn-danger" id="signOutAllDevices">
+                                            🚪 Sign Out All Devices
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Privacy Controls -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Privacy Controls</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="privacy-controls">
+                                        <div class="privacy-control">
+                                            <div class="control-info">
+                                                <div class="control-label">Auto-hide Financial Amounts</div>
+                                                <div class="control-description">Automatically blur amounts when app opens</div>
+                                            </div>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="autoHideAmounts">
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="privacy-control">
+                                            <div class="control-info">
+                                                <div class="control-label">Screenshot Protection</div>
+                                                <div class="control-description">Hide sensitive data in screenshots</div>
+                                            </div>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="screenshotProtection" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="privacy-control">
+                                            <div class="control-info">
+                                                <div class="control-label">Analytics & Usage Data</div>
+                                                <div class="control-description">Help improve the app by sharing anonymous usage data</div>
+                                            </div>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="allowAnalytics" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="privacy-control">
+                                            <div class="control-info">
+                                                <div class="control-label">AI Data Processing</div>
+                                                <div class="control-description">Allow AI to analyze your financial data for insights</div>
+                                            </div>
+                                            <label class="toggle-switch">
+                                                <input type="checkbox" id="allowAIProcessing" checked>
+                                                <span class="toggle-slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Encryption -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Data Encryption</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="encryption-status">
+                                        <div class="encryption-indicator">
+                                            <div class="encryption-icon">🔐</div>
+                                            <div class="encryption-details">
+                                                <div class="encryption-level">AES-256 Encryption</div>
+                                                <div class="encryption-description">Your data is encrypted with bank-level security</div>
+                                            </div>
+                                            <div class="encryption-badge">Active</div>
+                                        </div>
+                                        <button class="btn btn-secondary" id="viewEncryptionDetails">
+                                            View Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Notifications Section -->
+                    <section class="settings-section" id="notifications-section">
+                        <div class="section-header">
+                            <h2 class="section-title">🔔 Notifications</h2>
+                            <p class="section-description">Control how and when you receive notifications</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Push Notifications -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Push Notifications</h3>
+                                    <button class="btn btn-primary btn-sm" id="enablePushNotifications">
+                                        Enable Notifications
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="notification-categories">
+                                        <div class="notification-category">
+                                            <div class="category-header">
+                                                <h4 class="category-title">Financial Alerts</h4>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" id="financialAlerts" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="category-options">
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="lowBalanceAlerts" checked>
+                                                    <span class="checkbox-mark"></span>
+                                                    Low balance warnings
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="budgetAlerts" checked>
+                                                    <span class="checkbox-mark"></span>
+                                                    Budget overspend alerts
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="unusualSpendingAlerts">
+                                                    <span class="checkbox-mark"></span>
+                                                    Unusual spending pattern alerts
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="notification-category">
+                                            <div class="category-header">
+                                                <h4 class="category-title">Goal Progress</h4>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" id="goalNotifications" checked>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="category-options">
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="goalMilestones" checked>
+                                                    <span class="checkbox-mark"></span>
+                                                    Goal milestone achievements
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="goalReminders" checked>
+                                                    <span class="checkbox-mark"></span>
+                                                    Monthly contribution reminders
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="goalDeadlines">
+                                                    <span class="checkbox-mark"></span>
+                                                    Goal deadline warnings
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="notification-category">
+                                            <div class="category-header">
+                                                <h4 class="category-title">AI Insights</h4>
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" id="aiInsightNotifications">
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </div>
+                                            <div class="category-options">
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="weeklyInsights">
+                                                    <span class="checkbox-mark"></span>
+                                                    Weekly financial insights
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="savingsOpportunities">
+                                                    <span class="checkbox-mark"></span>
+                                                    Savings opportunity alerts
+                                                </label>
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="optimizationTips">
+                                                    <span class="checkbox-mark"></span>
+                                                    Optimization tips and suggestions
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Email Notifications -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Email Notifications</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="email-frequency">
+                                        <div class="form-group">
+                                            <label for="emailFrequency" class="form-label">Email Frequency</label>
+                                            <select id="emailFrequency" class="select">
+                                                <option value="immediate">Immediate</option>
+                                                <option value="daily" selected>Daily Digest</option>
+                                                <option value="weekly">Weekly Summary</option>
+                                                <option value="never">Never</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="email-types">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="monthlyReport" checked>
+                                            <span class="checkbox-mark"></span>
+                                            Monthly financial report
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="securityAlerts" checked>
+                                            <span class="checkbox-mark"></span>
+                                            Security and login alerts
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="productUpdates">
+                                            <span class="checkbox-mark"></span>
+                                            Product updates and new features
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="marketingEmails">
+                                            <span class="checkbox-mark"></span>
+                                            Marketing and promotional emails
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quiet Hours -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Quiet Hours</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="quiet-hours-toggle">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="enableQuietHours">
+                                            <span class="checkbox-mark"></span>
+                                            Enable quiet hours (no notifications during set times)
+                                        </label>
+                                    </div>
+                                    <div class="quiet-hours-settings" id="quietHoursSettings" style="display: none;">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="quietStart" class="form-label">Start Time</label>
+                                                <input type="time" id="quietStart" class="input" value="22:00">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="quietEnd" class="form-label">End Time</label>
+                                                <input type="time" id="quietEnd" class="input" value="08:00">
+                                            </div>
+                                        </div>
+                                        <div class="quiet-days">
+                                            <label class="form-label">Days</label>
+                                            <div class="day-selector">
+                                                <label class="day-option">
+                                                    <input type="checkbox" id="quietSun" checked>
+                                                    <span>Sun</span>
+                                                </label>
+                                                <label class="day-option">
+                                                    <input type="checkbox" id="quietMon" checked>
+                                                    <span>Mon</span>
+                                                </label>
+                                                <label class="day-option">
+                                                    <input type="checkbox" id="quietTue" checked>
+                                                    <span>Tue</span>
+                                                </label>
+                                                <label class="day-option">
+                                                    <input type="checkbox" id="quietWed" checked>
+                                                    <span>Wed</span>
+                                                </label>
+                                                <label class="day-option">
+                                                    <input type="checkbox" id="quietThu" checked>
+                                                    <span>Thu</span>
+                                                </label>
+                                                <label class="day-option">
+                                                    <input type="checkbox" id="quietFri" checked>
+                                                    <span>Fri</span>
+                                                </label>
+                                                <label class="day-option">
+                                                    <input type="checkbox" id="quietSat" checked>
+                                                    <span>Sat</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Subscription Section -->
+                    <section class="settings-section" id="subscription-section">
+                        <div class="section-header">
+                            <h2 class="section-title">💎 Subscription</h2>
+                            <p class="section-description">Manage your SmartFinanceAI subscription and billing</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Current Plan -->
+                            <div class="settings-card card card-premium">
+                                <div class="card-header">
+                                    <h3 class="card-title">Current Plan</h3>
+                                    <div class="plan-badge premium">Premium</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="subscription-details">
+                                        <div class="plan-info">
+                                            <div class="plan-name">SmartFinance Premium</div>
+                                            <div class="plan-price">$9.99 <span class="plan-period">/month</span></div>
+                                            <div class="plan-renewal">Next billing: January 15, 2025</div>
+                                        </div>
+                                        <div class="plan-features">
+                                            <div class="feature-item">✅ Unlimited accounts and goals</div>
+                                            <div class="feature-item">✅ Advanced AI coaching</div>
+                                            <div class="feature-item">✅ Automatic bank connections</div>
+                                            <div class="feature-item">✅ Investment tracking</div>
+                                            <div class="feature-item">✅ Family account sharing</div>
+                                        </div>
+                                    </div>
+                                    <div class="subscription-actions">
+                                        <button class="btn btn-secondary" id="changePlan">
+                                            📋 Change Plan
+                                        </button>
+                                        <button class="btn btn-ghost" id="cancelSubscription">
+                                            ❌ Cancel Subscription
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Billing Information -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Billing Information</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="billing-details">
+                                        <div class="payment-method">
+                                            <div class="payment-method-icon">💳</div>
+                                            <div class="payment-method-info">
+                                                <div class="payment-method-type">Visa ending in 4242</div>
+                                                <div class="payment-method-expiry">Expires 12/2025</div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-sm" id="updatePaymentMethod">
+                                                Update
+                                            </button>
+                                        </div>
+                                        <div class="billing-address">
+                                            <div class="address-info">
+                                                <div class="address-label">Billing Address</div>
+                                                <div class="address-details">
+                                                    123 Main Street<br>
+                                                    Auckland, 1010<br>
+                                                    New Zealand
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-sm" id="updateBillingAddress">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Billing History -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Billing History</h3>
+                                    <button class="btn btn-ghost btn-sm" id="downloadInvoices">
+                                        📄 Download All Invoices
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="billing-history" id="billingHistory">
+                                        <!-- Billing history will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Data & Backup Section -->
+                    <section class="settings-section" id="data-section">
+                        <div class="section-header">
+                            <h2 class="section-title">📊 Data & Backup</h2>
+                            <p class="section-description">Manage your data, backups, and export options</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Data Management -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Data Management</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="data-stats">
+                                        <div class="data-stat">
+                                            <div class="stat-icon">💳</div>
+                                            <div class="stat-details">
+                                                <div class="stat-value">1,247</div>
+                                                <div class="stat-label">Transactions</div>
+                                            </div>
+                                        </div>
+                                        <div class="data-stat">
+                                            <div class="stat-icon">🎯</div>
+                                            <div class="stat-details">
+                                                <div class="stat-value">5</div>
+                                                <div class="stat-label">Goals</div>
+                                            </div>
+                                        </div>
+                                        <div class="data-stat">
+                                            <div class="stat-icon">🏦</div>
+                                            <div class="stat-details">
+                                                <div class="stat-value">3</div>
+                                                <div class="stat-label">Accounts</div>
+                                            </div>
+                                        </div>
+                                        <div class="data-stat">
+                                            <div class="stat-icon">💾</div>
+                                            <div class="stat-details">
+                                                <div class="stat-value">2.1 MB</div>
+                                                <div class="stat-label">Storage Used</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="data-actions">
+                                        <button class="btn btn-primary" id="exportAllData">
+                                            📦 Export All Data
+                                        </button>
+                                        <button class="btn btn-secondary" id="requestDataCopy">
+                                            📋 Request Data Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Automatic Backups -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Automatic Backups</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="backup-status">
+                                        <div class="backup-indicator">
+                                            <div class="backup-icon">✅</div>
+                                            <div class="backup-details">
+                                                <div class="backup-status-text">Backups Enabled</div>
+                                                <div class="backup-last">Last backup: 2 hours ago</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="backup-settings">
+                                        <div class="form-group">
+                                            <label for="backupFrequency" class="form-label">Backup Frequency</label>
+                                            <select id="backupFrequency" class="select">
+                                                <option value="realtime" selected>Real-time</option>
+                                                <option value="hourly">Hourly</option>
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="backupRetention" class="form-label">Keep Backups For</label>
+                                            <select id="backupRetention" class="select">
+                                                <option value="30">30 days</option>
+                                                <option value="90" selected>90 days</option>
+                                                <option value="365">1 year</option>
+                                                <option value="forever">Forever</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="backup-actions">
+                                        <button class="btn btn-secondary" id="createBackupNow">
+                                            💾 Backup Now
+                                        </button>
+                                        <button class="btn btn-ghost" id="restoreFromBackup">
+                                            🔄 Restore from Backup
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Deletion -->
+                            <div class="settings-card card card-danger">
+                                <div class="card-header">
+                                    <h3 class="card-title">⚠️ Data Deletion</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="danger-warning">
+                                        <div class="warning-icon">⚠️</div>
+                                        <div class="warning-text">
+                                            <strong>Danger Zone</strong><br>
+                                            These actions cannot be undone. Please be careful.
+                                        </div>
+                                    </div>
+                                    <div class="danger-actions">
+                                        <button class="btn btn-danger" id="deleteAllTransactions">
+                                            🗑️ Delete All Transactions
+                                        </button>
+                                        <button class="btn btn-danger" id="deleteAllGoals">
+                                            🗑️ Delete All Goals
+                                        </button>
+                                        <button class="btn btn-danger" id="deleteAccount">
+                                            ❌ Delete Account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Integrations Section -->
+                    <section class="settings-section" id="integrations-section">
+                        <div class="section-header">
+                            <h2 class="section-title">🔗 Integrations</h2>
+                            <p class="section-description">Connect SmartFinanceAI with other services and applications</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Banking Connections -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Banking Connections</h3>
+                                    <button class="btn btn-primary btn-sm" id="addBankConnection">
+                                        ➕ Add Bank
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="bank-connections" id="bankConnections">
+                                        <div class="bank-connection">
+                                            <div class="bank-info">
+                                                <div class="bank-logo">🏦</div>
+                                                <div class="bank-details">
+                                                    <div class="bank-name">ANZ Bank</div>
+                                                    <div class="bank-status">Connected</div>
+                                                </div>
+                                            </div>
+                                            <div class="bank-actions">
+                                                <button class="btn btn-ghost btn-sm" id="refreshBank">🔄</button>
+                                                <button class="btn btn-ghost btn-sm" id="disconnectBank">❌</button>
+                                            </div>
+                                        </div>
+                                        <div class="bank-connection">
+                                            <div class="bank-info">
+                                                <div class="bank-logo">🏦</div>
+                                                <div class="bank-details">
+                                                    <div class="bank-name">ASB Bank</div>
+                                                    <div class="bank-status">Connected</div>
+                                                </div>
+                                            </div>
+                                            <div class="bank-actions">
+                                                <button class="btn btn-ghost btn-sm">🔄</button>
+                                                <button class="btn btn-ghost btn-sm">❌</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Third-Party Services -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Third-Party Services</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="service-integrations">
+                                        <div class="service-integration">
+                                            <div class="service-info">
+                                                <div class="service-icon">📊</div>
+                                                <div class="service-details">
+                                                    <div class="service-name">Google Sheets</div>
+                                                    <div class="service-description">Export data to Google Sheets automatically</div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-sm" id="connectGoogleSheets">
+                                                Connect
+                                            </button>
+                                        </div>
+                                        <div class="service-integration">
+                                            <div class="service-info">
+                                                <div class="service-icon">📅</div>
+                                                <div class="service-details">
+                                                    <div class="service-name">Google Calendar</div>
+                                                    <div class="service-description">Add bill reminders to your calendar</div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-secondary btn-sm" id="connectGoogleCalendar">
+                                                Connect
+                                            </button>
+                                        </div>
+                                        <div class="service-integration">
+                                            <div class="service-info">
+                                                <div class="service-icon">📧</div>
+                                                <div class="service-details">
+                                                    <div class="service-name">Email Receipts</div>
+                                                    <div class="service-description">Automatically parse receipts from email</div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-primary btn-sm" id="connectEmailReceipts">
+                                                Connected
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- API Access -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">API Access</h3>
+                                    <div class="plan-requirement">Premium Feature</div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="api-section">
+                                        <div class="api-description">
+                                            Access your SmartFinanceAI data programmatically with our secure API.
+                                        </div>
+                                        <div class="api-keys" id="apiKeys">
+                                            <div class="api-key-item">
+                                                <div class="api-key-info">
+                                                    <div class="api-key-name">Personal API Key</div>
+                                                    <div class="api-key-value">sk_live_••••••••••••••••••••••••••••</div>
+                                                </div>
+                                                <div class="api-key-actions">
+                                                    <button class="btn btn-ghost btn-sm" id="copyApiKey">📋</button>
+                                                    <button class="btn btn-ghost btn-sm" id="regenerateApiKey">🔄</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="api-actions">
+                                            <button class="btn btn-secondary" id="createApiKey">
+                                                🔑 Create New API Key
+                                            </button>
+                                            <button class="btn btn-ghost" id="viewApiDocs">
+                                                📖 View API Documentation
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Advanced Section -->
+                    <section class="settings-section" id="advanced-section">
+                        <div class="section-header">
+                            <h2 class="section-title">🔧 Advanced</h2>
+                            <p class="section-description">Advanced settings for power users</p>
+                        </div>
+
+                        <div class="settings-cards">
+                            <!-- Performance -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Performance</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="performance-settings">
+                                        <div class="setting-group">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="enableCaching" checked>
+                                                <span class="checkbox-mark"></span>
+                                                Enable data caching for faster loading
+                                            </label>
+                                        </div>
+                                        <div class="setting-group">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="preloadData">
+                                                <span class="checkbox-mark"></span>
+                                                Preload data for offline access
+                                            </label>
+                                        </div>
+                                        <div class="setting-group">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="reducedMotion">
+                                                <span class="checkbox-mark"></span>
+                                                Reduce motion for better performance
+                                            </label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="syncFrequency" class="form-label">Data Sync Frequency</label>
+                                            <select id="syncFrequency" class="select">
+                                                <option value="realtime" selected>Real-time</option>
+                                                <option value="5min">Every 5 minutes</option>
+                                                <option value="15min">Every 15 minutes</option>
+                                                <option value="hourly">Hourly</option>
+                                                <option value="manual">Manual only</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="performance-actions">
+                                        <button class="btn btn-secondary" id="clearCache">
+                                            🗑️ Clear Cache
+                                        </button>
+                                        <button class="btn btn-ghost" id="runDiagnostics">
+                                            🔍 Run Diagnostics
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Developer Options -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Developer Options</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="developer-settings">
+                                        <div class="setting-group">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="enableDebugMode">
+                                                <span class="checkbox-mark"></span>
+                                                Enable debug mode
+                                            </label>
+                                        </div>
+                                        <div class="setting-group">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="enableConsoleLogging">
+                                                <span class="checkbox-mark"></span>
+                                                Enable console logging
+                                            </label>
+                                        </div>
+                                        <div class="setting-group">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="enableBetaFeatures">
+                                                <span class="checkbox-mark"></span>
+                                                Enable beta features
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="developer-actions">
+                                        <button class="btn btn-secondary" id="exportLogs">
+                                            📄 Export Logs
+                                        </button>
+                                        <button class="btn btn-ghost" id="resetApplication">
+                                            🔄 Reset Application
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- System Information -->
+                            <div class="settings-card card">
+                                <div class="card-header">
+                                    <h3 class="card-title">System Information</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="system-info">
+                                        <div class="info-item">
+                                            <div class="info-label">App Version</div>
+                                            <div class="info-value">2.1.0</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Platform</div>
+                                            <div class="info-value">Progressive Web App</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Browser</div>
+                                            <div class="info-value" id="browserInfo">Loading...</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Last Updated</div>
+                                            <div class="info-value">December 15, 2024</div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div class="info-label">Server Status</div>
+                                            <div class="info-value status-online">🟢 Online</div>
+                                        </div>
+                                    </div>
+                                    <div class="system-actions">
+                                        <button class="btn btn-secondary" id="checkUpdates">
+                                            🔄 Check for Updates
+                                        </button>
+                                        <button class="btn btn-ghost" id="viewChangelog">
+                                            📋 View Changelog
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmationModal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmationTitle">Confirm Action</h3>
+                <button class="modal-close" id="closeConfirmationModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmationMessage">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelConfirmation">Cancel</button>
+                <button class="btn btn-danger" id="confirmAction">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div class="toast toast-success" id="successToast" style="display: none;">
+        <div class="toast-icon">✅</div>
+        <div class="toast-content">
+            <div class="toast-title">Settings Saved</div>
+            <div class="toast-message">Your preferences have been updated successfully.</div>
+        </div>
+        <button class="toast-close">✕</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../global/localization.js"></script>
+    <script src="../data/database-manager.js"></script>
+    <script src="../platform/user-manager.js"></script>
+    <script src="../utils/validation-utils.js"></script>
+    <script>
+        // Initialize Settings Page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile navigation toggle
+            const mobileToggle = document.querySelector('.mobile-nav-toggle');
+            const navbar = document.querySelector('.navbar-nav');
+            
+            mobileToggle?.addEventListener('click', () => {
+                navbar?.classList.toggle('active');
+            });
+
+            // Settings navigation
+            const settingsNavItems = document.querySelectorAll('.settings-nav-item');
+            const settingsSections = document.querySelectorAll('.settings-section');
+
+            settingsNavItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetSection = item.dataset.section + '-section';
+                    
+                    // Update active nav item
+                    settingsNavItems.forEach(navItem => navItem.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // Update active section
+                    settingsSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    const section = document.getElementById(targetSection);
+                    if (section) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+
+            // Theme selector
+            const themeOptions = document.querySelectorAll('input[name="theme"]');
+            themeOptions.forEach(option => {
+                option.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        applyTheme(e.target.value);
+                    }
+                });
+            });
+
+            // Color selector
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    applyAccentColor(option.dataset.color);
+                });
+            });
+
+            // Quiet hours toggle
+            const enableQuietHours = document.getElementById('enableQuietHours');
+            const quietHoursSettings = document.getElementById('quietHoursSettings');
+            
+            enableQuietHours?.addEventListener('change', (e) => {
+                quietHoursSettings.style.display = e.target.checked ? 'block' : 'none';
+            });
+
+            // Profile picture upload
+            const uploadPicture = document.getElementById('uploadPicture');
+            const pictureUpload = document.getElementById('pictureUpload');
+            
+            uploadPicture?.addEventListener('click', () => {
+                pictureUpload?.click();
+            });
+
+            pictureUpload?.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    handleProfilePictureUpload(file);
+                }
+            });
+
+            // Save all settings
+            document.getElementById('saveAllSettings')?.addEventListener('click', () => {
+                saveAllSettings();
+                showSuccessToast('Settings saved successfully!');
+            });
+
+            // Modal handlers
+            setupModalHandlers();
+
+            // Load current settings
+            loadUserSettings();
+
+            // Helper functions
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            }
+
+            function applyAccentColor(color) {
+                document.documentElement.setAttribute('data-accent', color);
+                localStorage.setItem('accentColor', color);
+            }
+
+            function handleProfilePictureUpload(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const avatar = document.getElementById('profileAvatar');
+                    avatar.innerHTML = `<img src="${e.target.result}" alt="Profile Picture" class="avatar-image">`;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function saveAllSettings() {
+                // Collect all settings from the form
+                const settings = {
+                    profile: {
+                        firstName: document.getElementById('firstName')?.value,
+                        lastName: document.getElementById('lastName')?.value,
+                        email: document.getElementById('email')?.value,
+                        phone: document.getElementById('phone')?.value,
+                        country: document.getElementById('country')?.value,
+                        currency: document.getElementById('currency')?.value,
+                        timezone: document.getElementById('timezone')?.value,
+                        dateFormat: document.getElementById('dateFormat')?.value
+                    },
+                    preferences: {
+                        theme: document.querySelector('input[name="theme"]:checked')?.value,
+                        accentColor: document.querySelector('.color-option.active')?.dataset.color,
+                        animationLevel: document.getElementById('animationLevel')?.value,
+                        numberFormat: document.getElementById('numberFormat')?.value,
+                        currencyDisplay: document.getElementById('currencyDisplay')?.value,
+                        decimalPlaces: document.getElementById('decimalPlaces')?.value
+                    },
+                    privacy: {
+                        autoHideAmounts: document.getElementById('autoHideAmounts')?.checked,
+                        screenshotProtection: document.getElementById('screenshotProtection')?.checked,
+                        allowAnalytics: document.getElementById('allowAnalytics')?.checked,
+                        allowAIProcessing: document.getElementById('allowAIProcessing')?.checked
+                    },
+                    notifications: {
+                        pushEnabled: document.getElementById('financialAlerts')?.checked,
+                        emailFrequency: document.getElementById('emailFrequency')?.value,
+                        quietHours: {
+                            enabled: document.getElementById('enableQuietHours')?.checked,
+                            start: document.getElementById('quietStart')?.value,
+                            end: document.getElementById('quietEnd')?.value
+                        }
+                    }
+                };
+
+                // Save to localStorage (in a real app, this would be sent to a server)
+                localStorage.setItem('userSettings', JSON.stringify(settings));
+            }
+
+            function loadUserSettings() {
+                const savedSettings = localStorage.getItem('userSettings');
+                if (savedSettings) {
+                    const settings = JSON.parse(savedSettings);
+                    
+                    // Load profile settings
+                    if (settings.profile) {
+                        document.getElementById('firstName').value = settings.profile.firstName || '';
+                        document.getElementById('lastName').value = settings.profile.lastName || '';
+                        document.getElementById('email').value = settings.profile.email || '';
+                        document.getElementById('phone').value = settings.profile.phone || '';
+                        document.getElementById('country').value = settings.profile.country || 'NZ';
+                        document.getElementById('currency').value = settings.profile.currency || 'NZD';
+                        document.getElementById('timezone').value = settings.profile.timezone || 'Pacific/Auckland';
+                        document.getElementById('dateFormat').value = settings.profile.dateFormat || 'DD/MM/YYYY';
+                    }
+
+                    // Load preference settings
+                    if (settings.preferences) {
+                        const themeOption = document.querySelector(`input[name="theme"][value="${settings.preferences.theme || 'dark'}"]`);
+                        if (themeOption) themeOption.checked = true;
+
+                        const colorOption = document.querySelector(`.color-option[data-color="${settings.preferences.accentColor || 'purple'}"]`);
+                        if (colorOption) {
+                            document.querySelector('.color-option.active')?.classList.remove('active');
+                            colorOption.classList.add('active');
+                        }
+                    }
+                }
+
+                // Update browser info
+                document.getElementById('browserInfo').textContent = navigator.userAgent.split(' ').pop();
+            }
+
+            function setupModalHandlers() {
+                // Close modals
+                document.querySelectorAll('.modal-close, .modal-overlay').forEach(element => {
+                    element.addEventListener('click', (e) => {
+                        if (e.target === element) {
+                            element.closest('.modal').style.display = 'none';
+                        }
+                    });
+                });
+
+                // Confirmation modal handlers
+                document.getElementById('cancelConfirmation')?.addEventListener('click', () => {
+                    document.getElementById('confirmationModal').style.display = 'none';
+                });
+            }
+
+            function showSuccessToast(message) {
+                const toast = document.getElementById('successToast');
+                const messageEl = toast.querySelector('.toast-message');
+                messageEl.textContent = message;
+                
+                toast.style.display = 'flex';
+                
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+
+            function showConfirmationModal(title, message, onConfirm) {
+                document.getElementById('confirmationTitle').textContent = title;
+                document.getElementById('confirmationMessage').textContent = message;
+                document.getElementById('confirmationModal').style.display = 'flex';
+                
+                document.getElementById('confirmAction').onclick = () => {
+                    onConfirm();
+                    document.getElementById('confirmationModal').style.display = 'none';
+                };
+            }
+
+            // Dangerous action handlers
+            document.getElementById('deleteAccount')?.addEventListener('click', () => {
+                showConfirmationModal(
+                    'Delete Account',
+                    'This will permanently delete your account and all associated data. This action cannot be undone.',
+                    () => {
+                        // Handle account deletion
+                        console.log('Account deletion confirmed');
+                    }
+                );
+            });
+
+            document.getElementById('resetSettings')?.addEventListener('click', () => {
+                showConfirmationModal(
+                    'Reset Settings',
+                    'This will reset all settings to their default values. Your data will not be affected.',
+                    () => {
+                        localStorage.removeItem('userSettings');
+                        location.reload();
+                    }
+                );
+            });
+        });
+    </script>
+</body>
+</html>

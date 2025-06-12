@@ -1,0 +1,397 @@
+{
+  "country": "CA",
+  "currency": "CAD",
+  "locale": "en-CA",
+  "dateFormat": "DD/MM/YYYY",
+  "numberFormat": "1,234.56",
+  "currencySymbol": "$",
+  "currencyCode": "CAD",
+  
+  "financial": {
+    "taxYear": {
+      "start": "January",
+      "end": "December"
+    },
+    "emergencyFund": {
+      "recommendedMonths": 6,
+      "description": "We recommend saving 6 months of expenses for emergencies in Canada"
+    },
+    "retirement": {
+      "name": "Retirement Savings",
+      "description": "Build your RRSP and TFSA for retirement",
+      "category": "investment",
+      "priority": "medium",
+      "timeFrame": 360,
+      "icon": "🏖️",
+      "tips": [
+        "Maximize RRSP contributions for tax deductions",
+        "Use TFSA for flexible tax-free growth",
+        "Take advantage of employer pension matching",
+        "Consider both CPP and OAS in retirement planning"
+      ]
+    },
+    "vacation": {
+      "name": "Vacation Fund",
+      "description": "Save for that special trip you've been planning",
+      "category": "lifestyle",
+      "priority": "low",
+      "timeFrame": 18,
+      "icon": "✈️",
+      "tips": [
+        "Research total costs including flights, accommodation, and activities",
+        "Set up a separate TFSA for vacation savings",
+        "Consider travel insurance and passport renewal costs",
+        "Book domestic trips during shoulder seasons for better rates"
+      ]
+    },
+    "education": {
+      "name": "Education Fund (RESP)",
+      "description": "Save for children's post-secondary education",
+      "category": "education",
+      "priority": "medium",
+      "timeFrame": 216,
+      "icon": "🎓",
+      "tips": [
+        "Open an RESP to get government grants (up to $7,200)",
+        "Contribute regularly to maximize the Canada Education Savings Grant",
+        "Research tuition costs and living expenses",
+        "Start early to benefit from compound growth"
+      ]
+    },
+    "debt": {
+      "name": "Debt Repayment",
+      "description": "Pay off credit cards and loans faster",
+      "category": "debt",
+      "priority": "high",
+      "timeFrame": 24,
+      "icon": "💳",
+      "tips": [
+        "Use the debt avalanche method (highest interest first)",
+        "Consider debt consolidation loans for multiple debts",
+        "Look into balance transfer options with promotional rates",
+        "Get free credit counselling from non-profit agencies"
+      ]
+    },
+    "investment": {
+      "name": "Investment Portfolio",
+      "description": "Build wealth through investments",
+      "category": "investment",
+      "priority": "medium",
+      "timeFrame": 60,
+      "icon": "📈",
+      "tips": [
+        "Use TFSA and RRSP accounts for tax-efficient investing",
+        "Consider low-cost index funds and ETFs",
+        "Understand tax implications of different account types",
+        "Diversify across Canadian and international markets"
+      ]
+    }
+  },
+  
+  "budgetCategories": {
+    "income": {
+      "salary": "Salary/Wages",
+      "ei": "Employment Insurance",
+      "cpp": "CPP Benefits",
+      "oas": "Old Age Security",
+      "investment": "Investment Income",
+      "rental": "Rental Income",
+      "business": "Business Income",
+      "other": "Other Income"
+    },
+    "housing": {
+      "rent": "Rent/Mortgage",
+      "propertyTax": "Property Tax",
+      "utilities": "Utilities",
+      "insurance": "Home Insurance",
+      "maintenance": "Home Maintenance",
+      "condo": "Condo Fees"
+    },
+    "transportation": {
+      "carPayment": "Car Payment",
+      "fuel": "Fuel",
+      "insurance": "Auto Insurance",
+      "maintenance": "Car Maintenance",
+      "publicTransit": "Public Transit",
+      "parking": "Parking"
+    },
+    "food": {
+      "groceries": "Groceries",
+      "dining": "Dining Out",
+      "delivery": "Food Delivery",
+      "coffee": "Coffee/Beverages"
+    },
+    "healthcare": {
+      "dental": "Dental Care",
+      "vision": "Vision Care",
+      "prescriptions": "Prescriptions",
+      "massage": "Massage/Physio",
+      "healthInsurance": "Extended Health"
+    },
+    "personal": {
+      "clothing": "Clothing",
+      "personalCare": "Personal Care",
+      "fitness": "Gym/Fitness",
+      "subscriptions": "Subscriptions",
+      "entertainment": "Entertainment",
+      "mobile": "Mobile Phone"
+    },
+    "financial": {
+      "savings": "Savings",
+      "rrsp": "RRSP Contributions",
+      "tfsa": "TFSA Contributions",
+      "resp": "RESP Contributions",
+      "investments": "Non-Registered Investments",
+      "lifeInsurance": "Life Insurance",
+      "debtPayments": "Debt Payments"
+    },
+    "other": {
+      "gifts": "Gifts",
+      "charity": "Charitable Donations",
+      "education": "Education/Training",
+      "pets": "Pet Expenses",
+      "travel": "Travel/Vacation",
+      "miscellaneous": "Miscellaneous"
+    }
+  },
+  
+  "regulations": {
+    "maxCashTransaction": 10000,
+    "reportingCurrency": "CAD",
+    "financialYear": "calendar",
+    "taxFilingDeadline": "April 30",
+    "cppAge": 65,
+    "oasAge": 65,
+    "rrspContributionLimit": 29210,
+    "tfsaContributionLimit": 6500,
+    "cdic": "Canada Deposit Insurance Corporation",
+    "creditBureaus": ["Equifax Canada", "TransUnion Canada"]
+  },
+  
+  "ui": {
+    "welcomeMessage": "Welcome to SmartFinanceAI",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "signUp": "Sign Up",
+    "logIn": "Log In",
+    "dashboard": "Dashboard",
+    "accounts": "Accounts",
+    "transactions": "Transactions",
+    "budget": "Budget",
+    "goals": "Goals",
+    "reports": "Reports",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Log Out",
+    
+    "onboarding": {
+      "step1": "Let's get you started with SmartFinanceAI",
+      "step2": "Tell us about your financial goals",
+      "step3": "Connect your bank accounts",
+      "step4": "Set up your budget",
+      "step5": "You're all set!"
+    },
+    
+    "dashboard": {
+      "totalBalance": "Total Balance",
+      "monthlyIncome": "Monthly Income",
+      "monthlyExpenses": "Monthly Expenses",
+      "goalProgress": "Goal Progress",
+      "budgetHealth": "Budget Health",
+      "aiInsights": "AI Insights"
+    },
+    
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "network": "Network error. Please check your connection.",
+      "validation": "Please check your input and try again.",
+      "unauthorized": "You are not authorized to perform this action.",
+      "notFound": "The requested resource was not found.",
+      "serverError": "Server error. Please try again later."
+    },
+    
+    "success": {
+      "saved": "Successfully saved!",
+      "deleted": "Successfully deleted!",
+      "updated": "Successfully updated!",
+      "imported": "Data imported successfully!",
+      "goalCreated": "Goal created successfully!",
+      "accountAdded": "Account added successfully!"
+    }
+  },
+  
+  "privacy": {
+    "dataRetention": "We retain your data in accordance with Canadian privacy laws",
+    "encryption": "All data is encrypted using AES-256 encryption",
+    "sharing": "We never share your financial data with third parties",
+    "rights": "You have rights under PIPEDA to access, correct, or delete your data"
+  },
+  
+  "support": {
+    "email": "support@smartfinanceai.com",
+    "phone": "+1-800-SMART-AI",
+    "hours": "Monday-Friday 9AM-6PM EST/PST",
+    "help": "Visit our help centre for common questions"
+  }
+}
+      "primaryAccount": "RRSP",
+      "supplementaryAccount": "TFSA",
+      "description": "RRSP and TFSA are the primary retirement savings vehicles in Canada"
+    },
+    "governmentBenefits": {
+      "cpp": "Canada Pension Plan",
+      "oas": "Old Age Security",
+      "gis": "Guaranteed Income Supplement"
+    }
+  },
+  
+  "banks": [
+    {
+      "name": "RBC",
+      "displayName": "Royal Bank of Canada",
+      "csvFormat": "RBC_CA",
+      "website": "https://www.rbc.com",
+      "logo": "/banks/rbc.png",
+      "popular": true
+    },
+    {
+      "name": "TD",
+      "displayName": "TD Canada Trust",
+      "csvFormat": "TD_CA",
+      "website": "https://www.td.com",
+      "logo": "/banks/td.png",
+      "popular": true
+    },
+    {
+      "name": "Scotiabank",
+      "displayName": "Scotiabank",
+      "csvFormat": "SCOTIA_CA",
+      "website": "https://www.scotiabank.com",
+      "logo": "/banks/scotiabank.png",
+      "popular": true
+    },
+    {
+      "name": "BMO",
+      "displayName": "Bank of Montreal",
+      "csvFormat": "BMO_CA",
+      "website": "https://www.bmo.com",
+      "logo": "/banks/bmo.png",
+      "popular": true
+    },
+    {
+      "name": "CIBC",
+      "displayName": "CIBC",
+      "csvFormat": "CIBC_CA",
+      "website": "https://www.cibc.com",
+      "logo": "/banks/cibc.png",
+      "popular": true
+    },
+    {
+      "name": "Tangerine",
+      "displayName": "Tangerine",
+      "csvFormat": "TANGERINE_CA",
+      "website": "https://www.tangerine.ca",
+      "logo": "/banks/tangerine.png",
+      "popular": false
+    },
+    {
+      "name": "PC Financial",
+      "displayName": "PC Financial",
+      "csvFormat": "PC_FINANCIAL_CA",
+      "website": "https://www.pcfinancial.ca",
+      "logo": "/banks/pc-financial.png",
+      "popular": false
+    },
+    {
+      "name": "Desjardins",
+      "displayName": "Desjardins",
+      "csvFormat": "DESJARDINS_CA",
+      "website": "https://www.desjardins.com",
+      "logo": "/banks/desjardins.png",
+      "popular": false
+    }
+  ],
+  
+  "accountTypes": {
+    "chequing": {
+      "name": "Chequing Account",
+      "description": "Primary account for daily transactions",
+      "icon": "💳"
+    },
+    "savings": {
+      "name": "Savings Account",
+      "description": "Interest-bearing savings account",
+      "icon": "🏦"
+    },
+    "tfsa": {
+      "name": "TFSA",
+      "description": "Tax-Free Savings Account",
+      "icon": "💰"
+    },
+    "rrsp": {
+      "name": "RRSP",
+      "description": "Registered Retirement Savings Plan",
+      "icon": "🏖️"
+    },
+    "resp": {
+      "name": "RESP",
+      "description": "Registered Education Savings Plan",
+      "icon": "🎓"
+    },
+    "credit": {
+      "name": "Credit Card",
+      "description": "Credit card account",
+      "icon": "💳"
+    },
+    "investment": {
+      "name": "Investment",
+      "description": "Non-registered investment account",
+      "icon": "📈"
+    },
+    "mortgage": {
+      "name": "Mortgage",
+      "description": "Home mortgage loan",
+      "icon": "🏠"
+    },
+    "loc": {
+      "name": "Line of Credit",
+      "description": "Personal line of credit",
+      "icon": "💷"
+    },
+    "gic": {
+      "name": "GIC",
+      "description": "Guaranteed Investment Certificate",
+      "icon": "🏛️"
+    }
+  },
+  
+  "goalTemplates": {
+    "emergency": {
+      "name": "Emergency Fund",
+      "description": "Build 6 months of expenses for unexpected situations",
+      "category": "emergency",
+      "priority": "critical",
+      "timeFrame": 12,
+      "icon": "🚨",
+      "tips": [
+        "Start with $1,000 as your initial emergency buffer",
+        "Aim for 6 months of expenses given Canada's social programs",
+        "Use a high-interest savings account or TFSA for emergency funds",
+        "Consider employment insurance benefits in your planning"
+      ]
+    },
+    "house": {
+      "name": "House Down Payment",
+      "description": "Save for a home down payment (minimum 5% for first home)",
+      "category": "savings",
+      "priority": "high",
+      "timeFrame": 36,
+      "icon": "🏠",
+      "tips": [
+        "Use the Home Buyers' Plan to withdraw from RRSP",
+        "Research first-time home buyer incentives",
+        "Factor in land transfer taxes and legal fees",
+        "Don't forget home inspection and moving costs"
+      ]
+    },
+    "retirement": {

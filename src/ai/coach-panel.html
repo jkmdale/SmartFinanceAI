@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Financial Coach - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/variables.css">
+</head>
+<body>
+    <!-- Main Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="navbar-logo">💡</div>
+                <span>SmartFinanceAI</span>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="../core/dashboard.html" class="nav-link">📊 Dashboard</a></li>
+                <li><a href="../core/accounts.html" class="nav-link">🏦 Accounts</a></li>
+                <li><a href="../core/transactions.html" class="nav-link">💳 Transactions</a></li>
+                <li><a href="../core/budget.html" class="nav-link">📋 Budget</a></li>
+                <li><a href="../core/goals.html" class="nav-link">🎯 Goals</a></li>
+                <li><a href="../core/reports.html" class="nav-link">📈 Reports</a></li>
+                <li><a href="../csv-import/upload.html" class="nav-link">📥 Import</a></li>
+                <li><a href="coach-panel.html" class="nav-link active">🤖 AI Coach</a></li>
+            </ul>
+            <button class="mobile-nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1 class="page-title text-gradient-primary">🤖 AI Financial Coach</h1>
+                    <p class="page-subtitle">Get personalized insights and recommendations for your financial journey</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-primary" id="generateInsights">
+                        ✨ Generate New Insights
+                    </button>
+                    <button class="btn btn-secondary" id="scheduleCoaching">
+                        📅 Schedule Coaching
+                    </button>
+                    <button class="btn btn-ghost" id="privacyToggle">
+                        👁️ Privacy Mode
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI Coach Dashboard -->
+            <div class="ai-dashboard">
+                <!-- Financial Health Overview -->
+                <div class="health-overview card card-premium">
+                    <div class="card-header">
+                        <h3 class="card-title">🏥 Financial Health Score</h3>
+                        <div class="health-status">
+                            <span class="status-badge excellent" id="healthStatus">Excellent</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="health-score-display">
+                            <div class="score-circle-large">
+                                <canvas id="healthScoreChart" class="score-chart-large"></canvas>
+                                <div class="score-content">
+                                    <div class="score-value" id="overallScore">85</div>
+                                    <div class="score-max">/100</div>
+                                    <div class="score-label">Financial Health</div>
+                                </div>
+                            </div>
+                            <div class="health-breakdown">
+                                <div class="health-category">
+                                    <div class="category-info">
+                                        <div class="category-icon">🚨</div>
+                                        <div class="category-name">Emergency Fund</div>
+                                    </div>
+                                    <div class="category-score">
+                                        <div class="score-bar">
+                                            <div class="score-fill excellent" style="width: 90%;"></div>
+                                        </div>
+                                        <span class="score-number">90</span>
+                                    </div>
+                                </div>
+                                <div class="health-category">
+                                    <div class="category-info">
+                                        <div class="category-icon">💳</div>
+                                        <div class="category-name">Debt Management</div>
+                                    </div>
+                                    <div class="category-score">
+                                        <div class="score-bar">
+                                            <div class="score-fill good" style="width: 75%;"></div>
+                                        </div>
+                                        <span class="score-number">75</span>
+                                    </div>
+                                </div>
+                                <div class="health-category">
+                                    <div class="category-info">
+                                        <div class="category-icon">💰</div>
+                                        <div class="category-name">Savings Rate</div>
+                                    </div>
+                                    <div class="category-score">
+                                        <div class="score-bar">
+                                            <div class="score-fill excellent" style="width: 88%;"></div>
+                                        </div>
+                                        <span class="score-number">88</span>
+                                    </div>
+                                </div>
+                                <div class="health-category">
+                                    <div class="category-info">
+                                        <div class="category-icon">📈</div>
+                                        <div class="category-name">Investment Portfolio</div>
+                                    </div>
+                                    <div class="category-score">
+                                        <div class="score-bar">
+                                            <div class="score-fill fair" style="width: 65%;"></div>
+                                        </div>
+                                        <span class="score-number">65</span>
+                                    </div>
+                                </div>
+                                <div class="health-category">
+                                    <div class="category-info">
+                                        <div class="category-icon">🎯</div>
+                                        <div class="category-name">Goal Progress</div>
+                                    </div>
+                                    <div class="category-score">
+                                        <div class="score-bar">
+                                            <div class="score-fill good" style="width: 82%;"></div>
+                                        </div>
+                                        <span class="score-number">82</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Chat Interface -->
+                <div class="ai-chat-container">
+                    <div class="chat-panel card">
+                        <div class="card-header">
+                            <h3 class="card-title">💬 Chat with Your AI Coach</h3>
+                            <div class="chat-controls">
+                                <button class="btn btn-ghost btn-sm" id="clearChat">🗑️ Clear</button>
+                                <button class="btn btn-ghost btn-sm" id="exportChat">📄 Export</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chat-messages" id="chatMessages">
+                                <!-- Welcome Message -->
+                                <div class="message ai-message">
+                                    <div class="message-avatar">🤖</div>
+                                    <div class="message-content">
+                                        <div class="message-text">
+                                            Hi! I'm your AI Financial Coach. I've analyzed your financial data and I'm here to help you make smarter money decisions. What would you like to know about your finances today?
+                                        </div>
+                                        <div class="message-time">Just now</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Suggested Questions -->
+                                <div class="suggested-questions">
+                                    <div class="suggestions-label">💡 Try asking me:</div>
+                                    <div class="suggestion-chips">
+                                        <button class="suggestion-chip" data-question="How can I improve my financial health score?">
+                                            How can I improve my financial health score?
+                                        </button>
+                                        <button class="suggestion-chip" data-question="What are my biggest spending categories?">
+                                            What are my biggest spending categories?
+                                        </button>
+                                        <button class="suggestion-chip" data-question="Am I on track to meet my savings goals?">
+                                            Am I on track to meet my savings goals?
+                                        </button>
+                                        <button class="suggestion-chip" data-question="How much should I save for retirement?">
+                                            How much should I save for retirement?
+                                        </button>
+                                        <button class="suggestion-chip" data-question="What investment strategy would you recommend?">
+                                            What investment strategy would you recommend?
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-input-container">
+                                <div class="chat-input-wrapper">
+                                    <input type="text" id="chatInput" class="chat-input" 
+                                        placeholder="Ask me anything about your finances..." 
+                                        maxlength="500">
+                                    <button class="chat-send-btn" id="sendMessage" disabled>
+                                        <span class="send-icon">📤</span>
+                                    </button>
+                                </div>
+                                <div class="chat-hints">
+                                    <div class="hint-text">
+                                        💡 I can help with budgeting, savings, investments, debt management, and goal planning
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Panel -->
+                    <div class="quick-actions card">
+                        <div class="card-header">
+                            <h3 class="card-title">⚡ Quick Actions</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="actions-grid">
+                                <button class="action-card" id="optimizeBudget">
+                                    <div class="action-icon">📊</div>
+                                    <div class="action-title">Optimize Budget</div>
+                                    <div class="action-description">Get budget recommendations</div>
+                                </button>
+                                <button class="action-card" id="goalAnalysis">
+                                    <div class="action-icon">🎯</div>
+                                    <div class="action-title">Goal Analysis</div>
+                                    <div class="action-description">Review goal progress</div>
+                                </button>
+                                <button class="action-card" id="spendingInsights">
+                                    <div class="action-icon">💸</div>
+                                    <div class="action-title">Spending Insights</div>
+                                    <div class="action-description">Analyze spending patterns</div>
+                                </button>
+                                <button class="action-card" id="savingsBooster">
+                                    <div class="action-icon">💰</div>
+                                    <div class="action-title">Savings Booster</div>
+                                    <div class="action-description">Find saving opportunities</div>
+                                </button>
+                                <button class="action-card" id="debtStrategy">
+                                    <div class="action-icon">💳</div>
+                                    <div class="action-title">Debt Strategy</div>
+                                    <div class="action-description">Optimize debt payments</div>
+                                </button>
+                                <button class="action-card" id="investmentAdvice">
+                                    <div class="action-icon">📈</div>
+                                    <div class="action-title">Investment Advice</div>
+                                    <div class="action-description">Portfolio recommendations</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Insights & Recommendations -->
+                <div class="ai-insights-section">
+                    <!-- Priority Recommendations -->
+                    <div class="priority-recommendations card card-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">🔥 Priority Recommendations</h3>
+                            <div class="recommendations-count">
+                                <span class="count-badge">3 urgent</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="recommendations-list" id="priorityRecommendations">
+                                <div class="recommendation urgent">
+                                    <div class="recommendation-header">
+                                        <div class="recommendation-icon">🚨</div>
+                                        <div class="recommendation-title">Build Emergency Fund</div>
+                                        <div class="recommendation-priority urgent">Urgent</div>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <p>Your emergency fund only covers 1.2 months of expenses. Aim for 3-6 months to protect against unexpected events.</p>
+                                        <div class="recommendation-actions">
+                                            <button class="btn btn-primary btn-sm" data-action="create-emergency-goal">
+                                                🎯 Create Emergency Goal
+                                            </button>
+                                            <button class="btn btn-ghost btn-sm" data-action="learn-more">
+                                                📖 Learn More
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="recommendation high">
+                                    <div class="recommendation-header">
+                                        <div class="recommendation-icon">💳</div>
+                                        <div class="recommendation-title">Optimize Credit Card Payments</div>
+                                        <div class="recommendation-priority high">High</div>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <p>You could save $247/month in interest by paying off your highest APR card first (avalanche method).</p>
+                                        <div class="recommendation-actions">
+                                            <button class="btn btn-primary btn-sm" data-action="debt-avalanche">
+                                                ⚡ Apply Strategy
+                                            </button>
+                                            <button class="btn btn-ghost btn-sm" data-action="show-calculation">
+                                                🧮 Show Calculation
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="recommendation medium">
+                                    <div class="recommendation-header">
+                                        <div class="recommendation-icon">🍽️</div>
+                                        <div class="recommendation-title">Reduce Dining Expenses</div>
+                                        <div class="recommendation-priority medium">Medium</div>
+                                    </div>
+                                    <div class="recommendation-content">
+                                        <p>Your dining expenses increased 34% this month. Setting a $400 monthly limit could save $1,800 annually.</p>
+                                        <div class="recommendation-actions">
+                                            <button class="btn btn-primary btn-sm" data-action="set-dining-budget">
+                                                📋 Set Budget Limit
+                                            </button>
+                                            <button class="btn btn-ghost btn-sm" data-action="view-dining-trends">
+                                                📊 View Trends
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Insights -->
+                    <div class="weekly-insights card">
+                        <div class="card-header">
+                            <h3 class="card-title">📈 This Week's Insights</h3>
+                            <div class="insights-date">
+                                <span>December 9-15, 2024</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="insights-grid">
+                                <div class="insight-item positive">
+                                    <div class="insight-icon">🎉</div>
+                                    <div class="insight-content">
+                                        <div class="insight-title">Great Progress!</div>
+                                        <div class="insight-text">You're 23% ahead on your house deposit goal this month.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="insight-item neutral">
+                                    <div class="insight-icon">📊</div>
+                                    <div class="insight-content">
+                                        <div class="insight-title">Spending Pattern</div>
+                                        <div class="insight-text">Most of your expenses occur on Fridays and weekends.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="insight-item warning">
+                                    <div class="insight-icon">⚠️</div>
+                                    <div class="insight-content">
+                                        <div class="insight-title">Budget Alert</div>
+                                        <div class="insight-text">You've used 85% of your entertainment budget with 2 weeks left.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="insight-item positive">
+                                    <div class="insight-icon">💰</div>
+                                    <div class="insight-content">
+                                        <div class="insight-title">Savings Opportunity</div>
+                                        <div class="insight-text">Switch to a high-yield savings account for an extra $156/year.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Insights -->
+                    <div class="market-insights card">
+                        <div class="card-header">
+                            <h3 class="card-title">🌍 Market & Economic Insights</h3>
+                            <div class="insights-source">
+                                <span>Updated 2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="market-insights-content">
+                                <div class="market-item">
+                                    <div class="market-icon">📈</div>
+                                    <div class="market-content">
+                                        <div class="market-title">Interest Rates</div>
+                                        <div class="market-text">RBNZ held rates at 5.5%. Consider fixed-rate refinancing if variable rate.</div>
+                                        <div class="market-impact positive">Positive for savers</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="market-item">
+                                    <div class="market-icon">🏠</div>
+                                    <div class="market-content">
+                                        <div class="market-title">Housing Market</div>
+                                        <div class="market-text">Auckland house prices down 3.2% YoY. Good time for first-home buyers.</div>
+                                        <div class="market-impact neutral">Opportunity for buyers</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="market-item">
+                                    <div class="market-icon">📊</div>
+                                    <div class="market-content">
+                                        <div class="market-title">NZX Performance</div>
+                                        <div class="market-text">Local market up 2.1% this month. Consider increasing KiwiSaver contributions.</div>
+                                        <div class="market-impact positive">Good for investments</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coaching Schedule -->
+                <div class="coaching-schedule card">
+                    <div class="card-header">
+                        <h3 class="card-title">📅 Coaching Schedule</h3>
+                        <button class="btn btn-primary btn-sm" id="addCoachingSession">
+                            ➕ Schedule Session
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="schedule-list" id="coachingSchedule">
+                            <div class="schedule-item upcoming">
+                                <div class="schedule-time">
+                                    <div class="schedule-date">Dec 16</div>
+                                    <div class="schedule-hour">2:00 PM</div>
+                                </div>
+                                <div class="schedule-content">
+                                    <div class="schedule-title">Monthly Financial Review</div>
+                                    <div class="schedule-description">Review December progress and plan for 2025</div>
+                                    <div class="schedule-type">Automated Review</div>
+                                </div>
+                                <div class="schedule-actions">
+                                    <button class="btn btn-ghost btn-sm">✏️</button>
+                                    <button class="btn btn-ghost btn-sm">🗑️</button>
+                                </div>
+                            </div>
+                            
+                            <div class="schedule-item completed">
+                                <div class="schedule-time">
+                                    <div class="schedule-date">Dec 1</div>
+                                    <div class="schedule-hour">10:00 AM</div>
+                                </div>
+                                <div class="schedule-content">
+                                    <div class="schedule-title">Goal Progress Check</div>
+                                    <div class="schedule-description">Reviewed Q4 savings goals and emergency fund</div>
+                                    <div class="schedule-type">Completed</div>
+                                </div>
+                                <div class="schedule-actions">
+                                    <button class="btn btn-ghost btn-sm">📊 View Report</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Recommendation Detail Modal -->
+    <div class="modal" id="recommendationModal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="recommendationModalTitle">Recommendation Details</h3>
+                <button class="modal-close" id="closeRecommendationModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="recommendation-details" id="recommendationDetails">
+                    <!-- Recommendation details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="dismissRecommendation">
+                    ❌ Dismiss
+                </button>
+                <button class="btn btn-primary" id="applyRecommendation">
+                    ✅ Apply Recommendation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coaching Session Modal -->
+    <div class="modal" id="coachingModal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📅 Schedule Coaching Session</h3>
+                <button class="modal-close" id="closeCoachingModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="coachingForm" class="coaching-form">
+                    <div class="form-group">
+                        <label for="sessionType" class="form-label">Session Type</label>
+                        <select id="sessionType" class="select" required>
+                            <option value="">Select session type</option>
+                            <option value="financial-review">Financial Health Review</option>
+                            <option value="goal-planning">Goal Planning Session</option>
+                            <option value="budget-optimization">Budget Optimization</option>
+                            <option value="debt-strategy">Debt Management Strategy</option>
+                            <option value="investment-advice">Investment Planning</option>
+                            <option value="emergency-planning">Emergency Fund Planning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionDate" class="form-label">Date</label>
+                        <input type="date" id="sessionDate" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionTime" class="form-label">Time</label>
+                        <input type="time" id="sessionTime" class="input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionNotes" class="form-label">Notes (Optional)</label>
+                        <textarea id="sessionNotes" class="input" rows="3" 
+                            placeholder="Any specific areas you'd like to focus on?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="sendReminder" checked>
+                            <span class="checkbox-mark"></span>
+                            Send reminder notification
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelCoaching">Cancel</button>
+                <button class="btn btn-primary" id="scheduleCoachingConfirm">
+                    📅 Schedule Session
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator for AI -->
+    <div class="ai-loading" id="aiLoading" style="display: none;">
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        <div class="loading-text">AI is thinking...</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../global/localization.js"></script>
+    <script src="../data/database-manager.js"></script>
+    <script src="../ai/ai-coach.js"></script>
+    <script src="../ai/health-score.js"></script>
+    <script src="../ai/recommendations.js"></script>
+    <script src="../utils/date-utils.js"></script>
+    <script>
+        // Initialize AI Coach Panel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AI components
+            if (typeof AICoach !== 'undefined') {
+                window.aiCoach = new AICoach();
+                window.aiCoach.init();
+            }
+
+            if (typeof HealthScore !== 'undefined') {
+                window.healthScore = new HealthScore();
+                window.healthScore.init();
+                window.healthScore.renderChart('healthScoreChart');
+            }
+
+            // Mobile navigation toggle
+            const mobileToggle = document.querySelector('.mobile-nav-toggle');
+            const navbar = document.querySelector('.navbar-nav');
+            
+            mobileToggle?.addEventListener('click', () => {
+                navbar?.classList.toggle('active');
+            });
+
+            // Privacy mode toggle
+            const privacyToggle = document.getElementById('privacyToggle');
+            let isPrivacyMode = false;
+
+            privacyToggle?.addEventListener('click', () => {
+                isPrivacyMode = !isPrivacyMode;
+                const financialElements = document.querySelectorAll('[data-financial]');
+                
+                financialElements.forEach(el => {
+                    el.style.filter = isPrivacyMode ? 'blur(8px)' : 'none';
+                });
+                
+                privacyToggle.textContent = isPrivacyMode ? '👁️‍🗨️ Show Amounts' : '👁️ Privacy Mode';
+            });
+
+            // Chat functionality
+            const chatInput = document.getElementById('chatInput');
+            const sendButton = document.getElementById('sendMessage');
+            const chatMessages = document.getElementById('chatMessages');
+
+            // Enable/disable send button based on input
+            chatInput?.addEventListener('input', (e) => {
+                const hasText = e.target.value.trim().length > 0;
+                sendButton.disabled = !hasText;
+                sendButton.classList.toggle('enabled', hasText);
+            });
+
+            // Send message on Enter key
+            chatInput?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !sendButton.disabled) {
+                    sendMessage();
+                }
+            });
+
+            // Send button click
+            sendButton?.addEventListener('click', sendMessage);
+
+            // Suggested question chips
+            document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    const question = chip.dataset.question;
+                    chatInput.value = question;
+                    sendMessage();
+                });
+            });
+
+            // Quick action cards
+            document.querySelectorAll('.action-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const actionId = card.id;
+                    handleQuickAction(actionId);
+                });
+            });
+
+            // Recommendation actions
+            document.querySelectorAll('[data-action]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const action = e.target.dataset.action;
+                    handleRecommendationAction(action, e.target);
+                });
+            });
+
+            // Modal handlers
+            setupModalHandlers();
+
+            // Functions
+            async function sendMessage() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                // Add user message to chat
+                addMessageToChat(message, 'user');
+                
+                // Clear input
+                chatInput.value = '';
+                sendButton.disabled = true;
+                sendButton.classList.remove('enabled');
+
+                // Show AI thinking indicator
+                showAIThinking();
+
+                try {
+                    // Get AI response
+                    if (window.aiCoach) {
+                        const response = await window.aiCoach.processMessage(message);
+                        hideAIThinking();
+                        addMessageToChat(response, 'ai');
+                    }
+                } catch (error) {
+                    hideAIThinking();
+                    addMessageToChat('Sorry, I encountered an error. Please try again.', 'ai', true);
+                }
+
+                // Scroll to bottom
+                scrollChatToBottom();
+            }
+
+            function addMessageToChat(message, sender, isError = false) {
+                const messageElement = document.createElement('div');
+                messageElement.className = `message ${sender}-message ${isError ? 'error' : ''}`;
+                
+                const timestamp = new Date().toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                messageElement.innerHTML = `
+                    <div class="message-avatar">${sender === 'user' ? '👤' : '🤖'}</div>
+                    <div class="message-content">
+                        <div class="message-text">${message}</div>
+                        <div class="message-time">${timestamp}</div>
+                    </div>
+                `;
+
+                // Remove suggested questions if this is the first user message
+                // Remove suggested questions if this is the first user message
+                const suggestions = chatMessages.querySelector('.suggested-questions');
+                if (sender === 'user' && suggestions) {
+                    suggestions.remove();
+                }
+
+                chatMessages.appendChild(messageElement);
+            }
+
+            function scrollChatToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showAIThinking() {
+                const thinkingElement = document.createElement('div');
+                thinkingElement.className = 'message ai-message thinking';
+                thinkingElement.id = 'ai-thinking';
+                thinkingElement.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="thinking-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(thinkingElement);
+                scrollChatToBottom();
+            }
+
+            function hideAIThinking() {
+                const thinkingElement = document.getElementById('ai-thinking');
+                if (thinkingElement) {
+                    thinkingElement.remove();
+                }
+            }
+
+            function handleQuickAction(actionId) {
+                const actions = {
+                    'optimizeBudget': 'Please analyze my budget and provide optimization recommendations.',
+                    'goalAnalysis': 'How am I doing with my financial goals? What can I improve?',
+                    'spendingInsights': 'What insights do you have about my spending patterns?',
+                    'savingsBooster': 'What are the best ways I can increase my savings?',
+                    'debtStrategy': 'Help me create an optimal debt payoff strategy.',
+                    'investmentAdvice': 'What investment recommendations do you have for me?'
+                };
+
+                const message = actions[actionId];
+                if (message) {
+                    chatInput.value = message;
+                    sendMessage();
+                }
+            }
+
+            function handleRecommendationAction(action, element) {
+                switch (action) {
+                    case 'create-emergency-goal':
+                        // Navigate to goals page with emergency fund template
+                        window.location.href = '../core/goals.html?template=emergency';
+                        break;
+                    case 'debt-avalanche':
+                        showRecommendationModal('Debt Avalanche Strategy', generateDebtAvalancheContent());
+                        break;
+                    case 'set-dining-budget':
+                        showRecommendationModal('Set Dining Budget', generateDiningBudgetContent());
+                        break;
+                    case 'learn-more':
+                        const topic = element.closest('.recommendation').querySelector('.recommendation-title').textContent;
+                        chatInput.value = `Tell me more about: ${topic}`;
+                        sendMessage();
+                        break;
+                    case 'show-calculation':
+                        showRecommendationModal('Debt Payoff Calculation', generateCalculationContent());
+                        break;
+                    case 'view-dining-trends':
+                        window.location.href = '../core/reports.html?category=dining';
+                        break;
+                    default:
+                        console.log('Unknown action:', action);
+                }
+            }
+
+            function showRecommendationModal(title, content) {
+                document.getElementById('recommendationModalTitle').textContent = title;
+                document.getElementById('recommendationDetails').innerHTML = content;
+                document.getElementById('recommendationModal').style.display = 'flex';
+            }
+
+            function generateDebtAvalancheContent() {
+                return `
+                    <div class="debt-strategy-content">
+                        <h4>Debt Avalanche Strategy</h4>
+                        <p>Pay off debts in order of highest interest rate first while making minimum payments on others.</p>
+                        
+                        <div class="debt-list">
+                            <div class="debt-item priority-1">
+                                <div class="debt-name">Credit Card A</div>
+                                <div class="debt-details">
+                                    <span class="debt-balance">$3,200</span>
+                                    <span class="debt-rate">22.99% APR</span>
+                                </div>
+                                <div class="debt-action">Pay this first</div>
+                            </div>
+                            <div class="debt-item priority-2">
+                                <div class="debt-name">Credit Card B</div>
+                                <div class="debt-details">
+                                    <span class="debt-balance">$1,800</span>
+                                    <span class="debt-rate">18.99% APR</span>
+                                </div>
+                                <div class="debt-action">Pay this second</div>
+                            </div>
+                            <div class="debt-item priority-3">
+                                <div class="debt-name">Personal Loan</div>
+                                <div class="debt-details">
+                                    <span class="debt-balance">$5,000</span>
+                                    <span class="debt-rate">12.50% APR</span>
+                                </div>
+                                <div class="debt-action">Minimum payments</div>
+                            </div>
+                        </div>
+                        
+                        <div class="strategy-benefits">
+                            <h5>Potential Savings:</h5>
+                            <ul>
+                                <li>Save $2,947 in total interest</li>
+                                <li>Pay off debt 18 months sooner</li>
+                                <li>Free up $247/month sooner</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function generateDiningBudgetContent() {
+                return `
+                    <div class="budget-content">
+                        <h4>Dining Budget Recommendation</h4>
+                        <p>Based on your spending patterns, here's a suggested dining budget:</p>
+                        
+                        <div class="budget-breakdown">
+                            <div class="budget-item">
+                                <span class="budget-category">Restaurants</span>
+                                <span class="budget-amount">$250/month</span>
+                            </div>
+                            <div class="budget-item">
+                                <span class="budget-category">Takeout/Delivery</span>
+                                <span class="budget-amount">$100/month</span>
+                            </div>
+                            <div class="budget-item">
+                                <span class="budget-category">Coffee/Drinks</span>
+                                <span class="budget-amount">$50/month</span>
+                            </div>
+                            <div class="budget-total">
+                                <span class="budget-category">Total Dining Budget</span>
+                                <span class="budget-amount">$400/month</span>
+                            </div>
+                        </div>
+                        
+                        <div class="budget-impact">
+                            <h5>Expected Impact:</h5>
+                            <ul>
+                                <li>Reduce dining expenses by 30%</li>
+                                <li>Save $1,800 annually</li>
+                                <li>Reach emergency fund goal 8 months sooner</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function generateCalculationContent() {
+                return `
+                    <div class="calculation-content">
+                        <h4>Debt Payoff Calculation</h4>
+                        
+                        <div class="calculation-comparison">
+                            <div class="calc-method">
+                                <h5>Current Method (Minimum Payments)</h5>
+                                <div class="calc-stats">
+                                    <div class="calc-stat">
+                                        <span class="stat-label">Total Interest:</span>
+                                        <span class="stat-value">$4,247</span>
+                                    </div>
+                                    <div class="calc-stat">
+                                        <span class="stat-label">Time to Pay Off:</span>
+                                        <span class="stat-value">7.2 years</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="calc-method recommended">
+                                <h5>Avalanche Method</h5>
+                                <div class="calc-stats">
+                                    <div class="calc-stat">
+                                        <span class="stat-label">Total Interest:</span>
+                                        <span class="stat-value">$1,300</span>
+                                    </div>
+                                    <div class="calc-stat">
+                                        <span class="stat-label">Time to Pay Off:</span>
+                                        <span class="stat-value">3.8 years</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="calc-savings">
+                            <h5>Your Savings:</h5>
+                            <div class="savings-highlight">
+                                <span class="savings-amount">$2,947</span>
+                                <span class="savings-label">in interest saved</span>
+                            </div>
+                            <div class="savings-highlight">
+                                <span class="savings-amount">3.4 years</span>
+                                <span class="savings-label">faster payoff</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function setupModalHandlers() {
+                // Close modals
+                document.querySelectorAll('.modal-close, .modal-overlay').forEach(element => {
+                    element.addEventListener('click', (e) => {
+                        if (e.target === element) {
+                            element.closest('.modal').style.display = 'none';
+                        }
+                    });
+                });
+
+                // Recommendation modal actions
+                document.getElementById('applyRecommendation')?.addEventListener('click', () => {
+                    // Handle applying the recommendation
+                    document.getElementById('recommendationModal').style.display = 'none';
+                    showSuccessMessage('Recommendation applied successfully!');
+                });
+
+                document.getElementById('dismissRecommendation')?.addEventListener('click', () => {
+                    document.getElementById('recommendationModal').style.display = 'none';
+                });
+
+                // Coaching modal
+                document.getElementById('scheduleCoaching')?.addEventListener('click', () => {
+                    document.getElementById('coachingModal').style.display = 'flex';
+                });
+
+                document.getElementById('addCoachingSession')?.addEventListener('click', () => {
+                    document.getElementById('coachingModal').style.display = 'flex';
+                });
+
+                document.getElementById('cancelCoaching')?.addEventListener('click', () => {
+                    document.getElementById('coachingModal').style.display = 'none';
+                });
+
+                document.getElementById('scheduleCoachingConfirm')?.addEventListener('click', () => {
+                    const form = document.getElementById('coachingForm');
+                    if (form.checkValidity()) {
+                        scheduleCoachingSession();
+                        document.getElementById('coachingModal').style.display = 'none';
+                    }
+                });
+            }
+
+            function scheduleCoachingSession() {
+                const sessionData = {
+                    type: document.getElementById('sessionType').value,
+                    date: document.getElementById('sessionDate').value,
+                    time: document.getElementById('sessionTime').value,
+                    notes: document.getElementById('sessionNotes').value,
+                    reminder: document.getElementById('sendReminder').checked
+                };
+
+                // Save session (in real app, would send to server)
+                console.log('Scheduling session:', sessionData);
+                
+                // Add to schedule display
+                addSessionToSchedule(sessionData);
+                
+                showSuccessMessage('Coaching session scheduled successfully!');
+                
+                // Reset form
+                document.getElementById('coachingForm').reset();
+            }
+
+            function addSessionToSchedule(sessionData) {
+                const scheduleList = document.getElementById('coachingSchedule');
+                const sessionElement = document.createElement('div');
+                sessionElement.className = 'schedule-item upcoming';
+                
+                const sessionDate = new Date(sessionData.date);
+                const formattedDate = sessionDate.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
+                sessionElement.innerHTML = `
+                    <div class="schedule-time">
+                        <div class="schedule-date">${formattedDate}</div>
+                        <div class="schedule-hour">${sessionData.time}</div>
+                    </div>
+                    <div class="schedule-content">
+                        <div class="schedule-title">${getSessionTypeName(sessionData.type)}</div>
+                        <div class="schedule-description">${sessionData.notes || 'No additional notes'}</div>
+                        <div class="schedule-type">Scheduled</div>
+                    </div>
+                    <div class="schedule-actions">
+                        <button class="btn btn-ghost btn-sm">✏️</button>
+                        <button class="btn btn-ghost btn-sm">🗑️</button>
+                    </div>
+                `;
+                
+                scheduleList.insertBefore(sessionElement, scheduleList.firstChild);
+            }
+
+            function getSessionTypeName(type) {
+                const typeNames = {
+                    'financial-review': 'Financial Health Review',
+                    'goal-planning': 'Goal Planning Session',
+                    'budget-optimization': 'Budget Optimization',
+                    'debt-strategy': 'Debt Management Strategy',
+                    'investment-advice': 'Investment Planning',
+                    'emergency-planning': 'Emergency Fund Planning'
+                };
+                return typeNames[type] || type;
+            }
+
+            function showSuccessMessage(message) {
+                const successEl = document.createElement('div');
+                successEl.className = 'notification notification-success';
+                successEl.innerHTML = `
+                    <div class="notification-icon">✅</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Success</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <button class="notification-close">✕</button>
+                `;
+                
+                document.body.appendChild(successEl);
+                
+                // Auto-remove after 3 seconds
+                setTimeout(() => {
+                    successEl.remove();
+                }, 3000);
+                
+                // Remove on close click
+                successEl.querySelector('.notification-close').addEventListener('click', () => {
+                    successEl.remove();
+                });
+            }
+
+            // Generate insights button
+            document.getElementById('generateInsights')?.addEventListener('click', async () => {
+                if (window.aiCoach) {
+                    showLoadingOverlay('Generating new insights...');
+                    try {
+                        await window.aiCoach.generateNewInsights();
+                        hideLoadingOverlay();
+                        showSuccessMessage('New insights generated successfully!');
+                        // Refresh the page or update insights display
+                        location.reload();
+                    } catch (error) {
+                        hideLoadingOverlay();
+                        showErrorMessage('Failed to generate insights. Please try again.');
+                    }
+                }
+            });
+
+            // Chat controls
+            document.getElementById('clearChat')?.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear the chat history?')) {
+                    // Keep only the welcome message and suggestions
+                    const welcomeMessage = chatMessages.querySelector('.ai-message:first-child');
+                    const suggestions = chatMessages.querySelector('.suggested-questions');
+                    chatMessages.innerHTML = '';
+                    if (welcomeMessage) chatMessages.appendChild(welcomeMessage.cloneNode(true));
+                    if (suggestions) chatMessages.appendChild(suggestions.cloneNode(true));
+                }
+            });
+
+            document.getElementById('exportChat')?.addEventListener('click', () => {
+                exportChatHistory();
+            });
+
+            function exportChatHistory() {
+                const messages = Array.from(chatMessages.querySelectorAll('.message:not(.thinking)'));
+                const chatText = messages.map(msg => {
+                    const sender = msg.classList.contains('ai-message') ? 'AI Coach' : 'You';
+                    const text = msg.querySelector('.message-text').textContent;
+                    const time = msg.querySelector('.message-time').textContent;
+                    return `[${time}] ${sender}: ${text}`;
+                }).join('\n\n');
+
+                const blob = new Blob([chatText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ai-coach-chat-${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            function showLoadingOverlay(text = 'Loading...') {
+                const overlay = document.createElement('div');
+                overlay.id = 'tempLoadingOverlay';
+                overlay.className = 'loading-overlay';
+                overlay.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">${text}</div>
+                `;
+                overlay.style.display = 'flex';
+                document.body.appendChild(overlay);
+            }
+
+            function hideLoadingOverlay() {
+                const overlay = document.getElementById('tempLoadingOverlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
+
+            function showErrorMessage(message) {
+                const errorEl = document.createElement('div');
+                errorEl.className = 'notification notification-error';
+                errorEl.innerHTML = `
+                    <div class="notification-icon">❌</div>
+                    <div class="notification-content">
+                        <div class="notification-title">Error</div>
+                        <div class="notification-message">${message}</div>
+                    </div>
+                    <button class="notification-close">✕</button>
+                `;
+                
+                document.body.appendChild(errorEl);
+                
+                setTimeout(() => {
+                    errorEl.remove();
+                }, 5000);
+                
+                errorEl.querySelector('.notification-close').addEventListener('click', () => {
+                    errorEl.remove();
+                });
+            }
+
+            // Initialize health score display
+            updateHealthScoreDisplay();
+
+            function updateHealthScoreDisplay() {
+                // This would normally fetch real data
+                const mockHealthData = {
+                    overall: 85,
+                    categories: {
+                        emergency: 90,
+                        debt: 75,
+                        savings: 88,
+                        investment: 65,
+                        goals: 82
+                    }
+                };
+
+                document.getElementById('overallScore').textContent = mockHealthData.overall;
+                
+                // Update status badge
+                const statusBadge = document.getElementById('healthStatus');
+                if (mockHealthData.overall >= 80) {
+                    statusBadge.textContent = 'Excellent';
+                    statusBadge.className = 'status-badge excellent';
+                } else if (mockHealthData.overall >= 60) {
+                    statusBadge.textContent = 'Good';
+                    statusBadge.className = 'status-badge good';
+                } else {
+                    statusBadge.textContent = 'Needs Improvement';
+                    statusBadge.className = 'status-badge poor';
+                }
+            }
+
+            // Auto-focus chat input
+            if (chatInput) {
+                chatInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>

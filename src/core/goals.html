@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/variables.css">
+</head>
+<body>
+    <!-- Main Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="navbar-logo">💡</div>
+                <span>SmartFinanceAI</span>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="dashboard.html" class="nav-link">📊 Dashboard</a></li>
+                <li><a href="accounts.html" class="nav-link">🏦 Accounts</a></li>
+                <li><a href="transactions.html" class="nav-link">💳 Transactions</a></li>
+                <li><a href="budget.html" class="nav-link">📋 Budget</a></li>
+                <li><a href="goals.html" class="nav-link active">🎯 Goals</a></li>
+                <li><a href="../csv-import/upload.html" class="nav-link">📥 Import</a></li>
+                <li><a href="../ai/coach-panel.html" class="nav-link">🤖 AI Coach</a></li>
+            </ul>
+            <button class="mobile-nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1 class="page-title text-gradient-primary">🎯 Financial Goals</h1>
+                    <p class="page-subtitle">Track your progress and achieve your financial dreams</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-primary" id="addGoalBtn">
+                        ➕ Add New Goal
+                    </button>
+                    <button class="btn btn-secondary" id="goalTemplatesBtn">
+                        📋 Goal Templates
+                    </button>
+                    <button class="btn btn-ghost" id="privacyToggle">
+                        👁️ Privacy Mode
+                    </button>
+                </div>
+            </div>
+
+            <!-- Goals Overview Cards -->
+            <div class="goals-overview" id="goalsOverview">
+                <div class="card card-premium goals-summary">
+                    <div class="card-header">
+                        <h3 class="card-title">Goals Overview</h3>
+                        <span class="goals-count" id="goalsCount">0 goals</span>
+                    </div>
+                    <div class="goals-stats">
+                        <div class="stat-item">
+                            <div class="stat-value financial-amount" data-financial>$0</div>
+                            <div class="stat-label">Total Target</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value financial-amount" data-financial>$0</div>
+                            <div class="stat-label">Current Progress</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0%</div>
+                            <div class="stat-label">Average Progress</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Months to Complete</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goal Categories Filter -->
+            <div class="goals-filters">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-category="all">All Goals</button>
+                    <button class="filter-tab" data-category="emergency">🚨 Emergency</button>
+                    <button class="filter-tab" data-category="savings">💰 Savings</button>
+                    <button class="filter-tab" data-category="debt">💳 Debt</button>
+                    <button class="filter-tab" data-category="investment">📈 Investment</button>
+                    <button class="filter-tab" data-category="property">🏠 Property</button>
+                </div>
+                <div class="filter-controls">
+                    <select class="select" id="sortGoals">
+                        <option value="priority">Sort by Priority</option>
+                        <option value="progress">Sort by Progress</option>
+                        <option value="target_date">Sort by Target Date</option>
+                        <option value="amount">Sort by Amount</option>
+                    </select>
+                    <select class="select" id="filterStatus">
+                        <option value="all">All Status</option>
+                        <option value="on_track">On Track</option>
+                        <option value="behind">Behind Schedule</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Goals Grid -->
+            <div class="goals-grid" id="goalsGrid">
+                <!-- Goals will be dynamically loaded here -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-content">
+                    <div class="empty-state-icon">🎯</div>
+                    <h3 class="empty-state-title">No Goals Yet</h3>
+                    <p class="empty-state-description">
+                        Start your financial journey by setting your first goal. 
+                        Whether it's building an emergency fund, saving for a house, 
+                        or planning for retirement, we'll help you get there.
+                    </p>
+                    <div class="empty-state-actions">
+                        <button class="btn btn-primary" id="createFirstGoal">
+                            🎯 Create Your First Goal
+                        </button>
+                        <button class="btn btn-secondary" id="browseTemplates">
+                            📋 Browse Goal Templates
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights Panel -->
+            <div class="ai-insights-panel card" id="aiInsights" style="display: none;">
+                <div class="card-header">
+                    <h3 class="card-title">🤖 AI Goal Insights</h3>
+                    <button class="btn btn-ghost btn-sm" id="refreshInsights">🔄 Refresh</button>
+                </div>
+                <div class="insights-content" id="insightsContent">
+                    <!-- AI insights will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Goal Templates Modal -->
+    <div class="modal" id="goalTemplatesModal" style="display: none;">
+        <div class="modal-overlay" id="templatesOverlay"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">📋 Goal Templates</h3>
+                <button class="modal-close" id="closeTemplatesModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="templates-grid" id="templatesGrid">
+                    <!-- Goal templates will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Goal Modal -->
+    <div class="modal" id="goalModal" style="display: none;">
+        <div class="modal-overlay" id="goalOverlay"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="goalModalTitle">🎯 Add New Goal</h3>
+                <button class="modal-close" id="closeGoalModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="goalForm" class="goal-form">
+                    <div class="form-step active" data-step="1">
+                        <h4 class="form-step-title">Goal Details</h4>
+                        <div class="form-group">
+                            <label for="goalName" class="form-label">Goal Name</label>
+                            <input type="text" id="goalName" class="input" placeholder="e.g., Emergency Fund" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="goalDescription" class="form-label">Description (Optional)</label>
+                            <textarea id="goalDescription" class="input" rows="3" 
+                                placeholder="Describe what this goal means to you..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="goalCategory" class="form-label">Category</label>
+                                <select id="goalCategory" class="select" required>
+                                    <option value="">Select category</option>
+                                    <option value="emergency">🚨 Emergency Fund</option>
+                                    <option value="savings">💰 General Savings</option>
+                                    <option value="debt">💳 Debt Payoff</option>
+                                    <option value="investment">📈 Investment</option>
+                                    <option value="property">🏠 Property/House</option>
+                                    <option value="education">🎓 Education</option>
+                                    <option value="travel">✈️ Travel</option>
+                                    <option value="other">📌 Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="goalPriority" class="form-label">Priority</label>
+                                <select id="goalPriority" class="select" required>
+                                    <option value="">Select priority</option>
+                                    <option value="critical">🔥 Critical</option>
+                                    <option value="high">🔴 High</option>
+                                    <option value="medium">🟡 Medium</option>
+                                    <option value="low">🟢 Low</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-step" data-step="2">
+                        <h4 class="form-step-title">Financial Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="targetAmount" class="form-label">Target Amount</label>
+                                <div class="input-currency-wrapper">
+                                    <input type="number" id="targetAmount" class="input input-currency" 
+                                        placeholder="0.00" step="0.01" min="0" required>
+                                    <span class="input-currency-symbol" id="currencySymbol">$</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="currentAmount" class="form-label">Current Amount</label>
+                                <div class="input-currency-wrapper">
+                                    <input type="number" id="currentAmount" class="input input-currency" 
+                                        placeholder="0.00" step="0.01" min="0">
+                                    <span class="input-currency-symbol">$</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="targetDate" class="form-label">Target Date</label>
+                                <input type="date" id="targetDate" class="input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="monthlyContribution" class="form-label">Monthly Contribution</label>
+                                <div class="input-currency-wrapper">
+                                    <input type="number" id="monthlyContribution" class="input input-currency" 
+                                        placeholder="0.00" step="0.01" min="0">
+                                    <span class="input-currency-symbol">$</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="goal-calculation" id="goalCalculation">
+                            <!-- AI calculations will appear here -->
+                        </div>
+                    </div>
+
+                    <div class="form-step" data-step="3">
+                        <h4 class="form-step-title">Goal Strategy</h4>
+                        <div class="form-group">
+                            <label class="form-label">Automatic Transfers</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="autoTransfer">
+                                    <span class="checkbox-mark"></span>
+                                    Set up automatic monthly transfers
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="autoTransferDetails" style="display: none;">
+                            <label for="transferDay" class="form-label">Transfer Day of Month</label>
+                            <select id="transferDay" class="select">
+                                <option value="1">1st of month</option>
+                                <option value="15">15th of month</option>
+                                <option value="28">28th of month</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notifications</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="progressNotifications" checked>
+                                    <span class="checkbox-mark"></span>
+                                    Weekly progress updates
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="milestoneNotifications" checked>
+                                    <span class="checkbox-mark"></span>
+                                    Milestone celebrations
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="reminderNotifications" checked>
+                                    <span class="checkbox-mark"></span>
+                                    Monthly contribution reminders
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-secondary" id="prevStep" style="display: none;">
+                            ← Previous
+                        </button>
+                        <div class="step-indicators">
+                            <span class="step-indicator active" data-step="1"></span>
+                            <span class="step-indicator" data-step="2"></span>
+                            <span class="step-indicator" data-step="3"></span>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="nextStep">
+                            Next →
+                        </button>
+                        <button type="submit" class="btn btn-success" id="saveGoal" style="display: none;">
+                            💾 Save Goal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div class="notification notification-success" id="successNotification" style="display: none;">
+        <div class="notification-icon">✅</div>
+        <div class="notification-content">
+            <div class="notification-title">Goal Created Successfully!</div>
+            <div class="notification-message">Your goal has been saved and is now being tracked.</div>
+        </div>
+        <button class="notification-close">✕</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../global/localization.js"></script>
+    <script src="../data/database-manager.js"></script>
+    <script src="../utils/currency-utils.js"></script>
+    <script src="../utils/date-utils.js"></script>
+    <script src="../components/modals/add-goal.js"></script>
+    <script src="goal-tracker.js"></script>
+    <script>
+        // Initialize Goals Page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize goal tracker
+            if (typeof GoalTracker !== 'undefined') {
+                window.goalTracker = new GoalTracker();
+                window.goalTracker.init();
+            }
+
+            // Mobile navigation toggle
+            const mobileToggle = document.querySelector('.mobile-nav-toggle');
+            const navbar = document.querySelector('.navbar-nav');
+            
+            mobileToggle?.addEventListener('click', () => {
+                navbar?.classList.toggle('active');
+            });
+
+            // Privacy mode toggle
+            const privacyToggle = document.getElementById('privacyToggle');
+            let isPrivacyMode = false;
+
+            privacyToggle?.addEventListener('click', () => {
+                isPrivacyMode = !isPrivacyMode;
+                const financialElements = document.querySelectorAll('[data-financial]');
+                
+                financialElements.forEach(el => {
+                    el.style.filter = isPrivacyMode ? 'blur(8px)' : 'none';
+                });
+                
+                privacyToggle.textContent = isPrivacyMode ? '👁️‍🗨️ Show Amounts' : '👁️ Privacy Mode';
+            });
+
+            // Filter tabs functionality
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    if (window.goalTracker) {
+                        window.goalTracker.filterGoals(tab.dataset.category);
+                    }
+                });
+            });
+
+            // Sort and filter controls
+            document.getElementById('sortGoals')?.addEventListener('change', (e) => {
+                if (window.goalTracker) {
+                    window.goalTracker.sortGoals(e.target.value);
+                }
+            });
+
+            document.getElementById('filterStatus')?.addEventListener('change', (e) => {
+                if (window.goalTracker) {
+                    window.goalTracker.filterByStatus(e.target.value);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Field Mapping - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/variables.css">
+</head>
+<body class="bg-primary">
+    <div class="container">
+        <!-- Header -->
+        <header class="mapping-header">
+            <div class="header-content glass">
+                <div class="step-indicator">
+                    <div class="step completed" data-step="1">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Upload</span>
+                    </div>
+                    <div class="step completed" data-step="2">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Preview</span>
+                    </div>
+                    <div class="step active" data-step="3">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Map Fields</span>
+                    </div>
+                    <div class="step" data-step="4">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Import</span>
+                    </div>
+                </div>
+                
+                <div class="mapping-summary">
+                    <h1 class="text-gradient-primary">Map Your CSV Fields</h1>
+                    <p class="text-secondary">Match your bank's CSV columns to SmartFinanceAI fields</p>
+                    <div class="bank-detected" id="bankDetected">
+                        <div class="bank-info">
+                            <img id="bankLogo" src="" alt="Bank Logo" class="bank-logo">
+                            <div class="bank-details">
+                                <span class="bank-name" id="bankName">Detecting bank...</span>
+                                <span class="confidence-score" id="confidenceScore">Confidence: --</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Mapping Interface -->
+        <main class="mapping-main">
+            <div class="mapping-container">
+                <!-- Field Mapping Section -->
+                <section class="field-mapping-section glass">
+                    <div class="section-header">
+                        <h2>Field Mapping</h2>
+                        <p class="text-tertiary">Drag CSV columns to the appropriate SmartFinanceAI fields</p>
+                    </div>
+
+                    <div class="mapping-grid">
+                        <!-- CSV Columns (Source) -->
+                        <div class="csv-columns">
+                            <h3 class="column-header">
+                                <span>CSV Columns</span>
+                                <span class="column-count" id="csvColumnCount">0 columns</span>
+                            </h3>
+                            <div class="columns-list" id="csvColumnsList">
+                                <!-- Dynamically populated CSV columns -->
+                            </div>
+                        </div>
+
+                        <!-- Mapping Arrow -->
+                        <div class="mapping-arrow">
+                            <div class="arrow-icon">→</div>
+                            <span class="arrow-label">Map to</span>
+                        </div>
+
+                        <!-- SmartFinanceAI Fields (Target) -->
+                        <div class="target-fields">
+                            <h3 class="column-header">
+                                <span>SmartFinanceAI Fields</span>
+                                <span class="required-indicator">* Required fields</span>
+                            </h3>
+                            <div class="fields-list">
+                                <!-- Required Fields -->
+                                <div class="field-category">
+                                    <h4>Required Fields</h4>
+                                    <div class="field-group">
+                                        <div class="target-field required" data-field="date" data-type="date">
+                                            <div class="field-header">
+                                                <span class="field-name">Date *</span>
+                                                <span class="field-type">Date</span>
+                                            </div>
+                                            <div class="drop-zone" id="dateField">
+                                                <span class="drop-hint">Drop date column here</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="target-field required" data-field="amount" data-type="currency">
+                                            <div class="field-header">
+                                                <span class="field-name">Amount *</span>
+                                                <span class="field-type">Currency</span>
+                                            </div>
+                                            <div class="drop-zone" id="amountField">
+                                                <span class="drop-hint">Drop amount column here</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="target-field required" data-field="description" data-type="text">
+                                            <div class="field-header">
+                                                <span class="field-name">Description *</span>
+                                                <span class="field-type">Text</span>
+                                            </div>
+                                            <div class="drop-zone" id="descriptionField">
+                                                <span class="drop-hint">Drop description column here</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Optional Fields -->
+                                <div class="field-category">
+                                    <h4>Optional Fields</h4>
+                                    <div class="field-group">
+                                        <div class="target-field optional" data-field="balance" data-type="currency">
+                                            <div class="field-header">
+                                                <span class="field-name">Balance</span>
+                                                <span class="field-type">Currency</span>
+                                            </div>
+                                            <div class="drop-zone" id="balanceField">
+                                                <span class="drop-hint">Drop balance column here</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="target-field optional" data-field="reference" data-type="text">
+                                            <div class="field-header">
+                                                <span class="field-name">Reference</span>
+                                                <span class="field-type">Text</span>
+                                            </div>
+                                            <div class="drop-zone" id="referenceField">
+                                                <span class="drop-hint">Drop reference column here</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="target-field optional" data-field="category" data-type="text">
+                                            <div class="field-header">
+                                                <span class="field-name">Category</span>
+                                                <span class="field-type">Text</span>
+                                            </div>
+                                            <div class="drop-zone" id="categoryField">
+                                                <span class="drop-hint">Drop category column here</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Preview Section -->
+                <section class="preview-section glass">
+                    <div class="section-header">
+                        <h3>Mapping Preview</h3>
+                        <p class="text-tertiary">Preview how your data will look after mapping</p>
+                    </div>
+
+                    <div class="preview-controls">
+                        <button class="btn btn-secondary" id="refreshPreview">
+                            <span>🔄</span>
+                            Refresh Preview
+                        </button>
+                        <div class="preview-stats" id="previewStats">
+                            <span class="stat">0 transactions</span>
+                            <span class="stat">0 valid</span>
+                            <span class="stat">0 errors</span>
+                        </div>
+                    </div>
+
+                    <div class="preview-table-container">
+                        <table class="preview-table" id="previewTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Balance</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="previewTableBody">
+                                <!-- Preview rows will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Duplicate Detection -->
+                <section class="duplicate-section glass" id="duplicateSection" style="display: none;">
+                    <div class="section-header">
+                        <h3 class="text-warning">⚠️ Potential Duplicates Detected</h3>
+                        <p class="text-tertiary">Review transactions that may already exist in your account</p>
+                    </div>
+
+                    <div class="duplicate-controls">
+                        <div class="bulk-actions">
+                            <button class="btn btn-ghost" id="selectAllDuplicates">Select All</button>
+                            <button class="btn btn-ghost" id="deselectAllDuplicates">Deselect All</button>
+                        </div>
+                        <div class="duplicate-stats" id="duplicateStats">
+                            <span class="stat text-warning">0 potential duplicates</span>
+                        </div>
+                    </div>
+
+                    <div class="duplicate-list" id="duplicateList">
+                        <!-- Duplicate items will be populated here -->
+                    </div>
+                </section>
+
+                <!-- Data Quality Warnings -->
+                <section class="quality-section glass" id="qualitySection" style="display: none;">
+                    <div class="section-header">
+                        <h3 class="text-warning">Data Quality Issues</h3>
+                        <p class="text-tertiary">The following issues were found in your data</p>
+                    </div>
+
+                    <div class="quality-warnings" id="qualityWarnings">
+                        <!-- Quality warnings will be populated here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer Actions -->
+        <footer class="mapping-footer">
+            <div class="footer-content glass">
+                <div class="footer-actions">
+                    <button class="btn btn-ghost" id="backButton">
+                        <span>←</span>
+                        Back to Preview
+                    </button>
+                    
+                    <div class="primary-actions">
+                        <button class="btn btn-secondary" id="saveMapping">
+                            Save Mapping
+                        </button>
+                        <button class="btn btn-primary" id="proceedToImport" disabled>
+                            <span>Continue to Import</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mapping-status" id="mappingStatus">
+                    <div class="status-indicator incomplete">
+                        <span class="status-icon">⚠️</span>
+                        <span class="status-text">Complete required field mapping to continue</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Advanced Mapping Modal -->
+    <div class="modal" id="advancedMappingModal">
+        <div class="modal-content glass-premium">
+            <div class="modal-header">
+                <h3>Advanced Field Configuration</h3>
+                <button class="modal-close" id="closeAdvancedModal">×</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="config-section">
+                    <h4>Date Format</h4>
+                    <select class="input" id="dateFormat">
+                        <option value="auto">Auto-detect</option>
+                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                        <option value="DD-MM-YYYY">DD-MM-YYYY</option>
+                    </select>
+                </div>
+
+                <div class="config-section">
+                    <h4>Currency Format</h4>
+                    <select class="input" id="currencyFormat">
+                        <option value="auto">Auto-detect</option>
+                        <option value="1234.56">1234.56</option>
+                        <option value="1,234.56">1,234.56</option>
+                        <option value="1234,56">1234,56</option>
+                        <option value="1.234,56">1.234,56</option>
+                    </select>
+                </div>
+
+                <div class="config-section">
+                    <h4>Amount Sign Convention</h4>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="amountSign" value="positive_credit" checked>
+                            Positive for credits, negative for debits
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="amountSign" value="positive_debit">
+                            Positive for debits, negative for credits
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="amountSign" value="separate_columns">
+                            Separate debit/credit columns
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-ghost" id="cancelAdvanced">Cancel</button>
+                <button class="btn btn-primary" id="applyAdvanced">Apply Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../global/localization.js"></script>
+    <script src="../csv-import/bank-formats.js"></script>
+    <script src="../csv-import/duplicate-detector.js"></script>
+    <script src="../utils/validation-utils.js"></script>
+    <script src="../utils/formatting-utils.js"></script>
+    <script>
+        // CSV Field Mapping Implementation
+        class CSVMappingInterface {
+            constructor() {
+                this.csvData = JSON.parse(sessionStorage.getItem('csvPreviewData')) || [];
+                this.csvHeaders = JSON.parse(sessionStorage.getItem('csvHeaders')) || [];
+                this.bankFormat = JSON.parse(sessionStorage.getItem('detectedBankFormat')) || null;
+                this.fieldMapping = new Map();
+                this.duplicateDetector = new DuplicateDetector();
+                this.previewData = [];
+                this.potentialDuplicates = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.renderCSVColumns();
+                this.renderBankInfo();
+                this.setupDragAndDrop();
+                this.setupEventListeners();
+                this.applyAutoMapping();
+                this.updateMappingStatus();
+            }
+
+            renderCSVColumns() {
+                const container = document.getElementById('csvColumnsList');
+                const countEl = document.getElementById('csvColumnCount');
+                
+                countEl.textContent = `${this.csvHeaders.length} columns`;
+                
+                container.innerHTML = this.csvHeaders.map((header, index) => `
+                    <div class="csv-column" draggable="true" data-column="${index}" data-header="${header}">
+                        <div class="column-info">
+                            <span class="column-name">${header}</span>
+                            <span class="column-sample">${this.getSampleValue(index)}</span>
+                        </div>
+                        <div class="column-actions">
+                            <button class="btn-icon" title="Preview values">👁️</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getSampleValue(columnIndex) {
+                if (this.csvData.length > 0 && this.csvData[0][this.csvHeaders[columnIndex]]) {
+                    const value = this.csvData[0][this.csvHeaders[columnIndex]];
+                    return typeof value === 'string' && value.length > 30 
+                        ? value.substring(0, 30) + '...' 
+                        : value;
+                }
+                return 'No data';
+            }
+
+            renderBankInfo() {
+                if (this.bankFormat) {
+                    document.getElementById('bankName').textContent = this.bankFormat.name;
+                    document.getElementById('confidenceScore').textContent = 
+                        `Confidence: ${Math.round(this.bankFormat.confidence * 100)}%`;
+                    
+                    if (this.bankFormat.logo) {
+                        document.getElementById('bankLogo').src = this.bankFormat.logo;
+                    }
+                }
+            }
+
+            setupDragAndDrop() {
+                // Make CSV columns draggable
+                document.addEventListener('dragstart', (e) => {
+                    if (e.target.classList.contains('csv-column')) {
+                        e.dataTransfer.setData('text/plain', JSON.stringify({
+                            columnIndex: e.target.dataset.column,
+                            header: e.target.dataset.header
+                        }));
+                        e.target.classList.add('dragging');
+                    }
+                });
+
+                document.addEventListener('dragend', (e) => {
+                    if (e.target.classList.contains('csv-column')) {
+                        e.target.classList.remove('dragging');
+                    }
+                });
+
+                // Setup drop zones
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    zone.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        zone.classList.add('drag-over');
+                    });
+
+                    zone.addEventListener('dragleave', () => {
+                        zone.classList.remove('drag-over');
+                    });
+
+                    zone.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        zone.classList.remove('drag-over');
+                        
+                        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                        const field = zone.parentElement.dataset.field;
+                        
+                        this.mapField(field, data.columnIndex, data.header);
+                        this.updateDropZone(zone, data.header);
+                        this.updatePreview();
+                        this.updateMappingStatus();
+                    });
+                });
+            }
+
+            mapField(field, columnIndex, header) {
+                this.fieldMapping.set(field, {
+                    columnIndex: parseInt(columnIndex),
+                    header: header
+                });
+            }
+
+            updateDropZone(zone, header) {
+                zone.innerHTML = `
+                    <div class="mapped-field">
+                        <span class="mapped-header">${header}</span>
+                        <button class="remove-mapping" title="Remove mapping">×</button>
+                    </div>
+                `;
+
+                // Setup remove mapping
+                zone.querySelector('.remove-mapping').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const field = zone.parentElement.dataset.field;
+                    this.fieldMapping.delete(field);
+                    zone.innerHTML = `<span class="drop-hint">Drop ${field} column here</span>`;
+                    this.updatePreview();
+                    this.updateMappingStatus();
+                });
+            }
+
+            applyAutoMapping() {
+                if (!this.bankFormat || !this.bankFormat.autoMapping) return;
+
+                Object.entries(this.bankFormat.autoMapping).forEach(([field, columnName]) => {
+                    const columnIndex = this.csvHeaders.findIndex(h => 
+                        h.toLowerCase().includes(columnName.toLowerCase()) ||
+                        columnName.toLowerCase().includes(h.toLowerCase())
+                    );
+
+                    if (columnIndex !== -1) {
+                        this.mapField(field, columnIndex, this.csvHeaders[columnIndex]);
+                        const zone = document.getElementById(`${field}Field`);
+                        if (zone) {
+                            this.updateDropZone(zone, this.csvHeaders[columnIndex]);
+                        }
+                    }
+                });
+
+                this.updatePreview();
+                this.updateMappingStatus();
+            }
+
+            updatePreview() {
+                const requiredFields = ['date', 'amount', 'description'];
+                const allRequiredMapped = requiredFields.every(field => this.fieldMapping.has(field));
+
+                if (!allRequiredMapped) {
+                    this.showPreviewMessage('Please map all required fields to see preview');
+                    return;
+                }
+
+                this.previewData = this.csvData.slice(0, 10).map((row, index) => {
+                    const mapped = {};
+                    
+                    this.fieldMapping.forEach((columnInfo, field) => {
+                        const value = row[columnInfo.header];
+                        mapped[field] = this.formatFieldValue(field, value);
+                    });
+
+                    mapped.status = this.validateRow(mapped);
+                    mapped.originalIndex = index;
+                    
+                    return mapped;
+                });
+
+                this.renderPreviewTable();
+                this.detectDuplicates();
+                this.updatePreviewStats();
+            }
+
+            formatFieldValue(field, value) {
+                switch(field) {
+                    case 'date':
+                        return this.parseDate(value);
+                    case 'amount':
+                    case 'balance':
+                        return this.parseAmount(value);
+                    default:
+                        return value;
+                }
+            }
+
+            parseDate(dateStr) {
+                // Enhanced date parsing logic
+                if (!dateStr) return null;
+                
+                // Try different date formats
+                const formats = [
+                    /(\d{1,2})\/(\d{1,2})\/(\d{4})/,  // DD/MM/YYYY or MM/DD/YYYY
+                    /(\d{4})-(\d{1,2})-(\d{1,2})/,   // YYYY-MM-DD
+                    /(\d{1,2})-(\d{1,2})-(\d{4})/    // DD-MM-YYYY
+                ];
+
+                for (const format of formats) {
+                    const match = dateStr.match(format);
+                    if (match) {
+                        const date = new Date(match[3] || match[1], (match[2] || match[1]) - 1, match[1] || match[3]);
+                        return date.toISOString().split('T')[0];
+                    }
+                }
+
+                return dateStr; // Return original if parsing fails
+            }
+
+            parseAmount(amountStr) {
+                if (!amountStr) return null;
+                
+                // Remove currency symbols and spaces
+                const cleaned = amountStr.toString().replace(/[^\d.,\-+]/g, '');
+                
+                // Handle different decimal separators
+                let num = cleaned.replace(',', '.');
+                return parseFloat(num) || 0;
+            }
+
+            validateRow(row) {
+                const errors = [];
+                
+                if (!row.date) errors.push('Invalid date');
+                if (isNaN(row.amount)) errors.push('Invalid amount');
+                if (!row.description) errors.push('Missing description');
+                
+                return errors.length === 0 ? 'valid' : 'error';
+            }
+
+            renderPreviewTable() {
+                const tbody = document.getElementById('previewTableBody');
+                tbody.innerHTML = this.previewData.map(row => `
+                    <tr class="preview-row ${row.status}">
+                        <td>${row.date || '—'}</td>
+                        <td class="financial-amount ${row.amount >= 0 ? 'financial-positive' : 'financial-negative'}">
+                            ${this.formatCurrency(row.amount)}
+                        </td>
+                        <td>${row.description || '—'}</td>
+                        <td class="financial-amount">${this.formatCurrency(row.balance)}</td>
+                        <td>${row.category || '—'}</td>
+                        <td>
+                            <span class="status-badge ${row.status}">
+                                ${row.status === 'valid' ? '✓' : '⚠️'}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            formatCurrency(amount) {
+                if (amount === null || amount === undefined) return '—';
+                return new Intl.NumberFormat('en-NZ', {
+                    style: 'currency',
+                    currency: 'NZD'
+                }).format(amount);
+            }
+
+            async detectDuplicates() {
+                // Simulate existing transactions for duplicate detection
+                const existingTransactions = JSON.parse(localStorage.getItem('transactions')) || [];
+                
+                this.potentialDuplicates = this.previewData.filter(newTx => {
+                    return existingTransactions.some(existing => 
+                        this.duplicateDetector.areSimilar(newTx, existing)
+                    );
+                });
+
+                if (this.potentialDuplicates.length > 0) {
+                    this.showDuplicateSection();
+                }
+            }
+
+            showDuplicateSection() {
+                const section = document.getElementById('duplicateSection');
+                section.style.display = 'block';
+                
+                const stats = document.getElementById('duplicateStats');
+                stats.innerHTML = `<span class="stat text-warning">${this.potentialDuplicates.length} potential duplicates</span>`;
+                
+                const list = document.getElementById('duplicateList');
+                list.innerHTML = this.potentialDuplicates.map(dup => `
+                    <div class="duplicate-item">
+                        <label class="duplicate-checkbox">
+                            <input type="checkbox" class="duplicate-check" data-index="${dup.originalIndex}">
+                            <span class="checkmark"></span>
+                        </label>
+                        <div class="duplicate-details">
+                            <div class="duplicate-transaction">
+                                <span class="date">${dup.date}</span>
+                                <span class="amount financial-amount ${dup.amount >= 0 ? 'positive' : 'negative'}">
+                                    ${this.formatCurrency(dup.amount)}
+                                </span>
+                                <span class="description">${dup.description}</span>
+                            </div>
+                            <div class="duplicate-warning">
+                                <span class="warning-icon">⚠️</span>
+                                Similar transaction may already exist
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updatePreviewStats() {
+                const stats = document.getElementById('previewStats');
+                const validCount = this.previewData.filter(row => row.status === 'valid').length;
+                const errorCount = this.previewData.filter(row => row.status === 'error').length;
+                
+                stats.innerHTML = `
+                    <span class="stat">${this.previewData.length} transactions</span>
+                    <span class="stat text-success">${validCount} valid</span>
+                    <span class="stat text-danger">${errorCount} errors</span>
+                `;
+            }
+
+            updateMappingStatus() {
+                const requiredFields = ['date', 'amount', 'description'];
+                const mappedRequired = requiredFields.filter(field => this.fieldMapping.has(field));
+                const allRequiredMapped = mappedRequired.length === requiredFields.length;
+                
+                const statusEl = document.getElementById('mappingStatus');
+                const proceedBtn = document.getElementById('proceedToImport');
+                
+                if (allRequiredMapped) {
+                    statusEl.innerHTML = `
+                        <div class="status-indicator complete">
+                            <span class="status-icon">✓</span>
+                            <span class="status-text">All required fields mapped. Ready to import!</span>
+                        </div>
+                    `;
+                    proceedBtn.disabled = false;
+                } else {
+                    const remaining = requiredFields.filter(field => !this.fieldMapping.has(field));
+                    statusEl.innerHTML = `
+                        <div class="status-indicator incomplete">
+                            <span class="status-icon">⚠️</span>
+                            <span class="status-text">
+                                Missing required fields: ${remaining.join(', ')}
+                            </span>
+                        </div>
+                    `;
+                    proceedBtn.disabled = true;
+                }
+            }
+
+            showPreviewMessage(message) {
+                const tbody = document.getElementById('previewTableBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="preview-message">
+                            ${message}
+                        </td>
+                    </tr>
+                `;
+            }
+
+            setupEventListeners() {
+                // Back button
+                document.getElementById('backButton').addEventListener('click', () => {
+                    window.location.href = 'preview.html';
+                });
+
+                // Refresh preview
+                document.getElementById('refreshPreview').addEventListener('click', () => {
+                    this.updatePreview();
+                });
+
+                // Save mapping
+                document.getElementById('saveMapping').addEventListener('click', () => {
+                    this.saveMapping();
+                });
+
+                // Proceed to import
+                document.getElementById('proceedToImport').addEventListener('click', () => {
+                    this.proceedToImport();
+                });
+
+                // Advanced mapping modal
+                document.querySelector('[title="Advanced settings"]')?.addEventListener('click', () => {
+                    document.getElementById('advancedMappingModal').style.display = 'block';
+                });
+
+                // Duplicate selection
+                document.getElementById('selectAllDuplicates')?.addEventListener('click', () => {
+                    document.querySelectorAll('.duplicate-check').forEach(cb => cb.checked = true);
+                });
+
+                document.getElementById('deselectAllDuplicates')?.addEventListener('click', () => {
+                    document.querySelectorAll('.duplicate-check').forEach(cb => cb.checked = false);
+                });
+            }
+
+            saveMapping() {
+                const mappingData = {
+                    fieldMapping: Object.fromEntries(this.fieldMapping),
+                    bankFormat: this.bankFormat,
+                    csvHeaders: this.csvHeaders,
+                    timestamp: new Date().toISOString()
+                };
+
+                localStorage.setItem('savedMappings', JSON.stringify(mappingData));
+                
+                // Show success message
+                this.showNotification('Mapping saved successfully!', 'success');
+            }
+
+            proceedToImport() {
+                // Store mapping data for import step
+                sessionStorage.setItem('finalMapping', JSON.stringify({
+                    fieldMapping: Object.fromEntries(this.fieldMapping),
+                    excludedDuplicates: this.getExcludedDuplicates(),
+                    previewData: this.previewData
+                }));
+
+                // Navigate to import step
+                window.location.href = '../core/transactions.html?import=true';
+            }
+
+            getExcludedDuplicates() {
+                const checkboxes = document.querySelectorAll('.duplicate-check:checked');
+                return Array.from(checkboxes).map(cb => parseInt(cb.dataset

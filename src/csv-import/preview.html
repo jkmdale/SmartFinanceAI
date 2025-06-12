@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Preview - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/variables.css">
+    <link rel="stylesheet" href="../styles/components.css">
+</head>
+<body class="bg-primary">
+    <!-- Header with Progress -->
+    <header class="glass border-b border-glass-border-light">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <button id="backBtn" class="btn btn-ghost btn-sm">
+                        <i class="icon-arrow-left"></i>
+                        Back
+                    </button>
+                    <h1 class="text-xl font-semibold text-primary">Preview CSV Data</h1>
+                </div>
+                
+                <!-- Progress Steps -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-success-500 flex items-center justify-center">
+                            <i class="icon-check text-xs text-white"></i>
+                        </div>
+                        <span class="text-sm text-secondary">Upload</span>
+                    </div>
+                    <div class="w-8 h-px bg-glass-border-light"></div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-primary-500 text-white flex items-center justify-center">
+                            <span class="text-xs font-medium">2</span>
+                        </div>
+                        <span class="text-sm text-primary font-medium">Preview</span>
+                    </div>
+                    <div class="w-8 h-px bg-glass-border-subtle"></div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded-full bg-glass-border-light text-quaternary flex items-center justify-center">
+                            <span class="text-xs">3</span>
+                        </div>
+                        <span class="text-sm text-quaternary">Import</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <!-- File Information Card -->
+        <div class="card mb-8">
+            <div class="card-header">
+                <h2 class="card-title">File Information</h2>
+                <div class="flex items-center gap-4 text-sm text-secondary">
+                    <div class="flex items-center gap-2">
+                        <i class="icon-file-text"></i>
+                        <span id="fileName">transactions.csv</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="icon-database"></i>
+                        <span id="rowCount">0 rows</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="icon-calendar"></i>
+                        <span id="dateRange">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Detection Results -->
+        <div id="bankDetectionCard" class="card mb-8" style="display: none;">
+            <div class="card-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-success-500/20 flex items-center justify-center">
+                        <i class="icon-check-circle text-success-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-primary">Bank Format Detected</h3>
+                        <p class="text-sm text-secondary">Automatically detected bank format with high confidence</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="text-sm font-medium text-secondary">Bank Name</label>
+                        <p id="detectedBank" class="text-primary font-medium">-</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-secondary">Country</label>
+                        <p id="detectedCountry" class="text-primary font-medium">-</p>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-secondary">Confidence</label>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 h-2 bg-glass-border-light rounded-full overflow-hidden">
+                                <div id="confidenceBar" class="h-full bg-gradient-success transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                            <span id="confidenceText" class="text-sm font-medium text-success-400">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Field Mapping Section -->
+        <div class="card mb-8">
+            <div class="card-header">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="card-title">Field Mapping</h3>
+                        <p class="text-sm text-secondary">Map CSV columns to transaction fields</p>
+                    </div>
+                    <button id="autoMapBtn" class="btn btn-secondary btn-sm">
+                        <i class="icon-magic-wand"></i>
+                        Auto Map
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- CSV Columns -->
+                    <div>
+                        <h4 class="font-medium text-primary mb-4">CSV Columns</h4>
+                        <div id="csvColumns" class="space-y-2">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+
+                    <!-- Transaction Fields -->
+                    <div>
+                        <h4 class="font-medium text-primary mb-4">Transaction Fields</h4>
+                        <div class="space-y-3">
+                            <div class="field-mapping-row">
+                                <label class="field-label required">Date</label>
+                                <select id="dateField" class="select">
+                                    <option value="">Select column...</option>
+                                </select>
+                                <div class="field-preview">
+                                    <span class="text-xs text-tertiary">Preview: </span>
+                                    <span id="datePreview" class="text-xs text-secondary">-</span>
+                                </div>
+                            </div>
+
+                            <div class="field-mapping-row">
+                                <label class="field-label required">Amount</label>
+                                <select id="amountField" class="select">
+                                    <option value="">Select column...</option>
+                                </select>
+                                <div class="field-preview">
+                                    <span class="text-xs text-tertiary">Preview: </span>
+                                    <span id="amountPreview" class="text-xs text-secondary">-</span>
+                                </div>
+                            </div>
+
+                            <div class="field-mapping-row">
+                                <label class="field-label required">Description</label>
+                                <select id="descriptionField" class="select">
+                                    <option value="">Select column...</option>
+                                </select>
+                                <div class="field-preview">
+                                    <span class="text-xs text-tertiary">Preview: </span>
+                                    <span id="descriptionPreview" class="text-xs text-secondary">-</span>
+                                </div>
+                            </div>
+
+                            <div class="field-mapping-row">
+                                <label class="field-label">Balance</label>
+                                <select id="balanceField" class="select">
+                                    <option value="">Select column...</option>
+                                </select>
+                                <div class="field-preview">
+                                    <span class="text-xs text-tertiary">Preview: </span>
+                                    <span id="balancePreview" class="text-xs text-secondary">-</span>
+                                </div>
+                            </div>
+
+                            <div class="field-mapping-row">
+                                <label class="field-label">Category</label>
+                                <select id="categoryField" class="select">
+                                    <option value="">Select column...</option>
+                                </select>
+                                <div class="field-preview">
+                                    <span class="text-xs text-tertiary">Preview: </span>
+                                    <span id="categoryPreview" class="text-xs text-secondary">-</span>
+                                </div>
+                            </div>
+
+                            <div class="field-mapping-row">
+                                <label class="field-label">Reference</label>
+                                <select id="referenceField" class="select">
+                                    <option value="">Select column...</option>
+                                </select>
+                                <div class="field-preview">
+                                    <span class="text-xs text-tertiary">Preview: </span>
+                                    <span id="referencePreview" class="text-xs text-secondary">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Validation Section -->
+        <div id="validationSection" class="card mb-8" style="display: none;">
+            <div class="card-header">
+                <h3 class="card-title">Data Validation</h3>
+                <p class="text-

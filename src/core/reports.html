@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/variables.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- Main Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="navbar-logo">💡</div>
+                <span>SmartFinanceAI</span>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="dashboard.html" class="nav-link">📊 Dashboard</a></li>
+                <li><a href="accounts.html" class="nav-link">🏦 Accounts</a></li>
+                <li><a href="transactions.html" class="nav-link">💳 Transactions</a></li>
+                <li><a href="budget.html" class="nav-link">📋 Budget</a></li>
+                <li><a href="goals.html" class="nav-link">🎯 Goals</a></li>
+                <li><a href="reports.html" class="nav-link active">📈 Reports</a></li>
+                <li><a href="../csv-import/upload.html" class="nav-link">📥 Import</a></li>
+                <li><a href="../ai/coach-panel.html" class="nav-link">🤖 AI Coach</a></li>
+            </ul>
+            <button class="mobile-nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1 class="page-title text-gradient-primary">📈 Financial Reports</h1>
+                    <p class="page-subtitle">Comprehensive insights into your financial health and trends</p>
+                </div>
+                <div class="page-actions">
+                    <div class="date-range-selector">
+                        <select class="select" id="reportPeriod">
+                            <option value="1m">Last Month</option>
+                            <option value="3m" selected>Last 3 Months</option>
+                            <option value="6m">Last 6 Months</option>
+                            <option value="1y">Last Year</option>
+                            <option value="2y">Last 2 Years</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="exportReport">
+                        📄 Export PDF
+                    </button>
+                    <button class="btn btn-secondary" id="shareReport">
+                        🔗 Share Report
+                    </button>
+                    <button class="btn btn-ghost" id="privacyToggle">
+                        👁️ Privacy Mode
+                    </button>
+                </div>
+            </div>
+
+            <!-- Report Summary Cards -->
+            <div class="report-summary">
+                <div class="summary-card card card-success">
+                    <div class="summary-icon">📈</div>
+                    <div class="summary-content">
+                        <div class="summary-value financial-amount" data-financial>$0</div>
+                        <div class="summary-label">Total Income</div>
+                        <div class="summary-change positive">+12.5% vs last period</div>
+                    </div>
+                </div>
+                <div class="summary-card card card-warning">
+                    <div class="summary-icon">📉</div>
+                    <div class="summary-content">
+                        <div class="summary-value financial-amount" data-financial>$0</div>
+                        <div class="summary-label">Total Expenses</div>
+                        <div class="summary-change negative">+8.3% vs last period</div>
+                    </div>
+                </div>
+                <div class="summary-card card card-premium">
+                    <div class="summary-icon">💰</div>
+                    <div class="summary-content">
+                        <div class="summary-value financial-amount" data-financial>$0</div>
+                        <div class="summary-label">Net Savings</div>
+                        <div class="summary-change positive">+25.1% vs last period</div>
+                    </div>
+                </div>
+                <div class="summary-card card card-info">
+                    <div class="summary-icon">🎯</div>
+                    <div class="summary-content">
+                        <div class="summary-value">0%</div>
+                        <div class="summary-label">Savings Rate</div>
+                        <div class="summary-change positive">+3.2% vs last period</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Navigation Tabs -->
+            <div class="report-tabs">
+                <button class="report-tab active" data-tab="overview">📊 Overview</button>
+                <button class="report-tab" data-tab="income">📈 Income Analysis</button>
+                <button class="report-tab" data-tab="expenses">📉 Expense Analysis</button>
+                <button class="report-tab" data-tab="categories">🏷️ Category Breakdown</button>
+                <button class="report-tab" data-tab="trends">📈 Trends</button>
+                <button class="report-tab" data-tab="goals">🎯 Goals Progress</button>
+                <button class="report-tab" data-tab="insights">🤖 AI Insights</button>
+            </div>
+
+            <!-- Report Content Panels -->
+            <div class="report-content">
+                <!-- Overview Tab -->
+                <div class="report-panel active" id="overview-panel">
+                    <div class="report-grid">
+                        <!-- Income vs Expenses Chart -->
+                        <div class="chart-container card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Income vs Expenses Trend</h3>
+                                <div class="chart-controls">
+                                    <select class="select select-sm" id="incomeExpenseChart">
+                                        <option value="monthly">Monthly View</option>
+                                        <option value="weekly">Weekly View</option>
+                                        <option value="daily">Daily View</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <canvas id="incomeExpensesChart" class="chart-canvas"></canvas>
+                        </div>
+
+                        <!-- Net Worth Progression -->
+                        <div class="chart-container card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Net Worth Progression</h3>
+                                <div class="chart-legend">
+                                    <span class="legend-item">
+                                        <span class="legend-color" style="background: var(--brand-accent);"></span>
+                                        Assets
+                                    </span>
+                                    <span class="legend-item">
+                                        <span class="legend-color" style="background: var(--brand-danger);"></span>
+                                        Liabilities
+                                    </span>
+                                </div>
+                            </div>
+                            <canvas id="netWorthChart" class="chart-canvas"></canvas>
+                        </div>
+
+                        <!-- Budget Performance -->
+                        <div class="budget-performance card">
+                            <div class="card-header">
+                                <h3 class="card-title">Budget Performance</h3>
+                                <span class="budget-score">Score: 85/100</span>
+                            </div>
+                            <div class="budget-items" id="budgetPerformance">
+                                <!-- Budget items will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Financial Health Score -->
+                        <div class="health-score-card card card-premium">
+                            <div class="card-header">
+                                <h3 class="card-title">Financial Health Score</h3>
+                                <button class="btn btn-ghost btn-sm" id="healthScoreDetails">
+                                    📊 View Details
+                                </button>
+                            </div>
+                            <div class="health-score-display">
+                                <div class="score-circle">
+                                    <canvas id="healthScoreChart" class="score-chart"></canvas>
+                                    <div class="score-text">
+                                        <span class="score-value">85</span>
+                                        <span class="score-label">Good</span>
+                                    </div>
+                                </div>
+                                <div class="score-breakdown">
+                                    <div class="score-item">
+                                        <span class="score-category">Emergency Fund</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 80%;"></div>
+                                        </div>
+                                        <span class="score-points">80/100</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-category">Debt Ratio</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 90%;"></div>
+                                        </div>
+                                        <span class="score-points">90/100</span>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-category">Savings Rate</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 85%;"></div>
+                                        </div>
+                                        <span class="score-points">85/100</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income Analysis Tab -->
+                <div class="report-panel" id="income-panel" style="display: none;">
+                    <div class="report-grid">
+                        <!-- Income Sources Chart -->
+                        <div class="chart-container card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Income Sources</h3>
+                                <div class="chart-total">
+                                    Total: <span class="financial-amount" data-financial>$0</span>
+                                </div>
+                            </div>
+                            <canvas id="incomeSourcesChart" class="chart-canvas"></canvas>
+                        </div>
+
+                        <!-- Income Trend -->
+                        <div class="chart-container card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Income Trend Analysis</h3>
+                                <select class="select select-sm" id="incomeTrendPeriod">
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                            <canvas id="incomeTrendChart" class="chart-canvas"></canvas>
+                        </div>
+
+                        <!-- Income Statistics -->
+                        <div class="income-stats card">
+                            <div class="card-header">
+                                <h3 class="card-title">Income Statistics</h3>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <div class="stat-label">Average Monthly</div>
+                                    <div class="stat-value financial-amount" data-financial>$0</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">Highest Month</div>
+                                    <div class="stat-value financial-amount" data-financial>$0</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label

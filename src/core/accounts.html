@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounts - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+</head>
+<body class="app-page">
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <div class="navbar-logo">💳</div>
+                    <span>SmartFinanceAI</span>
+                </div>
+                
+                <ul class="navbar-nav">
+                    <li><a href="dashboard.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a></li>
+                    <li><a href="accounts.html" class="nav-link active">
+                        <span class="nav-icon">🏦</span>
+                        <span class="nav-text">Accounts</span>
+                    </a></li>
+                    <li><a href="transactions.html" class="nav-link">
+                        <span class="nav-icon">💸</span>
+                        <span class="nav-text">Transactions</span>
+                    </a></li>
+                    <li><a href="budget.html" class="nav-link">
+                        <span class="nav-icon">📈</span>
+                        <span class="nav-text">Budget</span>
+                    </a></li>
+                    <li><a href="goals.html" class="nav-link">
+                        <span class="nav-icon">🎯</span>
+                        <span class="nav-text">Goals</span>
+                    </a></li>
+                    <li><a href="reports.html" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">Reports</span>
+                    </a></li>
+                </ul>
+
+                <div class="navbar-user">
+                    <button class="user-menu-toggle" id="user-menu-toggle">
+                        <div class="user-avatar" id="user-avatar">👤</div>
+                        <span class="user-name" id="user-name">User</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1 class="page-title">
+                        <span class="title-icon">🏦</span>
+                        Your Accounts
+                    </h1>
+                    <p class="page-subtitle">Manage all your bank accounts, cards, and investments in one place</p>
+                </div>
+                
+                <div class="page-actions">
+                    <button class="btn btn-ghost" id="sync-accounts">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-text">Sync All</span>
+                    </button>
+                    <button class="btn btn-primary" id="add-account">
+                        <span class="btn-icon">➕</span>
+                        <span class="btn-text">Add Account</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accounts Overview Cards -->
+            <div class="accounts-overview">
+                <div class="overview-card total-balance">
+                    <div class="card-header">
+                        <h3 class="card-title">Total Balance</h3>
+                        <span class="balance-trend positive" id="balance-trend">+2.3%</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="balance-amount financial-amount financial-large" id="total-balance">
+                            <span class="currency-symbol">$</span>
+                            <span class="amount" data-financial="true">45,670.89</span>
+                        </div>
+                        <div class="balance-breakdown">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Liquid Assets</span>
+                                <span class="breakdown-value financial-amount" data-financial="true">$32,450.50</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Investments</span>
+                                <span class="breakdown-value financial-amount" data-financial="true">$13,220.39</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overview-card net-worth">
+                    <div class="card-header">
+                        <h3 class="card-title">Net Worth</h3>
+                        <span class="trend-indicator positive" id="networth-trend">📈</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="networth-amount financial-amount financial-large" id="net-worth">
+                            <span class="currency-symbol">$</span>
+                            <span class="amount" data-financial="true">42,150.89</span>
+                        </div>
+                        <div class="networth-breakdown">
+                            <div class="breakdown-item positive">
+                                <span class="breakdown-label">Assets</span>
+                                <span class="breakdown-value financial-amount" data-financial="true">$45,670.89</span>
+                            </div>
+                            <div class="breakdown-item negative">
+                                <span class="breakdown-label">Liabilities</span>
+                                <span class="breakdown-value financial-amount" data-financial="true">-$3,520.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overview-card monthly-change">
+                    <div class="card-header">
+                        <h3 class="card-title">This Month</h3>
+                        <span class="period-selector" id="period-selector">📅</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="change-amount financial-amount financial-large positive" id="monthly-change">
+                            <span class="currency-symbol">+$</span>
+                            <span class="amount" data-financial="true">1,240.50</span>
+                        </div>
+                        <div class="change-breakdown">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Income</span>
+                                <span class="breakdown-value financial-amount positive" data-financial="true">+$4,500.00</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Expenses</span>
+                                <span class="breakdown-value financial-amount negative" data-financial="true">-$3,259.50</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Controls -->
+            <div class="accounts-controls">
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label for="account-type-filter" class="filter-label">Account Type</label>
+                        <select id="account-type-filter" class="input select">
+                            <option value="all">All Accounts</option>
+                            <option value="checking">Checking</option>
+                            <option value="savings">Savings</option>
+                            <option value="credit">Credit Cards</option>
+                            <option value="investment">Investments</option>
+                            <option value="loan">Loans</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="institution-filter" class="filter-label">Institution</label>
+                        <select id="institution-filter" class="input select">
+                            <option value="all">All Banks</option>
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="status-filter" class="filter-label">Status</label>
+                        <select id="status-filter" class="input select">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="view-options">
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid">
+                            <span class="view-icon">⊞</span>
+                            <span class="view-text">Grid</span>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <span class="view-icon">☰</span>
+                            <span class="view-text">List</span>
+                        </button>
+                    </div>
+                    
+                    <button class="btn btn-ghost" id="export-accounts">
+                        <span class="btn-icon">📤</span>
+                        <span class="btn-text">Export</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accounts Grid/List -->
+            <div class="accounts-container">
+                <div class="accounts-grid" id="accounts-grid">
+                    <!-- Account cards will be populated here -->
+                </div>
+                
+                <div class="accounts-list" id="accounts-list" style="display: none;">
+                    <!-- Account list will be populated here -->
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <div class="empty-content">
+                    <div class="empty-icon">🏦</div>
+                    <h3 class="empty-title">No Accounts Found</h3>
+                    <p class="empty-description">Start by adding your first bank account or importing your financial data</p>
+                    <div class="empty-actions">
+                        <button class="btn btn-primary" id="add-first-account">
+                            <span class="btn-icon">➕</span>
+                            <span class="btn-text">Add Your First Account</span>
+                        </button>
+                        <button class="btn btn-ghost" id="import-data">
+                            <span class="btn-icon">📁</span>
+                            <span class="btn-text">Import Bank Data</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Account Modal -->
+    <div id="add-account-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Account</h3>
+                <button type="button" class="modal-close" id="close-add-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-account-form">
+                    <div class="form-group">
+                        <label for="account-name" class="form-label">Account Name</label>
+                        <input type="text" id="account-name" class="input" placeholder="e.g., ANZ Checking Account" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="account-type" class="form-label">Account Type</label>
+                            <select id="account-type" class="input select" required>
+                                <option value="">Select account type</option>
+                                <option value="checking">Checking Account</option>
+                                <option value="savings">Savings Account</option>
+                                <option value="credit">Credit Card</option>
+                                <option value="investment">Investment Account</option>
+                                <option value="loan">Loan Account</option>
+                                <option value="mortgage">Mortgage</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="institution" class="form-label">Bank/Institution</label>
+                            <select id="institution" class="input select" required>
+                                <option value="">Select your bank</option>
+                                <!-- Populated based on country -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="account-number" class="form-label">Account Number (Last 4 digits)</label>
+                            <input type="text" id="account-number" class="input" placeholder="****1234" maxlength="4">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="currency" class="form-label">Currency</label>
+                            <select id="currency" class="input select" required>
+                                <!-- Populated based on country -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current-balance" class="form-label">Current Balance</label>
+                        <div class="input-currency-wrapper">
+                            <input type="number" id="current-balance" class="input input-currency" step="0.01" placeholder="0.00" required>
+                            <span class="input-currency-symbol" id="currency-symbol">$</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="account-notes" class="form-label">Notes (Optional)</label>
+                        <textarea id="account-notes" class="input" rows="3" placeholder="Any additional notes about this account..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" id="cancel-add">Cancel</button>
+                <button type="submit" form="add-account-form" class="btn btn-primary">Add Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Details Modal -->
+    <div id="account-details-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="account-details-title">Account Details</h3>
+                <button type="button" class="modal-close" id="close-details-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="account-details-content">
+                    <!-- Account summary -->
+                    <div class="account-summary">
+                        <div class="account-info">
+                            <div class="account-icon" id="details-account-icon">🏦</div>
+                            <div class="account-meta">
+                                <h4 id="details-account-name">Account Name</h4>
+                                <p id="details-account-type">Account Type</p>
+                                <p id="details-institution">Institution</p>
+                            </div>
+                        </div>
+                        <div class="account-balance">
+                            <div class="balance-amount financial-amount financial-large" id="details-balance">
+                                <span class="currency-symbol">$</span>
+                                <span class="amount" data-financial="true">0.00</span>
+                            </div>
+                            <div class="balance-change" id="details-change">
+                                <span class="change-indicator">📈</span>
+                                <span class="change-amount">+$0.00 this month</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick actions -->
+                    <div class="account-actions">
+                        <button class="action-btn" id="edit-account">
+                            <span class="action-icon">✏️</span>
+                            <span class="action-text">Edit</span>
+                        </button>
+                        <button class="action-btn" id="sync-account">
+                            <span class="action-icon">🔄</span>
+                            <span class="action-text">Sync</span>
+                        </button>
+                        <button class="action-btn" id="export-account">
+                            <span class="action-icon">📤</span>
+                            <span class="action-text">Export</span>
+                        </button>
+                        <button class="action-btn danger" id="delete-account">
+                            <span class="action-icon">🗑️</span>
+                            <span class="action-text">Delete</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Recent transactions -->
+                    <div class="recent-transactions">
+                        <h4>Recent Transactions</h4>
+                        <div class="transactions-list" id="details-transactions">
+                            <!-- Populated dynamically -->
+                        </div>
+                        <button class="btn btn-ghost" id="view-all-transactions">
+                            View All Transactions
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../platform/user-manager.js"></script>
+    <script src="../data/database-manager.js"></script>
+    <script src="../global/localization.js"></script>
+    <script src="../global/currency-manager.js"></script>
+    <script src="../utils/formatting-utils.js"></script>
+    <script>
+        class AccountsManager {
+            constructor() {
+                this.accounts = [];
+                this.filteredAccounts = [];
+                this.currentView = 'grid';
+                this.currentFilter = {
+                    type: 'all',
+                    institution: 'all',
+                    status: 'all'
+                };
+                
+                this.init();
+            }
+
+            async init() {
+                await this.loadAccounts();
+                this.setupEventListeners();
+                this.populateFilters();
+                this.renderAccounts();
+                this.updateOverview();
+            }
+
+            async loadAccounts() {
+                try {
+                    // Load accounts from database
+                    const storedAccounts = localStorage.getItem('smartfinance_accounts');
+                    if (storedAccounts) {
+                        this.accounts = JSON.parse(storedAccounts);
+                    } else {
+                        // Load sample data for demo
+                        this.accounts = this.getSampleAccounts();
+                    }
+                    
+                    this.filteredAccounts = [...this.accounts];
+                } catch (error) {
+                    console.error('Failed to load accounts:', error);
+                    this.accounts = [];
+                    this.filteredAccounts = [];
+                }
+            }
+
+            getSampleAccounts() {
+                return [
+                    {
+                        id: 'acc-1',
+                        name: 'ANZ Checking Account',
+                        type: 'checking',
+                        institution: 'ANZ',
+                        currency: 'NZD',
+                        balance: 12450.50,
+                        accountNumber: '****1234',
+                        status: 'active',
+                        lastSync: new Date().toISOString(),
+                        monthlyChange: 240.50,
+                        notes: 'Primary checking account for daily expenses'
+                    },
+                    {
+                        id: 'acc-2',
+                        name: 'ASB Savings Account',
+                        type: 'savings',
+                        institution: 'ASB',
+                        currency: 'NZD',
+                        balance: 18500.00,
+                        accountNumber: '****5678',
+                        status: 'active',
+                        lastSync: new Date().toISOString(),
+                        monthlyChange: 500.00,
+                        notes: 'Emergency fund and long-term savings'
+                    },
+                    {
+                        id: 'acc-3',
+                        name: 'ANZ Credit Card',
+                        type: 'credit',
+                        institution: 'ANZ',
+                        currency: 'NZD',
+                        balance: -1520.00,
+                        accountNumber: '****9876',
+                        status: 'active',
+                        lastSync: new Date().toISOString(),
+                        monthlyChange: -120.00,
+                        creditLimit: 5000.00,
+                        notes: 'Main credit card for rewards and purchases'
+                    },
+                    {
+                        id: 'acc-4',
+                        name: 'Sharesies Investment',
+                        type: 'investment',
+                        institution: 'Sharesies',
+                        currency: 'NZD',
+                        balance: 8750.39,
+                        accountNumber: '****4321',
+                        status: 'active',
+                        lastSync: new Date().toISOString(),
+                        monthlyChange: 145.89,
+                        notes: 'Diversified investment portfolio'
+                    },
+                    {
+                        id: 'acc-5',
+                        name: 'KiwiSaver - ANZ',
+                        type: 'investment',
+                        institution: 'ANZ',
+                        currency: 'NZD',
+                        balance: 25470.00,
+                        accountNumber: '****7890',
+                        status: 'active',
+                        lastSync: new Date().toISOString(),
+                        monthlyChange: 890.00,
+                        notes: 'KiwiSaver retirement fund'
+                    }
+                ];
+            }
+
+            setupEventListeners() {
+                // Add account button
+                document.getElementById('add-account').addEventListener('click', () => {
+                    this.showAddAccountModal();
+                });
+
+                // Sync all accounts
+                document.getElementById('sync-accounts').addEventListener('click', () => {
+                    this.syncAllAccounts();
+                });
+
+                // View toggle
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.switchView(e.target.closest('.view-btn').dataset.view);
+                    });
+                });
+
+                // Filters
+                document.getElementById('account-type-filter').addEventListener('change', (e) => {
+                    this.currentFilter.type = e.target.value;
+                    this.applyFilters();
+                });
+
+                document.getElementById('institution-filter').addEventListener('change', (e) => {
+                    this.currentFilter.institution = e.target.value;
+                    this.applyFilters();
+                });
+
+                document.getElementById('status-filter').addEventListener('change', (e) => {
+                    this.currentFilter.status = e.target.value;
+                    this.applyFilters();
+                });
+
+                // Modal events
+                this.setupModalEvents();
+            }
+
+            setupModalEvents() {
+                // Add account modal
+                document.getElementById('close-add-modal').addEventListener('click', () => {
+                    this.hideAddAccountModal();
+                });
+
+                document.getElementById('cancel-add').addEventListener('click', () => {
+                    this.hideAddAccountModal();
+                });
+
+                document.getElementById('add-account-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleAddAccount();
+                });
+
+                // Account details modal
+                document.getElementById('close-details-modal').addEventListener('click', () => {
+                    this.hideAccountDetailsModal();
+                });
+            }
+
+            populateFilters() {
+                // Populate institution filter
+                const institutions = [...new Set(this.accounts.map(acc => acc.institution))];
+                const institutionFilter = document.getElementById('institution-filter');
+                
+                institutions.forEach(institution => {
+                    const option = document.createElement('option');
+                    option.value = institution;
+                    option.textContent = institution;
+                    institutionFilter.appendChild(option);
+                });
+            }
+
+            applyFilters() {
+                this.filteredAccounts = this.accounts.filter(account => {
+                    const typeMatch = this.currentFilter.type === 'all' || account.type === this.currentFilter.type;
+                    const institutionMatch = this.currentFilter.institution === 'all' || account.institution === this.currentFilter.institution;
+                    const statusMatch = this.currentFilter.status === 'all' || account.status === this.currentFilter.status;
+                    
+                    return typeMatch && institutionMatch && statusMatch;
+                });
+                
+                this.renderAccounts();
+            }
+
+            renderAccounts() {
+                if (this.filteredAccounts.length === 0) {
+                    this.showEmptyState();
+                    return;
+                }
+
+                this.hideEmptyState();
+
+                if (this.currentView === 'grid') {
+                    this.renderAccountsGrid();
+                } else {
+                    this.renderAccountsList();
+                }
+            }
+
+            renderAccountsGrid() {
+                const grid = document.getElementById('accounts-grid');
+                grid.innerHTML = '';
+
+                this.filteredAccounts.forEach(account => {
+                    const accountCard = this.createAccountCard(account);
+                    grid.appendChild(accountCard);
+                });
+            }
+
+            createAccountCard(account) {
+                const card = document.createElement('div');
+                card.className = 'account-card glass';
+                card.dataset.accountId = account.id;
+                
+                const statusClass = account.status === 'active' ? 'active' : 'inactive';
+                const balanceClass = account.balance >= 0 ? 'positive' : 'negative';
+                const changeClass = account.monthlyChange >= 0 ? 'positive' : 'negative';
+                
+                card.innerHTML = `
+                    <div class="account-header">
+                        <div class="account-icon">${this.getAccountTypeIcon(account.type)}</div>
+                        <div class="account-info">
+                            <h3 class="account-name">${account.name}</h3>
+                            <p class="account-details">${account.institution} • ${account.accountNumber}</p>
+                        </div>
+                        <div class="account-status ${statusClass}">
+                            <span class="status-indicator"></span>
+                            <span class="status-text">${account.status}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="account-balance">
+                        <div class="balance-amount financial-amount financial-medium ${balanceClass}" data-financial="true">
+                            <span class="currency-symbol">${this.getCurrencySymbol(account.currency)}</span>
+                            <span class="amount">${this.formatCurrency(Math.abs(account.balance))}</span>
+                        </div>
+                        ${account.type === 'credit' && account.creditLimit ? `
+                            <div class="credit-info">
+                                <span class="credit-used">${this.formatCurrency(Math.abs(account.balance))} used</span>
+                                <span class="credit-limit">of ${this.getCurrencySymbol(account.currency)}${this.formatCurrency(account.creditLimit)} limit</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="account-change ${changeClass}">
+                        <span class="change-indicator">${changeClass === 'positive' ? '📈' : '📉'}</span>
+                        <span class="change-amount">
+                            ${changeClass === 'positive' ? '+' : ''}${this.getCurrencySymbol(account.currency)}${this.formatCurrency(Math.abs(account.monthlyChange))} this month
+                        </span>
+                    </div>
+                    
+                    <div class="account-actions">
+                        <button class="action-btn" onclick="accountsManager.viewAccount('${account.id}')">
+                            <span class="action-icon">👁️</span>
+                            <span class="action-text">View</span>
+                        </button>
+                        <button class="action-btn" onclick="accountsManager.syncAccount('${account.id}')">
+                            <span class="action-icon">🔄</span>
+                            <span class="action-text">Sync</span>

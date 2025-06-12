@@ -1,0 +1,392 @@
+{
+  "country": "AU",
+  "currency": "AUD",
+  "locale": "en-AU",
+  "dateFormat": "DD/MM/YYYY",
+  "numberFormat": "1,234.56",
+  "currencySymbol": "$",
+  "currencyCode": "AUD",
+  
+  "financial": {
+    "taxYear": {
+      "start": "July",
+      "end": "June"
+    },
+    "emergencyFund": {
+      "recommendedMonths": 3,
+      "description": "We recommend saving 3 months of expenses for emergencies in Australia"
+    },
+    "retirement": {
+      "primaryAccount": "Superannuation",
+      "supplementaryAccount": "SMSF",
+      "description": "Superannuation is the primary retirement savings vehicle in Australia"
+    },
+    "superannuation": {
+      "guaranteeRate": 11.0,
+      "description": "Employer must contribute 11% of salary to superannuation"
+    }
+  },
+  
+  "banks": [
+    {
+      "name": "CommBank",
+      "displayName": "Commonwealth Bank",
+      "csvFormat": "CBA_AU",
+      "website": "https://www.commbank.com.au",
+      "logo": "/banks/commbank.png",
+      "popular": true
+    },
+    {
+      "name": "Westpac",
+      "displayName": "Westpac",
+      "csvFormat": "WESTPAC_AU",
+      "website": "https://www.westpac.com.au",
+      "logo": "/banks/westpac.png",
+      "popular": true
+    },
+    {
+      "name": "ANZ",
+      "displayName": "ANZ Australia",
+      "csvFormat": "ANZ_AU",
+      "website": "https://www.anz.com.au",
+      "logo": "/banks/anz-au.png",
+      "popular": true
+    },
+    {
+      "name": "NAB",
+      "displayName": "National Australia Bank",
+      "csvFormat": "NAB_AU",
+      "website": "https://www.nab.com.au",
+      "logo": "/banks/nab.png",
+      "popular": true
+    },
+    {
+      "name": "Macquarie",
+      "displayName": "Macquarie Bank",
+      "csvFormat": "MACQUARIE_AU",
+      "website": "https://www.macquarie.com.au",
+      "logo": "/banks/macquarie.png",
+      "popular": false
+    },
+    {
+      "name": "ING",
+      "displayName": "ING Australia",
+      "csvFormat": "ING_AU",
+      "website": "https://www.ing.com.au",
+      "logo": "/banks/ing.png",
+      "popular": false
+    },
+    {
+      "name": "Bendigo",
+      "displayName": "Bendigo Bank",
+      "csvFormat": "BENDIGO_AU",
+      "website": "https://www.bendigobank.com.au",
+      "logo": "/banks/bendigo.png",
+      "popular": false
+    },
+    {
+      "name": "BOQ",
+      "displayName": "Bank of Queensland",
+      "csvFormat": "BOQ_AU",
+      "website": "https://www.boq.com.au",
+      "logo": "/banks/boq.png",
+      "popular": false
+    }
+  ],
+  
+  "accountTypes": {
+    "savings": {
+      "name": "Savings Account",
+      "description": "High-interest savings account",
+      "icon": "🏦"
+    },
+    "transaction": {
+      "name": "Transaction Account",
+      "description": "Everyday banking account",
+      "icon": "💳"
+    },
+    "term_deposit": {
+      "name": "Term Deposit",
+      "description": "Fixed-term investment account",
+      "icon": "💰"
+    },
+    "credit": {
+      "name": "Credit Card",
+      "description": "Credit card account",
+      "icon": "💳"
+    },
+    "investment": {
+      "name": "Investment",
+      "description": "Share trading or investment account",
+      "icon": "📈"
+    },
+    "super": {
+      "name": "Superannuation",
+      "description": "Retirement superannuation account",
+      "icon": "🏖️"
+    },
+    "mortgage": {
+      "name": "Home Loan",
+      "description": "Mortgage or home loan",
+      "icon": "🏠"
+    },
+    "personal_loan": {
+      "name": "Personal Loan",
+      "description": "Personal or car loan",
+      "icon": "🚗"
+    },
+    "offset": {
+      "name": "Offset Account",
+      "description": "Mortgage offset account",
+      "icon": "🏠"
+    }
+  },
+  
+  "goalTemplates": {
+    "emergency": {
+      "name": "Emergency Fund",
+      "description": "Build 3 months of expenses for unexpected situations",
+      "category": "emergency",
+      "priority": "critical",
+      "timeFrame": 12,
+      "icon": "🚨",
+      "tips": [
+        "Start with $1,000 as your initial emergency buffer",
+        "Aim for 3 months of expenses in easily accessible savings",
+        "Use a high-interest savings account for emergency funds",
+        "Consider government support options in emergencies"
+      ]
+    },
+    "house": {
+      "name": "House Deposit",
+      "description": "Save for a property deposit (typically 10-20%)",
+      "category": "savings",
+      "priority": "high",
+      "timeFrame": 36,
+      "icon": "🏠",
+      "tips": [
+        "Use the First Home Super Saver scheme to save through super",
+        "Research First Home Owner Grants in your state",
+        "Factor in stamp duty, legal fees, and building inspections",
+        "Don't forget removalist costs and immediate property expenses"
+      ]
+    },
+    "super": {
+      "name": "Superannuation Boost",
+      "description": "Top up your super for retirement",
+      "category": "investment",
+      "priority": "medium",
+      "timeFrame": 360,
+      "icon": "🏖️",
+      "tips": [
+        "Maximise employer contributions and salary sacrifice",
+        "Consider making voluntary after-tax contributions",
+        "Take advantage of government co-contributions if eligible",
+        "Review your super fund's performance annually"
+      ]
+    },
+    "holiday": {
+      "name": "Holiday Fund",
+      "description": "Save for that special trip you've been planning",
+      "category": "lifestyle",
+      "priority": "low",
+      "timeFrame": 18,
+      "icon": "✈️",
+      "tips": [
+        "Research total costs including flights, accommodation, and spending money",
+        "Set up a separate savings account for holiday funds",
+        "Book domestic trips during shoulder seasons for better rates",
+        "Consider travel insurance and check passport validity"
+      ]
+    },
+    "education": {
+      "name": "Education Fund",
+      "description": "Save for university or TAFE education costs",
+      "category": "education",
+      "priority": "medium",
+      "timeFrame": 120,
+      "icon": "🎓",
+      "tips": [
+        "Research HECS-HELP and other government assistance",
+        "Consider education investment bonds for tax benefits",
+        "Factor in living costs as well as course fees",
+        "Start saving early to benefit from compound growth"
+      ]
+    },
+    "debt": {
+      "name": "Debt Repayment",
+      "description": "Pay off credit cards and loans faster",
+      "category": "debt",
+      "priority": "high",
+      "timeFrame": 24,
+      "icon": "💳",
+      "tips": [
+        "Use the debt avalanche method (highest interest first)",
+        "Consider debt consolidation for multiple cards",
+        "Look into balance transfer options with 0% intro rates",
+        "Get free financial counselling from ASIC MoneySmart"
+      ]
+    },
+    "investment": {
+      "name": "Investment Portfolio",
+      "description": "Build wealth through shares and investments",
+      "category": "investment",
+      "priority": "medium",
+      "timeFrame": 60,
+      "icon": "📈",
+      "tips": [
+        "Consider low-cost ETFs for diversified exposure",
+        "Use dollar-cost averaging to reduce timing risk",
+        "Understand capital gains tax implications",
+        "Keep investment costs low with discount brokers"
+      ]
+    }
+  },
+  
+  "budgetCategories": {
+    "income": {
+      "salary": "Salary/Wages",
+      "casual": "Casual Work",
+      "centrelink": "Centrelink Benefits",
+      "super": "Super/Pension",
+      "investment": "Investment Income",
+      "rental": "Rental Income",
+      "business": "Business Income",
+      "other": "Other Income"
+    },
+    "housing": {
+      "rent": "Rent/Mortgage",
+      "rates": "Council Rates",
+      "utilities": "Electricity/Gas",
+      "water": "Water Bills",
+      "insurance": "Home Insurance",
+      "maintenance": "Home Maintenance",
+      "strata": "Strata/Body Corporate"
+    },
+    "transport": {
+      "carPayment": "Car Loan",
+      "fuel": "Petrol",
+      "insurance": "Car Insurance",
+      "rego": "Registration",
+      "service": "Car Servicing",
+      "publicTransport": "Public Transport",
+      "parking": "Parking",
+      "rideshare": "Uber/Taxi"
+    },
+    "food": {
+      "groceries": "Groceries",
+      "diningOut": "Dining Out",
+      "takeaway": "Takeaway",
+      "coffee": "Coffee"
+    },
+    "healthcare": {
+      "medicare": "Medicare Levy",
+      "privateHealth": "Private Health Insurance",
+      "dental": "Dental",
+      "optical": "Optical",
+      "pharmacy": "Pharmacy",
+      "medical": "Medical Expenses"
+    },
+    "personal": {
+      "clothing": "Clothing",
+      "personalCare": "Personal Care",
+      "gym": "Gym/Fitness",
+      "subscriptions": "Subscriptions",
+      "entertainment": "Entertainment",
+      "mobile": "Mobile Phone"
+    },
+    "financial": {
+      "savings": "Savings",
+      "super": "Super Contributions",
+      "investments": "Investments",
+      "lifeInsurance": "Life Insurance",
+      "debtPayments": "Debt Payments",
+      "emergencyFund": "Emergency Fund"
+    },
+    "other": {
+      "gifts": "Gifts",
+      "charity": "Donations",
+      "education": "Education/Training",
+      "pets": "Pet Expenses",
+      "holiday": "Holidays",
+      "miscellaneous": "Miscellaneous"
+    }
+  },
+  
+  "regulations": {
+    "maxCashTransaction": 10000,
+    "reportingCurrency": "AUD",
+    "financialYear": "july-june",
+    "taxFilingDeadline": "31 October",
+    "preservationAge": 60,
+    "superGuarantee": 11.0,
+    "fcsProtection": 250000,
+    "creditReportingBodies": ["Equifax", "Experian", "illion"]
+  },
+  
+  "ui": {
+    "welcomeMessage": "Welcome to SmartFinanceAI",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "signUp": "Sign Up",
+    "logIn": "Log In",
+    "dashboard": "Dashboard",
+    "accounts": "Accounts",
+    "transactions": "Transactions",
+    "budget": "Budget",
+    "goals": "Goals",
+    "reports": "Reports",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Log Out",
+    
+    "onboarding": {
+      "step1": "Let's get you started with SmartFinanceAI",
+      "step2": "Tell us about your financial goals",
+      "step3": "Connect your bank accounts",
+      "step4": "Set up your budget",
+      "step5": "You're all set!"
+    },
+    
+    "dashboard": {
+      "totalBalance": "Total Balance",
+      "monthlyIncome": "Monthly Income",
+      "monthlyExpenses": "Monthly Expenses",
+      "goalProgress": "Goal Progress",
+      "budgetHealth": "Budget Health",
+      "aiInsights": "AI Insights"
+    },
+    
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "network": "Network error. Please check your connection.",
+      "validation": "Please check your input and try again.",
+      "unauthorised": "You are not authorised to perform this action.",
+      "notFound": "The requested resource was not found.",
+      "serverError": "Server error. Please try again later."
+    },
+    
+    "success": {
+      "saved": "Successfully saved!",
+      "deleted": "Successfully deleted!",
+      "updated": "Successfully updated!",
+      "imported": "Data imported successfully!",
+      "goalCreated": "Goal created successfully!",
+      "accountAdded": "Account added successfully!"
+    }
+  },
+  
+  "privacy": {
+    "dataRetention": "We retain your data in accordance with Australian Privacy Principles",
+    "encryption": "All data is encrypted using AES-256 encryption",
+    "sharing": "We never share your financial data with third parties",
+    "rights": "You have the right to access, correct, or delete your data under the Privacy Act"
+  },
+  
+  "support": {
+    "email": "support@smartfinanceai.com",
+    "phone": "+61-2-SMART-AI",
+    "hours": "Monday-Friday 9AM-5PM AEST",
+    "help": "Visit our help centre for common questions"
+  }
+}

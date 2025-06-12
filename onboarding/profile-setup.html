@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Setup - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+</head>
+<body class="onboarding-page">
+    <div class="onboarding-container">
+        <!-- Header Section -->
+        <header class="onboarding-header">
+            <div class="navbar-brand">
+                <div class="navbar-logo">💳</div>
+                <span>SmartFinanceAI</span>
+            </div>
+            <div class="progress-indicator">
+                <span class="step completed">1</span>
+                <span class="step completed">2</span>
+                <span class="step active">3</span>
+                <span class="step">4</span>
+                <span class="step">5</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="onboarding-main">
+            <div class="card glass-premium profile-setup-card">
+                <div class="card-header text-center">
+                    <div class="profile-icon">
+                        <div class="user-avatar" id="user-avatar">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="card-title text-gradient-primary">Tell Us About Yourself</h1>
+                    <p class="card-subtitle">Help us personalise your financial experience with AI-powered recommendations</p>
+                </div>
+
+                <div class="card-body">
+                    <form id="profile-form" class="profile-form">
+                        <!-- Personal Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">👤</span>
+                                Personal Information
+                            </h3>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="first-name" class="form-label">First Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="first-name" 
+                                        name="firstName" 
+                                        class="input" 
+                                        placeholder="Enter your first name"
+                                        required
+                                        autocomplete="given-name"
+                                    >
+                                    <div class="form-error" id="first-name-error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="last-name" class="form-label">Last Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="last-name" 
+                                        name="lastName" 
+                                        class="input" 
+                                        placeholder="Enter your last name"
+                                        required
+                                        autocomplete="family-name"
+                                    >
+                                    <div class="form-error" id="last-name-error"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="age-range" class="form-label">Age Range</label>
+                                    <select id="age-range" name="ageRange" class="input select" required>
+                                        <option value="">Select your age range</option>
+                                        <option value="18-24">18-24 years</option>
+                                        <option value="25-34">25-34 years</option>
+                                        <option value="35-44">35-44 years</option>
+                                        <option value="45-54">45-54 years</option>
+                                        <option value="55-64">55-64 years</option>
+                                        <option value="65+">65+ years</option>
+                                    </select>
+                                    <div class="form-error" id="age-range-error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="employment-status" class="form-label">Employment Status</label>
+                                    <select id="employment-status" name="employmentStatus" class="input select" required>
+                                        <option value="">Select employment status</option>
+                                        <option value="employed-full-time">Employed (Full-time)</option>
+                                        <option value="employed-part-time">Employed (Part-time)</option>
+                                        <option value="self-employed">Self-employed</option>
+                                        <option value="student">Student</option>
+                                        <option value="retired">Retired</option>
+                                        <option value="unemployed">Looking for work</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="form-error" id="employment-status-error"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Financial Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">💰</span>
+                                Financial Information
+                                <span class="privacy-note">(This helps us provide better recommendations)</span>
+                            </h3>
+
+                            <div class="form-group">
+                                <label for="income-range" class="form-label">
+                                    Annual Income Range
+                                    <span class="currency-symbol" id="currency-symbol">$</span>
+                                </label>
+                                <select id="income-range" name="incomeRange" class="input select" required>
+                                    <option value="">Select your annual income range</option>
+                                    <!-- Options will be populated based on country -->
+                                </select>
+                                <div class="form-help">
+                                    <span class="help-icon">ℹ️</span>
+                                    <span class="help-text">This information is encrypted and only used to provide personalised recommendations</span>
+                                </div>
+                                <div class="form-error" id="income-range-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="financial-experience" class="form-label">Financial Experience Level</label>
+                                <div class="experience-options">
+                                    <label class="experience-option">
+                                        <input type="radio" name="financialExperience" value="beginner" required>
+                                        <div class="option-content">
+                                            <div class="option-icon">🌱</div>
+                                            <div class="option-details">
+                                                <h4>Beginner</h4>
+                                                <p>New to managing finances, need guidance with basics</p>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="experience-option">
+                                        <input type="radio" name="financialExperience" value="intermediate" required>
+                                        <div class="option-content">
+                                            <div class="option-icon">📈</div>
+                                            <div class="option-details">
+                                                <h4>Intermediate</h4>
+                                                <p>Have some experience, want to optimise and learn more</p>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="experience-option">
+                                        <input type="radio" name="financialExperience" value="advanced" required>
+                                        <div class="option-content">
+                                            <div class="option-icon">🎯</div>
+                                            <div class="option-details">
+                                                <h4>Advanced</h4>
+                                                <p>Experienced with investing and financial planning</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="form-error" id="financial-experience-error"></div>
+                            </div>
+                        </div>
+
+                        <!-- Goals and Priorities Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">🎯</span>
+                                Financial Goals & Priorities
+                            </h3>
+
+                            <div class="form-group">
+                                <label class="form-label">What are your main financial goals? (Select all that apply)</label>
+                                <div class="goals-grid">
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="emergency-fund">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">🚨</div>
+                                            <div class="goal-text">Emergency Fund</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="debt-payoff">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">💳</div>
+                                            <div class="goal-text">Pay Off Debt</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="house-deposit">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">🏠</div>
+                                            <div class="goal-text">House Deposit</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="retirement">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">🏖️</div>
+                                            <div class="goal-text">Retirement Savings</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="investment">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">📊</div>
+                                            <div class="goal-text">Investment Portfolio</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="travel">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">✈️</div>
+                                            <div class="goal-text">Travel Fund</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="education">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">🎓</div>
+                                            <div class="goal-text">Education Savings</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="goal-option">
+                                        <input type="checkbox" name="financialGoals" value="business">
+                                        <div class="goal-content">
+                                            <div class="goal-icon">💼</div>
+                                            <div class="goal-text">Start a Business</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="risk-tolerance" class="form-label">Investment Risk Tolerance</label>
+                                <div class="risk-slider-container">
+                                    <input 
+                                        type="range" 
+                                        id="risk-tolerance" 
+                                        name="riskTolerance" 
+                                        min="1" 
+                                        max="5" 
+                                        value="3" 
+                                        class="risk-slider"
+                                    >
+                                    <div class="risk-labels">
+                                        <span class="risk-label conservative">Conservative</span>
+                                        <span class="risk-label moderate">Moderate</span>
+                                        <span class="risk-label aggressive">Aggressive</span>
+                                    </div>
+                                    <div class="risk-description" id="risk-description">
+                                        Balanced approach with moderate risk and return expectations
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Household Information Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">👨‍👩‍👧‍👦</span>
+                                Household Information
+                            </h3>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="household-type" class="form-label">Household Type</label>
+                                    <select id="household-type" name="householdType" class="input select" required>
+                                        <option value="">Select household type</option>
+                                        <option value="single">Single person</option>
+                                        <option value="couple-no-kids">Couple without children</option>
+                                        <option value="couple-with-kids">Couple with children</option>
+                                        <option value="single-parent">Single parent</option>
+                                        <option value="shared-house">Shared housing</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="form-error" id="household-type-error"></div>
+                                </div>
+
+                                <div class="form-group" id="dependents-group" style="display: none;">
+                                    <label for="dependents" class="form-label">Number of Dependents</label>
+                                    <select id="dependents" name="dependents" class="input select">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4+">4 or more</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Would you like to set up joint financial management?
+                                    <span class="feature-badge">Premium Feature</span>
+                                </label>
+                                <div class="joint-management-info">
+                                    <div class="info-content">
+                                        <p>Share budgets, goals, and accounts with your partner while maintaining individual privacy controls.</p>
+                                        <div class="joint-options">
+                                            <label class="joint-option">
+                                                <input type="radio" name="jointManagement" value="none" checked>
+                                                <div class="option-text">
+                                                    <h4>Individual Only</h4>
+                                                    <p>Manage your finances independently</p>
+                                                </div>
+                                            </label>
+
+                                            <label class="joint-option">
+                                                <input type="radio" name="jointManagement" value="setup-later">
+                                                <div class="option-text">
+                                                    <h4>Set Up Later</h4>
+                                                    <p>Add joint management after initial setup</p>
+                                                </div>
+                                            </label>
+
+                                            <label class="joint-option">
+                                                <input type="radio" name="jointManagement" value="setup-now">
+                                                <div class="option-text">
+                                                    <h4>Set Up Now</h4>
+                                                    <p>Configure joint management during onboarding</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preferences Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">⚙️</span>
+                                Preferences
+                            </h3>
+
+                            <div class="form-group">
+                                <label class="form-label">Notification Preferences</label>
+                                <div class="preference-options">
+                                    <label class="preference-option">
+                                        <input type="checkbox" name="notifications" value="budget-alerts" checked>
+                                        <div class="preference-content">
+                                            <div class="preference-icon">📊</div>
+                                            <div class="preference-text">
+                                                <h4>Budget Alerts</h4>
+                                                <p>Get notified when approaching budget limits</p>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="preference-option">
+                                        <input type="checkbox" name="notifications" value="goal-updates" checked>
+                                        <div class="preference-content">
+                                            <div class="preference-icon">🎯</div>
+                                            <div class="preference-text">
+                                                <h4>Goal Updates</h4>
+                                                <p>Track progress on your financial goals</p>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="preference-option">
+                                        <input type="checkbox" name="notifications" value="ai-insights" checked>
+                                        <div class="preference-content">
+                                            <div class="preference-icon">🤖</div>
+                                            <div class="preference-text">
+                                                <h4>AI Insights</h4>
+                                                <p>Receive personalised financial recommendations</p>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <label class="preference-option">
+                                        <input type="checkbox" name="notifications" value="weekly-summary">
+                                        <div class="preference-content">
+                                            <div class="preference-icon">📈</div>
+                                            <div class="preference-text">
+                                                <h4>Weekly Summary</h4>
+                                                <p>Get weekly financial health reports</p>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="currency-display" class="form-label">Currency Display Preference</label>
+                                <select id="currency-display" name="currencyDisplay" class="input select">
+                                    <!-- Options populated based on country -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Privacy Section -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <span class="section-icon">🔒</span>
+                                Privacy & Data
+                            </h3>
+
+                            <div class="privacy-info">
+                                <div class="privacy-item">
+                                    <div class="privacy-icon">🔐</div>
+                                    <div class="privacy-text">
+                                        <h4>Bank-Level Encryption</h4>
+                                        <p>Your financial data is encrypted with AES-256 encryption</p>
+                                    </div>
+                                </div>
+
+                                <div class="privacy-item">
+                                    <div class="privacy-icon">🛡️</div>
+                                    <div class="privacy-text">
+                                        <h4>Zero-Knowledge Architecture</h4>
+                                        <p>We cannot access your raw financial data</p>
+                                    </div>
+                                </div>
+
+                                <div class="privacy-item">
+                                    <div class="privacy-icon">🔍</div>
+                                    <div class="privacy-text">
+                                        <h4>Transparent AI</h4>
+                                        <p>AI recommendations are based on anonymised patterns only</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="consent-options">
+                                <label class="consent-option">
+                                    <input type="checkbox" name="dataConsent" value="anonymised-analytics" checked>
+                                    <div class="consent-text">
+                                        <h4>Anonymised Analytics</h4>
+                                        <p>Help improve SmartFinanceAI by sharing anonymised usage patterns</p>
+                                    </div>
+                                </label>
+
+                                <label class="consent-option">
+                                    <input type="checkbox" name="dataConsent" value="marketing-emails">
+                                    <div class="consent-text">
+                                        <h4>Product Updates</h4>
+                                        <p>Receive emails about new features and financial tips</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    <div class="button-group">
+                        <a href="country-selection.html" class="btn btn-ghost">
+                            <span class="btn-icon">←</span>
+                            <span class="btn-text">Back</span>
+                        </a>
+                        <button type="submit" form="profile-form" id="continue-btn" class="btn btn-primary">
+                            <span class="btn-text">Continue to Account Setup</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="onboarding-footer">
+            <div class="security-badges">
+                <div class="badge">
+                    <span class="badge-icon">🔒</span>
+                    <span class="badge-text">256-bit Encryption</span>
+                </div>
+                <div class="badge">
+                    <span class="badge-icon">🛡️</span>
+                    <span class="badge-text">GDPR Compliant</span>
+                </div>
+                <div class="badge">
+                    <span class="badge-icon">🏦</span>
+                    <span class="badge-text">Bank-Level Security</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../global/localization.js"></script>
+    <script src="../global/currency-manager.js"></script>
+    <script>
+        class ProfileSetup {
+            constructor() {
+                this.countryConfig = null;
+                this.formData = {};
+                
+                this.init();
+            }
+
+            async init() {
+                await this.loadCountryConfig();
+                this.populateCountrySpecificFields();
+                this.bindEvents();
+                this.setupFormValidation();
+                this.loadSavedData();
+            }
+
+            async loadCountryConfig() {
+                const countryData = localStorage.getItem('smartfinance_country_config');
+                if (countryData) {
+                    this.countryConfig = JSON.parse(countryData);
+                } else {
+                    // Fallback to default
+                    this.countryConfig = {
+                        code: 'US',
+                        currency: 'USD',
+                        name: 'United States'
+                    };
+                }
+            }
+
+            populateCountrySpecificFields() {
+                this.populateCurrencySymbol();
+                this.populateIncomeRanges();
+                this.populateCurrencyDisplay();
+            }
+
+            populateCurrencySymbol() {
+                const currencySymbol = document.getElementById('currency-symbol');
+                const symbols = {
+                    'USD': '$',
+                    'NZD': '$',
+                    'AUD': '$',
+                    'GBP': '£',
+                    'CAD': '$',
+                    'EUR': '€',
+                    'JPY': '¥'
+                };
+                
+                currencySymbol.textContent = symbols[this.countryConfig.currency] || '$';
+            }
+
+            populateIncomeRanges() {
+                const incomeSelect = document.getElementById('income-range');
+                const currency = this.countryConfig.currency;
+                
+                const ranges = {
+                    'USD': [
+                        { value: 'under-25k', label: 'Under $25,000' },
+                        { value: '25k-50k', label: '$25,000 - $

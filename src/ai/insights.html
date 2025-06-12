@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insights - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/variables.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- Main Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="navbar-logo">💡</div>
+                <span>SmartFinanceAI</span>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="../core/dashboard.html" class="nav-link">📊 Dashboard</a></li>
+                <li><a href="../core/accounts.html" class="nav-link">🏦 Accounts</a></li>
+                <li><a href="../core/transactions.html" class="nav-link">💳 Transactions</a></li>
+                <li><a href="../core/budget.html" class="nav-link">📋 Budget</a></li>
+                <li><a href="../core/goals.html" class="nav-link">🎯 Goals</a></li>
+                <li><a href="../core/reports.html" class="nav-link">📈 Reports</a></li>
+                <li><a href="../csv-import/upload.html" class="nav-link">📥 Import</a></li>
+                <li><a href="coach-panel.html" class="nav-link">🤖 AI Coach</a></li>
+                <li><a href="insights.html" class="nav-link active">💡 Insights</a></li>
+            </ul>
+            <button class="mobile-nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-section">
+                    <h1 class="page-title text-gradient-primary">💡 AI Financial Insights</h1>
+                    <p class="page-subtitle">Discover patterns, opportunities, and optimizations in your financial data</p>
+                </div>
+                <div class="page-actions">
+                    <div class="insights-period">
+                        <select class="select" id="insightsPeriod">
+                            <option value="1m">Last Month</option>
+                            <option value="3m" selected>Last 3 Months</option>
+                            <option value="6m">Last 6 Months</option>
+                            <option value="1y">Last Year</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="refreshInsights">
+                        🔄 Refresh Insights
+                    </button>
+                    <button class="btn btn-secondary" id="shareInsights">
+                        📤 Share Report
+                    </button>
+                    <button class="btn btn-ghost" id="privacyToggle">
+                        👁️ Privacy Mode
+                    </button>
+                </div>
+            </div>
+
+            <!-- Insights Overview -->
+            <div class="insights-overview">
+                <div class="insight-summary-cards">
+                    <div class="summary-card card card-premium">
+                        <div class="summary-header">
+                            <div class="summary-icon">🧠</div>
+                            <div class="summary-title">AI Analysis</div>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value">47</div>
+                            <div class="summary-label">Insights Generated</div>
+                            <div class="summary-change positive">+12 this week</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card card card-success">
+                        <div class="summary-header">
+                            <div class="summary-icon">💰</div>
+                            <div class="summary-title">Potential Savings</div>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value financial-amount" data-financial>$2,847</div>
+                            <div class="summary-label">Identified Opportunities</div>
+                            <div class="summary-change positive">$456 this month</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card card card-warning">
+                        <div class="summary-header">
+                            <div class="summary-icon">⚠️</div>
+                            <div class="summary-title">Action Items</div>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value">8</div>
+                            <div class="summary-label">Recommendations</div>
+                            <div class="summary-change neutral">3 high priority</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card card card-info">
+                        <div class="summary-header">
+                            <div class="summary-icon">📈</div>
+                            <div class="summary-title">Progress Score</div>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value">87%</div>
+                            <div class="summary-label">Financial Health</div>
+                            <div class="summary-change positive">+5% this month</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Categories -->
+            <div class="insights-categories">
+                <div class="category-tabs">
+                    <button class="category-tab active" data-category="all">🔍 All Insights</button>
+                    <button class="category-tab" data-category="spending">💸 Spending Patterns</button>
+                    <button class="category-tab" data-category="savings">💰 Savings Opportunities</button>
+                    <button class="category-tab" data-category="budgets">📋 Budget Analysis</button>
+                    <button class="category-tab" data-category="goals">🎯 Goal Optimization</button>
+                    <button class="category-tab" data-category="investments">📈 Investment Insights</button>
+                    <button class="category-tab" data-category="predictions">🔮 Predictions</button>
+                </div>
+
+                <!-- All Insights Panel -->
+                <div class="insights-panel active" id="all-panel">
+                    <!-- Priority Insights -->
+                    <div class="priority-insights card card-warning">
+                        <div class="card-header">
+                            <h3 class="card-title">🔥 Priority Insights</h3>
+                            <div class="insights-filter">
+                                <select class="select select-sm" id="priorityFilter">
+                                    <option value="all">All Priorities</option>
+                                    <option value="urgent">Urgent Only</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="medium">Medium Priority</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="insights-list" id="priorityInsightsList">
+                                <div class="insight-item urgent">
+                                    <div class="insight-header">
+                                        <div class="insight-icon">🚨</div>
+                                        <div class="insight-title">Emergency Fund Below Target</div>
+                                        <div class="insight-priority urgent">Urgent</div>
+                                        <div class="insight-confidence">95% confidence</div>
+                                    </div>
+                                    <div class="insight-content">
+                                        <p class="insight-description">
+                                            Your emergency fund covers only 1.2 months of expenses, well below the recommended 3-6 months. 
+                                            A financial emergency could impact your ability to meet monthly obligations.
+                                        </p>
+                                        <div class="insight-metrics">
+                                            <div class="metric">
+                                                <span class="metric-label">Current Coverage:</span>
+                                                <span class="metric-value">1.2 months</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Recommended:</span>
+                                                <span class="metric-value">3-6 months</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Shortfall:</span>
+                                                <span class="metric-value financial-amount" data-financial>$4,800</span>
+                                            </div>
+                                        </div>
+                                        <div class="insight-actions">
+                                            <button class="btn btn-primary btn-sm" data-action="create-emergency-goal">
+                                                🎯 Create Emergency Goal
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" data-action="auto-save-setup">
+                                                ⚡ Setup Auto-Save
+                                            </button>
+                                            <button class="btn btn-ghost btn-sm" data-action="learn-emergency">
+                                                📖 Learn More
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="insight-item high">
+                                    <div class="insight-header">
+                                        <div class="insight-icon">💳</div>
+                                        <div class="insight-title">Suboptimal Debt Payment Strategy</div>
+                                        <div class="insight-priority high">High</div>
+                                        <div class="insight-confidence">89% confidence</div>
+                                    </div>
+                                    <div class="insight-content">
+                                        <p class="insight-description">
+                                            You're paying equal amounts on all credit cards. Switching to the avalanche method 
+                                            (highest interest first) could save $2,100 in interest and pay off debt 14 months sooner.
+                                        </p>
+                                        <div class="insight-metrics">
+                                            <div class="metric">
+                                                <span class="metric-label">Interest Savings:</span>
+                                                <span class="metric-value financial-amount" data-financial>$2,100</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Time Saved:</span>
+                                                <span class="metric-value">14 months</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Monthly Impact:</span>
+                                                <span class="metric-value">Same payment</span>
+                                            </div>
+                                        </div>
+                                        <div class="insight-chart">
+                                            <canvas id="debtComparisonChart" class="mini-chart"></canvas>
+                                        </div>
+                                        <div class="insight-actions">
+                                            <button class="btn btn-primary btn-sm" data-action="apply-avalanche">
+                                                ⚡ Apply Avalanche Method
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" data-action="view-debt-plan">
+                                                📊 View Full Plan
+                                            </button>
+                                            <button class="btn btn-ghost btn-sm

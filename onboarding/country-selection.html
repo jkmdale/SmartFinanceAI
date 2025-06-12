@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Country - SmartFinanceAI</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+</head>
+<body class="onboarding-page">
+    <div class="onboarding-container">
+        <!-- Header Section -->
+        <header class="onboarding-header">
+            <div class="navbar-brand">
+                <div class="navbar-logo">💳</div>
+                <span>SmartFinanceAI</span>
+            </div>
+            <div class="progress-indicator">
+                <span class="step completed">1</span>
+                <span class="step active">2</span>
+                <span class="step">3</span>
+                <span class="step">4</span>
+                <span class="step">5</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="onboarding-main">
+            <div class="card glass-premium country-selection-card">
+                <div class="card-header text-center">
+                    <div class="globe-animation">
+                        <div class="globe-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12,2 C14.5,6 14.5,18 12,22 C9.5,18 9.5,6 12,2 z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="card-title text-gradient-primary">Choose Your Country</h1>
+                    <p class="card-subtitle">We'll customise SmartFinanceAI for your local banking system, currency, and financial regulations</p>
+                </div>
+
+                <div class="card-body">
+                    <!-- Auto-Detection Section -->
+                    <div class="auto-detection-section">
+                        <div class="detection-result" id="auto-detection">
+                            <div class="detection-icon">📍</div>
+                            <div class="detection-content">
+                                <h3>Detected Location</h3>
+                                <p id="detected-country">Detecting your location...</p>
+                                <button type="button" class="btn btn-ghost btn-sm" id="use-detected">
+                                    <span class="btn-text">Use This Location</span>
+                                    <span class="btn-icon">✓</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Manual Selection Section -->
+                    <div class="manual-selection-section">
+                        <h3>Or Choose Manually</h3>
+                        
+                        <!-- Search Box -->
+                        <div class="country-search">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-icon">🔍</span>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    id="country-search" 
+                                    class="input" 
+                                    placeholder="Search for your country..."
+                                    autocomplete="country"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Country Grid -->
+                        <div class="countries-grid" id="countries-grid">
+                            <!-- Primary Markets (Featured) -->
+                            <div class="countries-section">
+                                <h4 class="section-title">🚀 Full Platform Support</h4>
+                                <div class="countries-row featured-countries">
+                                    <div class="country-option featured" data-country="NZ">
+                                        <div class="country-flag">🇳🇿</div>
+                                        <div class="country-info">
+                                            <div class="country-name">New Zealand</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">KiwiSaver</span>
+                                                <span class="feature-badge">All Major Banks</span>
+                                                <span class="feature-badge">NZD</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge ready">Ready</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="country-option featured" data-country="AU">
+                                        <div class="country-flag">🇦🇺</div>
+                                        <div class="country-info">
+                                            <div class="country-name">Australia</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">Superannuation</span>
+                                                <span class="feature-badge">Big 4 Banks</span>
+                                                <span class="feature-badge">AUD</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge ready">Ready</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="country-option featured" data-country="GB">
+                                        <div class="country-flag">🇬🇧</div>
+                                        <div class="country-info">
+                                            <div class="country-name">United Kingdom</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">ISAs</span>
+                                                <span class="feature-badge">Open Banking</span>
+                                                <span class="feature-badge">GBP</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge ready">Ready</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="country-option featured" data-country="US">
+                                        <div class="country-flag">🇺🇸</div>
+                                        <div class="country-info">
+                                            <div class="country-name">United States</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">401(k)</span>
+                                                <span class="feature-badge">Major Banks</span>
+                                                <span class="feature-badge">USD</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge ready">Ready</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="country-option featured" data-country="CA">
+                                        <div class="country-flag">🇨🇦</div>
+                                        <div class="country-info">
+                                            <div class="country-name">Canada</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">RRSP/TFSA</span>
+                                                <span class="feature-badge">Big 6 Banks</span>
+                                                <span class="feature-badge">CAD</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge ready">Ready</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coming Soon -->
+                            <div class="countries-section">
+                                <h4 class="section-title">🔜 Coming Soon</h4>
+                                <div class="countries-row coming-soon-countries">
+                                    <div class="country-option coming-soon" data-country="DE">
+                                        <div class="country-flag">🇩🇪</div>
+                                        <div class="country-info">
+                                            <div class="country-name">Germany</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">EUR</span>
+                                                <span class="feature-badge">Q2 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge soon">Q2 2025</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="country-option coming-soon" data-country="FR">
+                                        <div class="country-flag">🇫🇷</div>
+                                        <div class="country-info">
+                                            <div class="country-name">France</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">EUR</span>
+                                                <span class="feature-badge">Q2 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge soon">Q2 2025</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="country-option coming-soon" data-country="SG">
+                                        <div class="country-flag">🇸🇬</div>
+                                        <div class="country-info">
+                                            <div class="country-name">Singapore</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">SGD</span>
+                                                <span class="feature-badge">Q3 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge soon">Q3 2025</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="country-option coming-soon" data-country="JP">
+                                        <div class="country-flag">🇯🇵</div>
+                                        <div class="country-info">
+                                            <div class="country-name">Japan</div>
+                                            <div class="country-features">
+                                                <span class="feature-badge">JPY</span>
+                                                <span class="feature-badge">Q4 2025</span>
+                                            </div>
+                                        </div>
+                                        <div class="country-status">
+                                            <span class="status-badge soon">Q4 2025</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Not Your Country? -->
+                            <div class="countries-section">
+                                <div class="not-listed-section">
+                                    <div class="not-listed-content">
+                                        <h4>Don't see your country?</h4>
+                                        <p>You can still use SmartFinanceAI! We support manual CSV imports from any bank worldwide.</p>
+                                        <button type="button" class="btn btn-ghost" id="other-country-btn">
+                                            <span class="btn-text">Select Other Country</span>
+                                            <span class="btn-icon">🌍</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Country Preview -->
+                    <div class="selected-preview" id="selected-preview" style="display: none;">
+                        <h3>Your Selection</h3>
+                        <div class="preview-card">
+                            <div class="preview-flag" id="preview-flag"></div>
+                            <div class="preview-details">
+                                <div class="preview-name" id="preview-name"></div>
+                                <div class="preview-features" id="preview-features"></div>
+                            </div>
+                            <button type="button" class="btn btn-ghost btn-sm" id="change-selection">
+                                <span class="btn-text">Change</span>
+                            </button>
+                        </div>
+
+                        <!-- Country-Specific Benefits -->
+                        <div class="country-benefits" id="country-benefits">
+                            <!-- Dynamically populated based on selection -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="button-group">
+                        <a href="welcome.html" class="btn btn-ghost">
+                            <span class="btn-icon">←</span>
+                            <span class="btn-text">Back</span>
+                        </a>
+                        <button type="button" id="continue-btn" class="btn btn-primary" disabled>
+                            <span class="btn-text">Continue Setup</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="onboarding-footer">
+            <div class="global-stats">
+                <div class="stat">
+                    <span class="stat-number">5</span>
+                    <span class="stat-label">Countries Ready</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Banks Supported</span>
+                </div>
+                <div class="stat">
