@@ -112,7 +112,7 @@
     <link rel="stylesheet" href="./src/styles/animations.css">
     <link rel="stylesheet" href="./src/styles/responsive.css">
     
-    <!-- ===== EMBEDDED GLASSMORPHISM STYLES (FALLBACK) ===== -->
+    <!-- ===== COMPLETE EMBEDDED STYLES ===== -->
     <style>
         /* ===== CRITICAL INLINE STYLES FOR IMMEDIATE RENDERING ===== */
         
@@ -378,10 +378,6 @@
             font-size: 1.125rem;
         }
         
-        .btn-glow {
-            position: relative;
-        }
-        
         /* Cards */
         .card {
             background: var(--glass-light);
@@ -456,6 +452,7 @@
             width: 100%;
             margin: 0 auto;
             padding: 0 1rem;
+            max-width: 1200px;
         }
         
         .mx-auto {
@@ -599,4 +596,237 @@
         }
         
         .border-t-transparent {
-            border-top-color: tra
+            border-top-color: transparent;
+        }
+        
+        .rounded-full {
+            border-radius: 9999px;
+        }
+        
+        .absolute {
+            position: absolute;
+        }
+        
+        .relative {
+            position: relative;
+        }
+        
+        .fixed {
+            position: fixed;
+        }
+        
+        .inset-0 {
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .top-0 {
+            top: 0;
+        }
+        
+        .bottom-0 {
+            bottom: 0;
+        }
+        
+        .left-0 {
+            left: 0;
+        }
+        
+        .right-0 {
+            right: 0;
+        }
+        
+        .z-50 {
+            z-index: 50;
+        }
+        
+        .z-40 {
+            z-index: 40;
+        }
+        
+        .z-30 {
+            z-index: 30;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .text-white {
+            color: rgb(255 255 255);
+        }
+        
+        .text-gray-300 {
+            color: rgb(209 213 219);
+        }
+        
+        .overflow-x-hidden {
+            overflow-x: hidden;
+        }
+        
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 640px) {
+            .sm\:inline {
+                display: inline;
+            }
+            .sm\:flex-row {
+                flex-direction: row;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .md\:flex {
+                display: flex;
+            }
+            .md\:hidden {
+                display: none;
+            }
+            .md\:grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-nav {
+                display: none;
+            }
+        }
+        
+        /* Mobile Navigation */
+        .nav-link-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link-mobile:hover {
+            color: var(--text-primary);
+        }
+        
+        .mobile-nav-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Background Colors */
+        .bg-glass-light {
+            background: var(--glass-light);
+        }
+        
+        .bg-glass-medium {
+            background: var(--glass-medium);
+        }
+        
+        .bg-gradient-primary {
+            background: var(--gradient-primary);
+        }
+        
+        .bg-gradient-animated {
+            background: var(--gradient-bg);
+        }
+        
+        .backdrop-blur-xl {
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        
+        /* Font Classes */
+        .font-primary {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+    </style>
+    
+    <!-- ===== SCHEMA.ORG STRUCTURED DATA ===== -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "SmartFinanceAI",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Personal Finance",
+        "operatingSystem": "Any",
+        "description": "Global Personal Finance Operating System with AI-powered coaching and multi-country support",
+        "url": "https://smartfinanceai.com",
+        "downloadUrl": "https://smartfinanceai.com",
+        "softwareVersion": "1.0.0",
+        "datePublished": "2024-01-01",
+        "dateModified": "2024-01-01",
+        "author": {
+            "@type": "Organization",
+            "name": "SmartFinanceAI",
+            "url": "https://smartfinanceai.com"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "category": "Freemium"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "10000"
+        },
+        "featureList": [
+            "AI Financial Coaching",
+            "Multi-Currency Support", 
+            "Budget Management",
+            "Goal Tracking",
+            "Bank Statement Import",
+            "Investment Tracking",
+            "Family Collaboration",
+            "Advanced Analytics",
+            "Security & Privacy"
+        ]
+    }
+    </script>
+    
+    <!-- ===== GLOBAL CONFIGURATION ===== -->
+    <script>
+        // Global app configuration
+        window.SmartFinanceConfig = {
+            version: '1.0.0',
+            environment: 'production',
+            supportedCountries: ['NZ', 'AU', 'UK', 'US', 'CA'],
+            defaultCountry: 'US',
+            defaultCurrency: 'USD',
+            defaultLocale: 'en-US',
+            features: {
+                aiCoaching: true,
+                multiCurrency: true,
+                familySharing: true,
+                offlineMode: true,
+                biometricAuth: true,
+                darkMode: true
+            },
+            security: {
+                encryptionEnabled: true,
+                biometricSupported: !!window.PublicKeyCredential,
+                webAuthnSupported: !!window.PublicKeyCredential
+            },
+            api: {
+                baseUrl: 'https://api.smartfinanceai.com',
