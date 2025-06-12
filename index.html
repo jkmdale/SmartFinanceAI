@@ -3,139 +3,672 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Debug Test</title>
+    <title>Dashboard - SmartFinanceAI</title>
+    <meta name="description" content="Your intelligent financial command center - track accounts, goals, and insights">
+    
+    <!-- Security & Performance -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    
+    <!-- PWA Meta -->
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/styles/main.css" as="style">
+    <link rel="preload" href="/src/core/dashboard-controller.js" as="script">
+    
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            color: white;
+        /* CSS Variables - Premium Financial Theme */
+        :root {
+            /* Brand Colors */
+            --brand-primary: #8b5cf6;
+            --brand-secondary: #3b82f6;
+            --brand-accent: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #ef4444;
+            
+            /* Glassmorphism */
+            --glass-light: rgba(255, 255, 255, 0.08);
+            --glass-medium: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            
+            /* Typography */
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            
+            /* Text Colors */
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-tertiary: rgba(255, 255, 255, 0.65);
+        }
+
+        /* Global Reset & Base */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--gradient-bg);
+            color: var(--text-primary);
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 40px 20px;
+
+        /* Layout Structure */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            gap: 2rem;
+            padding: 2rem;
         }
-        
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            background: var(--glass-light);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-logo {
+            width: 3rem;
+            height: 3rem;
+            background: var(--gradient-primary);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px 0;
+
+        .nav-menu {
+            list-style: none;
         }
-        
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            color: white;
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
             text-decoration: none;
-            border-radius: 10px;
-            margin: 10px;
-            transition: transform 0.3s ease;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
-        
-        .btn:hover {
+
+        .nav-link:hover {
+            background: var(--glass-light);
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--brand-primary);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            width: 1.5rem;
+            text-align: center;
+        }
+
+        /* Main Dashboard Content */
+        .main-content {
+            flex: 1;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section {
+            background: var(--glass-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--glass-light);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: var(--brand-accent);
+        }
+
+        .stat-change.negative {
+            color: var(--brand-danger);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-card {
+            background: var(--glass-light);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
             transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
         }
-        
-        .debug-info {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: left;
-            font-family: monospace;
-            font-size: 14px;
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-action {
+            background: none;
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .card-action:hover {
+            background: var(--glass-light);
+            color: var(--text-primary);
+        }
+
+        /* Account List */
+        .account-list {
+            space-y: 1rem;
+        }
+
+        .account-item {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            padding: 1rem;
+            background: var(--glass-light);
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .account-item:hover {
+            background: var(--glass-medium);
+        }
+
+        .account-info {
+            flex: 1;
+        }
+
+        .account-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .account-type {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        .account-balance {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: var(--text-primary);
+        }
+
+        /* Goals Progress */
+        .goal-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .goal-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .goal-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .goal-percentage {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .goal-amount {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--glass-light);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-medium);
+        }
+
+        /* Privacy Mode */
+        .privacy-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--glass-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 3rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .privacy-toggle:hover {
+            background: var(--glass-light);
+        }
+
+        .privacy-mode .financial-amount {
+            filter: blur(4px);
+            transition: filter 0.3s ease;
+        }
+
+        .privacy-mode .financial-amount:hover {
+            filter: none;
+        }
+
+        /* Mobile Sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -300px;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+                border-radius: 0 1.5rem 1.5rem 0;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                background: var(--glass-medium);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 0.75rem;
+                padding: 0.75rem;
+                color: var(--text-primary);
+                cursor: pointer;
+                z-index: 1001;
+                font-size: 1.25rem;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .main-content {
+                margin-left: 0;
+                margin-top: 4rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .dashboard-container {
+                padding: 0.5rem;
+            }
+            
+            .welcome-section {
+                padding: 1.5rem;
+            }
+            
+            .dashboard-card {
+                padding: 1.5rem;
+            }
+            
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 SmartFinanceAI</h1>
-        
-        <div class="card">
-            <h2>Debug Test - Can You See This?</h2>
-            <p>If you can see this content, then the HTML is loading correctly and the issue is with the CSS files.</p>
-        </div>
-        
-        <div class="card">
-            <h3>Quick Navigation Test</h3>
-            <a href="./src/core/dashboard.html" class="btn">📊 Dashboard</a>
-            <a href="./src/auth/login.html" class="btn">🔐 Login</a>
-            <a href="./src/core/accounts.html" class="btn">🏦 Accounts</a>
-        </div>
-        
-        <div class="debug-info">
-            <h4>🔍 Debug Information:</h4>
-            <p><strong>Current URL:</strong> <span id="current-url"></span></p>
-            <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
-            <p><strong>Screen Size:</strong> <span id="screen-size"></span></p>
-            <p><strong>CSS Files Loading:</strong> <span id="css-status">Checking...</span></p>
-            <p><strong>JavaScript Working:</strong> ✅ Yes (you can see this message)</p>
-        </div>
-        
-        <div class="card">
-            <h3>What to Check Next:</h3>
-            <ol style="text-align: left;">
-                <li>Open Browser Developer Tools (F12)</li>
-                <li>Check Console tab for red error messages</li>
-                <li>Check Network tab for failed file loads (404 errors)</li>
-                <li>Look for CSS files: main.css, components.css, etc.</li>
-                <li>Report back what errors you see!</li>
-            </ol>
-        </div>
-    </div>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span id="menu-icon">☰</span>
+    </button>
 
-    <script>
-        // Debug information
-        document.getElementById('current-url').textContent = window.location.href;
-        document.getElementById('user-agent').textContent = navigator.userAgent.substring(0, 100) + '...';
-        document.getElementById('screen-size').textContent = screen.width + 'x' + screen.height;
-        
-        // Check if CSS files are loading
-        const cssFiles = [
-            './src/styles/main.css',
-            './src/styles/components.css',
-            './src/styles/themes.css'
-        ];
-        
-        let cssStatus = '';
-        cssFiles.forEach(file => {
-            fetch(file)
-                .then(response => {
-                    if (response.ok) {
-                        cssStatus += '✅ ' + file + ' loaded\n';
-                    } else {
-                        cssStatus += '❌ ' + file + ' failed (' + response.status + ')\n';
-                    }
-                })
-                .catch(error => {
-                    cssStatus += '❌ ' + file + ' error: ' + error.message + '\n';
-                })
-                .finally(() => {
-                    document.getElementById('css-status').innerHTML = cssStatus.replace(/\n/g, '<br>');
-                });
-        });
-        
-        console.log('🔍 SmartFinanceAI Debug Test Loaded');
-        console.log('📍 Current URL:', window.location.href);
-        console.log('📁 Expected CSS path:', window.location.origin + window.location.pathname.replace('index.html', '') + 'src/styles/main.css');
-    </script>
-</body>
-</html>
+    <!-- Privacy Mode Toggle -->
+    <button class="privacy-toggle" onclick="togglePrivacyMode()">
+        <span id="privacy-icon">👁️</span> Privacy Mode
+    </button>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">💰</div>
+                <div class="sidebar-title">SmartFinanceAI</div>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="/src/core/dashboard.html" class="nav-link active">
+                            <span class="nav-icon">📊</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/core/accounts.html" class="nav-link">
+                            <span class="nav-icon">🏦</span>
+                            Accounts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/core/transactions.html" class="nav-link">
+                            <span class="nav-icon">💳</span>
+                            Transactions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/core/budget.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            Budget
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/core/goals.html" class="nav-link">
+                            <span class="nav-icon">🎯</span>
+                            Goals
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/ai/coach-panel.html" class="nav-link">
+                            <span class="nav-icon">🤖</span>
+                            AI Coach
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/core/reports.html" class="nav-link">
+                            <span class="nav-icon">📋</span>
+                            Reports
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/csv-import/upload.html" class="nav-link">
+                            <span class="nav-icon">📤</span>
+                            Import Data
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/src/core/settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Dashboard Content -->
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1 class="welcome-title">Welcome back, Alex! 👋</h1>
+                <p class="welcome-subtitle">Here's your financial overview for today</p>
+                
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Balance</div>
+                        <div class="stat-value financial-amount">$24,580.45</div>
+                        <div class="stat-change positive">+2.3% this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Monthly Spending</div>
+                        <div class="stat-value financial-amount">$3,421.89</div>
+                        <div class="stat-change negative">+5.2% vs budget</div>
+                    </div>
+                    <div class="stat-card">
+       
