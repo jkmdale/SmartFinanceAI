@@ -3,360 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Global Personal Finance Operating System</title>
-    <meta name="description" content="Revolutionary AI-powered personal finance management platform. Track accounts, set goals, analyze spending, and get intelligent coaching across 5+ countries.">
-    <meta name="keywords" content="personal finance, AI financial advisor, budget tracker, goal setting, financial health, multi-currency, global banking">
-    <meta name="author" content="SmartFinanceAI">
+    <title>SmartFinanceAI - Personal Finance Operating System</title>
+    <meta name="description" content="AI-powered personal finance management platform with global banking support">
     
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="SmartFinanceAI - Your Personal Finance Operating System">
-    <meta property="og:description" content="Revolutionary AI-powered financial management with global banking support, intelligent coaching, and beautiful mobile-first design.">
-    <meta property="og:image" content="/images/og-image.png">
-    <meta property="og:url" content="https://jkmdale.github.io/SmartFinanceAI/">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="SmartFinanceAI">
-    
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@SmartFinanceAI">
-    <meta name="twitter:title" content="SmartFinanceAI - Personal Finance Operating System">
-    <meta name="twitter:description" content="AI-powered financial management with global banking support and intelligent coaching.">
-    <meta name="twitter:image" content="/images/twitter-card.png">
-    
-    <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    
-    <!-- PWA Meta Tags -->
+    <!-- PWA Meta -->
     <meta name="theme-color" content="#8b5cf6">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SmartFinanceAI">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="SmartFinanceAI">
-    
-    <!-- Favicon and Icons -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#8b5cf6">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="/styles/main.css" as="style">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "SmartFinanceAI",
-        "description": "AI-powered personal finance management platform with global banking support",
-        "url": "https://jkmdale.github.io/SmartFinanceAI/",
-        "applicationCategory": "FinanceApplication",
-        "operatingSystem": ["Web", "iOS", "Android"],
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-        },
-        "author": {
-            "@type": "Organization",
-            "name": "SmartFinanceAI"
-        },
-        "featureList": [
-            "Multi-currency account tracking",
-            "AI-powered financial coaching",
-            "Goal setting and progress tracking",
-            "CSV bank statement import",
-            "Financial health scoring",
-            "Budget management",
-            "Global banking support"
-        ]
-    }
-    </script>
+    <link rel="manifest" href="./manifest.json">
     
     <style>
-        /* Critical CSS - Above the fold */
-        :root {
-            /* Brand Colors */
-            --brand-primary: #8b5cf6;
-            --brand-secondary: #3b82f6;
-            --brand-accent: #10b981;
-            --brand-warning: #f59e0b;
-            --brand-danger: #ef4444;
-            
-            /* Glassmorphism System */
-            --glass-subtle: rgba(255, 255, 255, 0.05);
-            --glass-light: rgba(255, 255, 255, 0.08);
-            --glass-medium: rgba(255, 255, 255, 0.12);
-            --glass-strong: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            
-            /* Gradient System */
-            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-            --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            --gradient-rainbow: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 25%, #10b981 50%, #f59e0b 75%, #ef4444 100%);
-            
-            /* Typography */
-            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
-            --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            
-            /* Text Colors */
-            --text-primary: rgba(255, 255, 255, 0.95);
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --text-tertiary: rgba(255, 255, 255, 0.65);
-            --text-quaternary: rgba(255, 255, 255, 0.5);
-            
-            /* Spacing */
-            --space-xs: 0.25rem;
-            --space-sm: 0.5rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
-            
-            /* Border Radius */
-            --radius-sm: 0.5rem;
-            --radius-md: 0.75rem;
-            --radius-lg: 1rem;
-            --radius-xl: 1.5rem;
-            --radius-2xl: 2rem;
-            
-            /* Shadows */
-            --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.3);
-            --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Reset and Base Styles */
+        /* Reset and Variables */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-darker: #1e1b4b;
+            --bg-purple: #312e81;
+            --text-light: rgba(255, 255, 255, 0.95);
+            --text-medium: rgba(255, 255, 255, 0.8);
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: var(--font-primary);
-            background: var(--gradient-bg);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 25%, var(--bg-purple) 50%, var(--bg-darker) 75%, var(--bg-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--gradient-bg);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        .loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loading-logo {
-            width: 5rem;
-            height: 5rem;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-xl);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin-bottom: var(--space-lg);
-            animation: pulse 2s infinite;
-        }
-
-        .loading-text {
-            font-size: 1.125rem;
-            font-weight: 600;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: var(--space-sm);
-        }
-
-        .loading-subtitle {
-            font-size: 0.875rem;
-            color: var(--text-tertiary);
-            margin-bottom: var(--space-xl);
-        }
-
-        .loading-progress {
-            width: 200px;
-            height: 4px;
-            background: var(--glass-light);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .loading-progress-bar {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 2px;
-            animation: loading 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes loading {
-            0% { width: 0%; transform: translateX(-100%); }
-            50% { width: 100%; transform: translateX(0%); }
-            100% { width: 100%; transform: translateX(100%); }
-        }
-
-        /* Main Layout */
-        .app-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
         /* Header */
         .header {
             position: sticky;
             top: 0;
-            z-index: 1000;
-            background: var(--glass-light);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
         }
 
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: var(--space-md) var(--space-lg);
+            padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .logo-section {
+        .logo {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-light);
         }
 
-        .logo {
-            width: 3rem;
-            height: 3rem;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 0.75rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             color: white;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow);
         }
 
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .brand-name {
-            font-size: 1.5rem;
+        .logo-text {
+            font-size: 1.25rem;
             font-weight: 700;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
         }
 
-        .brand-tagline {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Navigation */
-        .nav-menu {
+        .nav {
             display: none;
-            align-items: center;
-            gap: var(--space-md);
+            gap: 2rem;
         }
 
         .nav-link {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-md);
+            color: var(--text-medium);
             text-decoration: none;
-            color: var(--text-secondary);
             font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.2s ease;
-            position: relative;
+            transition: color 0.2s ease;
         }
 
         .nav-link:hover {
-            color: var(--text-primary);
-            background: var(--glass-subtle);
-            transform: translateY(-1px);
-        }
-
-        .nav-link.active {
-            color: var(--brand-primary);
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        .nav-icon {
-            font-size: 1.125rem;
+            color: var(--text-light);
         }
 
         .header-actions {
             display: flex;
+            gap: 1rem;
             align-items: center;
-            gap: var(--space-md);
         }
 
         /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: var(--space-sm);
-            padding: var(--space-md) var(--space-lg);
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: var(--radius-md);
-            font-family: var(--font-primary);
+            border-radius: 0.75rem;
+            font-family: inherit;
             font-weight: 600;
             font-size: 0.875rem;
             text-decoration: none;
@@ -364,8 +133,6 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
             white-space: nowrap;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn:focus {
@@ -374,56 +141,34 @@
         }
 
         .btn-primary {
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
         }
 
         .btn-secondary {
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
+            background: var(--glass);
             border: 1px solid var(--glass-border);
-            color: var(--text-primary);
+            color: var(--text-light);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .btn-secondary:hover {
-            background: var(--glass-medium);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-1px);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--glass-border);
-        }
-
-        .btn-ghost:hover {
-            background: var(--glass-subtle);
-            color: var(--text-primary);
-        }
-
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: flex;
-            background: var(--glass-medium);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            padding: var(--space-sm);
-            color: var(--text-primary);
-            cursor: pointer;
-            font-size: 1.25rem;
         }
 
         /* Hero Section */
         .hero {
-            position: relative;
-            padding: var(--space-2xl) var(--space-lg);
+            padding: 4rem 1.5rem;
             text-align: center;
+            position: relative;
             overflow: hidden;
         }
 
@@ -434,9 +179,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
             z-index: -1;
         }
 
@@ -450,36 +196,24 @@
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-sm);
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
+            gap: 0.5rem;
+            background: var(--glass);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius-2xl);
-            padding: var(--space-sm) var(--space-lg);
-            margin-bottom: var(--space-xl);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            margin-bottom: 2rem;
             font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-
-        .hero-badge-icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            color: white;
+            color: var(--text-medium);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .hero-title {
             font-size: clamp(2.5rem, 8vw, 4rem);
             font-weight: 800;
             line-height: 1.1;
-            margin-bottom: var(--space-lg);
-            background: var(--gradient-rainbow);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -487,23 +221,22 @@
 
         .hero-subtitle {
             font-size: clamp(1rem, 3vw, 1.25rem);
-            color: var(--text-secondary);
-            margin-bottom: var(--space-2xl);
+            color: var(--text-medium);
+            margin-bottom: 2rem;
             line-height: 1.6;
         }
 
         .hero-actions {
             display: flex;
             flex-direction: column;
-            gap: var(--space-md);
+            gap: 1rem;
             align-items: center;
         }
 
-        /* Feature Grid */
+        /* Features Section */
         .features {
-            padding: var(--space-2xl) var(--space-lg);
-            background: var(--glass-subtle);
-            backdrop-filter: blur(20px);
+            padding: 4rem 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .features-content {
@@ -511,48 +244,43 @@
             margin: 0 auto;
         }
 
-        .features-header {
-            text-align: center;
-            margin-bottom: var(--space-2xl);
-        }
-
-        .features-title {
+        .section-title {
             font-size: clamp(2rem, 5vw, 2.5rem);
             font-weight: 700;
-            margin-bottom: var(--space-md);
-            background: var(--gradient-primary);
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .features-subtitle {
+        .section-subtitle {
             font-size: 1.125rem;
-            color: var(--text-secondary);
+            color: var(--text-medium);
+            text-align: center;
+            margin-bottom: 3rem;
             max-width: 600px;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-xl);
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
         }
 
         .feature-card {
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
+            background: var(--glass);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: var(--space-xl);
-            transition: all 0.3s ease;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
         }
 
         .feature-card::before {
@@ -561,61 +289,357 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         .feature-icon {
-            width: 4rem;
-            height: 4rem;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: var(--space-lg);
-            box-shadow: var(--shadow-md);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
         }
 
         .feature-title {
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: var(--space-sm);
-            color: var(--text-primary);
+            margin-bottom: 1rem;
+            color: var(--text-light);
         }
 
-        .feature-description {
-            color: var(--text-secondary);
+        .feature-desc {
+            color: var(--text-medium);
+            margin-bottom: 1.5rem;
             line-height: 1.6;
-            margin-bottom: var(--space-lg);
         }
 
         .feature-link {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-sm);
-            color: var(--brand-primary);
+            color: var(--primary);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.875rem;
-            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.2s ease;
         }
 
         .feature-link:hover {
-            gap: var(--space-md);
+            gap: 0.75rem;
         }
 
         /* Status Section */
         .status {
-            padding: var(--space-2xl) var(--space-lg);
+            padding: 4rem 1.5rem;
+            text-align: center;
         }
 
         .status-content {
             max-width: 1000px;
             margin: 0 auto;
-            text-align: center;
         }
 
         .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .status-item {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .status-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-label {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(15, 23, 42, 0.5);
+            border-top: 1px solid var(--glass-border);
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        .footer-copyright {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .nav {
+                display: flex;
+            }
             
+            .hero-actions {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .header-content {
+                padding: 1rem;
+            }
+            
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .features {
+                padding: 3rem 1rem;
+            }
+            
+            .status {
+                padding: 3rem 1rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .fade-in-delay {
+            animation: fadeIn 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Loading state */
+        body {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 0.1s forwards;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-light);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            box-shadow: var(--shadow);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--accent);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="./" class="logo">
+                <div class="logo-icon">💰</div>
+                <div class="logo-text">SmartFinanceAI</div>
+            </a>
+
+            <nav class="nav">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#platform" class="nav-link">Platform</a>
+                <a href="#status" class="nav-link">Status</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="./src/auth/login.html" class="btn btn-secondary">Sign In</a>
+                <a href="./src/core/dashboard.html" class="btn btn-primary">
+                    <span>🚀</span>
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge fade-in">
+                <span>🤖</span>
+                <span>AI-Powered Financial Intelligence</span>
+            </div>
+            
+            <h1 class="hero-title fade-in">
+                Your Personal Finance Operating System
+            </h1>
+            
+            <p class="hero-subtitle fade-in-delay">
+                Revolutionary AI-powered platform that transforms how you manage money. 
+                Track accounts, achieve goals, and get intelligent coaching across 5+ countries 
+                with beautiful mobile-first design.
+            </p>
+            
+            <div class="hero-actions fade-in-delay">
+                <a href="./src/core/dashboard.html" class="btn btn-primary" onclick="trackClick('hero-dashboard')">
+                    <span>🚀</span>
+                    Launch Dashboard
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    <span>✨</span>
+                    Explore Features
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-content">
+            <h2 class="section-title">Revolutionary Financial Intelligence</h2>
+            <p class="section-subtitle">
+                Experience the future of personal finance with AI-powered insights, 
+                global banking support, and beautiful design that works everywhere.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h3 class="feature-title">AI Financial Coach</h3>
+                    <p class="feature-desc">
+                        Get personalized financial advice powered by advanced AI. Our intelligent coach 
+                        analyzes your spending patterns, predicts cash flow, and provides actionable 
+                        recommendations to optimize your financial health.
+                    </p>
+                    <a href="./src/ai/coach-panel.html" class="feature-link" onclick="trackClick('ai-coach')">
+                        Try AI Coach <span>→</span>
+                    </a>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🌍</span>
+                    <h3 class="feature-title">Global Banking Support</h3>
+                    <p class="feature-desc">
+                        Connect accounts from 50+ banks across New Zealand, Australia, UK, US, and Canada. 
+                        Multi-currency support with real-time exchange rates and country-specific 
+                        financial regulations.
+                    </p>
+                    <a href="./src/csv-import/upload.html" class="feature-link" onclick="trackClick('import-data')">
+                        Import Bank Data <span>→</span>
+                    </a>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🎯</span>
+                    <h3 class="feature-title">Smart Goal Tracking</h3>
+                    <p class="feature-desc">
+                        Set and achieve financial goals with AI-optimized timelines. Track house deposits, 
+                        emergency funds, retirement savings, and more with intelligent progress monitoring 
+                        and milestone celebrations.
+                    </p>
+                    <a href="./src/core/goals.html" class="feature-link" onclick="trackClick('goals')">
+                        Manage Goals <span>→</span>
+                    </a>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Advanced Analytics</h3>
+                    <p class="feature-desc">
+                        Comprehensive financial health scoring, spending pattern analysis, and predictive 
+                        cash flow forecasting. Beautiful charts and insights that help you understand 
+                        your money better.
+                    </p>
+                    <a href="./src/core/reports.html" class="feature-link" onclick="trackClick('reports')">
+                        View Reports <span>→</span>
+                    </a>
+                </div>
+                
+ 
