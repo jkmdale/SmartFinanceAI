@@ -1,660 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="../utils/css-injector.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - SmartFinanceAI</title>
-    <meta name="description" content="Your intelligent financial command center">
+    <title>SmartFinanceAI - Financial Dashboard</title>
     
-    <!-- Favicon and Icons - Updated with Brain Logo -->
-    <link rel="icon" type="image/png" sizes="32x32" href="../../public/icons/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../public/icons/favicon-16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../../public/icons/apple-touch-icon.png">
-    
-    <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    
-    <!-- PWA Meta -->
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#8b5cf6">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="../../manifest.json">
     
-    <style>
-        /* Complete CSS System */
-        :root {
-            /* Brand Colors */
-            --brand-primary: #8b5cf6;
-            --brand-secondary: #3b82f6;
-            --brand-accent: #10b981;
-            --brand-warning: #f59e0b;
-            --brand-danger: #ef4444;
-            
-            /* Glassmorphism */
-            --glass-light: rgba(255, 255, 255, 0.08);
-            --glass-medium: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            
-            /* Gradients */
-            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            
-            /* Typography */
-            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-            
-            /* Text Colors */
-            --text-primary: rgba(255, 255, 255, 0.95);
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --text-tertiary: rgba(255, 255, 255, 0.65);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-primary);
-            background: var(--gradient-bg);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Mobile-First Layout */
-        .app-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Mobile Header */
-        .mobile-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem;
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .logo {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 0.75rem;
-        }
-
-        .app-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .privacy-toggle {
-            background: var(--glass-medium);
-            border: 1px solid var(--glass-border);
-            border-radius: 2rem;
-            padding: 0.5rem 1rem;
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-height: 44px;
-            min-width: 44px;
-        }
-
-        .privacy-toggle:hover {
-            background: var(--glass-light);
-            transform: translateY(-1px);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 1rem;
-        }
-
-        /* Welcome Section */
-        .welcome-section {
-            background: var(--glass-medium);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
-        .welcome-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .welcome-subtitle {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: var(--glass-light);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 1rem;
-            padding: 1rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            min-height: 44px;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .stat-value {
-            font-family: var(--font-mono);
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-change {
-            font-size: 0.675rem;
-            font-weight: 500;
-        }
-
-        .stat-change.positive {
-            color: var(--brand-accent);
-        }
-
-        .stat-change.negative {
-            color: var(--brand-danger);
-        }
-
-        /* Content Cards */
-        .content-grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .content-card {
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .content-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            flex: 1;
-        }
-
-        .card-action {
-            background: none;
-            border: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-height: 44px;
-            min-width: 44px;
-        }
-
-        .card-action:hover {
-            background: var(--glass-light);
-            color: var(--text-primary);
-        }
-
-        /* Account List */
-        .account-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem;
-            background: var(--glass-light);
-            border-radius: 0.75rem;
-            margin-bottom: 0.75rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            min-height: 44px;
-        }
-
-        .account-item:hover {
-            background: var(--glass-medium);
-        }
-
-        .account-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .account-info {
-            flex: 1;
-        }
-
-        .account-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.125rem;
-        }
-
-        .account-type {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-        }
-
-        .account-balance {
-            font-family: var(--font-mono);
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-primary);
-        }
-
-        /* Goals Progress */
-        .goal-item {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .goal-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .goal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .goal-name {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.875rem;
-        }
-
-        .goal-percentage {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 3px;
-            transition: width 1s ease;
-        }
-
-        .goal-amount {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-        }
-
-        /* Action Buttons */
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .action-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: var(--glass-light);
-            border: 1px solid var(--glass-border);
-            border-radius: 1rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            min-height: 4rem;
-        }
-
-        .action-btn:hover {
-            background: var(--glass-medium);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .action-btn.primary {
-            background: var(--gradient-primary);
-            border-color: rgba(139, 92, 246, 0.5);
-        }
-
-        .action-icon {
-            font-size: 1.5rem;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--glass-border);
-            padding: 0.75rem 0;
-            position: sticky;
-            bottom: 0;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.25rem;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            min-width: 4rem;
-            min-height: 44px;
-        }
-
-        .nav-item:hover {
-            color: var(--text-primary);
-            background: var(--glass-light);
-        }
-
-        .nav-item.active {
-            color: var(--brand-primary);
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        .nav-icon {
-            font-size: 1.25rem;
-        }
-
-        /* Privacy Mode */
-        .privacy-mode .financial-amount {
-            filter: blur(4px);
-            transition: filter 0.3s ease;
-        }
-
-        .privacy-mode .financial-amount:hover {
-            filter: none;
-        }
-
-        /* Animations */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-in {
-            animation: slideIn 0.5s ease-out forwards;
-        }
-
-        /* Loading States */
-        .loading {
-            display: inline-block;
-            width: 1rem;
-            height: 1rem;
-            border: 2px solid transparent;
-            border-top: 2px solid var(--brand-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Breakpoints */
-        @media (min-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .content-grid {
-                grid-template-columns: 2fr 1fr;
-            }
-            
-            .action-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .bottom-nav {
-                display: none;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .main-content {
-                padding: 2rem;
-            }
-            
-            .welcome-section {
-                padding: 2rem;
-            }
-            
-            .content-card {
-                padding: 2rem;
-            }
-        }
-
-        /* Notification System */
-        .notification {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            background: var(--glass-medium);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 1rem;
-            padding: 1rem;
-            color: var(--text-primary);
-            max-width: 300px;
-            z-index: 1000;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.success {
-            border-left: 4px solid var(--brand-accent);
-        }
-
-        .notification.warning {
-            border-left: 4px solid var(--brand-warning);
-        }
-
-        .notification.error {
-            border-left: 4px solid var(--brand-danger);
-        }
-    </style>
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/styles/main.css" as="style">
+    <link rel="preload" href="/src/data/database-manager.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    
+    <!-- Security -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
 </head>
-<body>
-    <div class="app-container">
-        <!-- Mobile Header -->
-        <header class="mobile-header">
-            <div class="logo-section">
-                <div class="logo">
-                    <img src="../../public/icons/icon-192.png" alt="SmartFinanceAI" />
-                </div>
-                <div class="app-title">SmartFinanceAI</div>
+<body class="dashboard-page">
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="navbar-logo">🧠</div>
+                <span>SmartFinanceAI</span>
             </div>
-            <div class="header-actions">
-                <button class="privacy-toggle" onclick="togglePrivacyMode()">
-                    <span id="privacy-icon">👁️</span>
+            
+            <ul class="navbar-nav desktop-nav">
+                <li><a href="/dashboard" class="nav-link active">📊 Dashboard</a></li>
+                <li><a href="/accounts" class="nav-link">🏦 Accounts</a></li>
+                <li><a href="/transactions" class="nav-link">💳 Transactions</a></li>
+                <li><a href="/budget" class="nav-link">📈 Budget</a></li>
+                <li><a href="/goals" class="nav-link">🎯 Goals</a></li>
+                <li><a href="/reports" class="nav-link">📊 Reports</a></li>
+            </ul>
+            
+            <div class="navbar-actions">
+                <button class="nav-action-btn" id="privacy-toggle" title="Toggle Privacy Mode">
+                    👁️
+                </button>
+                <button class="nav-action-btn" id="notifications-btn" title="Notifications">
+                    🔔
+                    <span class="notification-badge" id="notification-count">0</span>
+                </button>
+                <div class="user-menu">
+                    <button class="user-avatar" id="user-menu-toggle">
+                        👤
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="/profile">👤 Profile</a>
+                        <a href="/settings">⚙️ Settings</a>
+                        <a href="/help">❓ Help</a>
+                        <hr>
+                        <a href="/logout">🚪 Sign Out</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile menu toggle -->
+            <button class="mobile-nav-toggle" id="mobile-nav-toggle">
+                ☰
+            </button>
+        </div>
+        
+        <!-- Mobile navigation -->
+        <ul class="navbar-nav mobile-nav" id="mobile-nav">
+            <li><a href="/dashboard" class="nav-link active">📊 Dashboard</a></li>
+            <li><a href="/accounts" class="nav-link">🏦 Accounts</a></li>
+            <li><a href="/transactions" class="nav-link">💳 Transactions</a></li>
+            <li><a href="/budget" class="nav-link">📈 Budget</a></li>
+            <li><a href="/goals" class="nav-link">🎯 Goals</a></li>
+            <li><a href="/reports" class="nav-link">📊 Reports</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Container -->
+        <div id="dashboard-container" class="dashboard-container">
+            <!-- Initial loading state -->
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <h2>Loading your financial dashboard...</h2>
+                <p>Analyzing your accounts, transactions, and goals</p>
+            </div>
+        </div>
+        
+        <!-- Quick Actions Floating Menu -->
+        <div class="quick-actions" id="quick-actions">
+            <button class="quick-action-toggle" id="quick-action-toggle">
+                ➕
+            </button>
+            <div class="quick-action-menu" id="quick-action-menu">
+                <button class="quick-action" onclick="window.location.href='/transactions/add'">
+                    💳 Add Transaction
+                </button>
+                <button class="quick-action" onclick="window.location.href='/accounts/create'">
+                    🏦 Add Account
+                </button>
+                <button class="quick-action" onclick="window.location.href='/goals/create'">
+                    🎯 Create Goal
+                </button>
+                <button class="quick-action" onclick="window.location.href='/csv-import'">
+                    📄 Import CSV
                 </button>
             </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Welcome Section -->
-            <section class="welcome-section animate-in">
-                <h1 class="welcome-title">Welcome back, Alex! 👋</h1>
-                <p class="welcome-subtitle">Here's your financial overview for today</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-card" onclick="showAccountDetails()">
-                        <div class="stat-label">Total Balance</div>
-                        <div class="stat-value financial-amount" id="total-balance">$24,580.45</div>
-                        <div class="stat-change positive">+2.3% this month</div>
-                    </div>
-                    <div class="stat-card" onclick="showSpendingBreakdown()">
-                        <div class="stat-label">Monthly Spending</div>
-                        <div class="stat-value financial-amount" id="monthly-spending">$3,421.89</div>
-                        <div class="stat-change negative">+5.2% vs budget</div>
-                    </div>
-                    <div class="stat-card" onclick="showSavingsDetails()">
-                        <div class="stat-label">Savings Rate</div>
-                        <div class="stat-value" id="savings-rate">23.8%</div>
-                        <div class="stat-change positive">Above target</div>
-                    </div>
-                    <div class="stat-card" onclick="showHealthScore()">
-                        <div class="stat-label">Financial Health</div>
-                        <div class="stat-value" id="health-score">87/100</div>
-                        <div class="stat-change positive">Excellent</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Content Grid -->
-            <div class="content-grid">
-                <!-- Accounts Card -->
-                <div class="content-card animate-in">
-                    <div class="card-header">
-                        <h2 class="card-title">Your Accounts</h2>
-                        <button class="card-action" onclick="navigateToAccounts()">View All</button>
-                    </div>
+        </div>
+    </main>
+    
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+    
+    <!-- Offline Indicator -->
+    <div id="offline-indicator" class="offline-indicator" style="display: none;">
+        <span class="offline-icon">⚠️</span>
+        <span>You're offline. Data will sync when connection is restored.</span>
+    </div>
+    
+    <!-- Loading Overlay for Sync -->
+    <div id="sync-overlay" class="sync-overlay" style="display: none;">
+        <div class="sync-content">
+            <div class="sync-spinner"></div>
+            <h3>Syncing your data...</h3>
+            <p id="sync-status">Checking for updates</p>
+        </div>
+    </div>
+    
+    <!-- Core JavaScript Dependencies -->
+    <script src="/src/data/database-manager.js"></script>
+    <script src="/src/core/account-manager.js"></script>
+    <script src="/src/core/dashboard-controller.js"></script>
+    <script src="/src/global/localization.js"></script>
+    <script src="/src/utils/currency-utils.js"></script>
+    <script src="/src/utils/date-utils.js"></script>
+    <script src="/src/platform/user-manager.js"></script>
+    
+    <!-- Dashboard Specific Scripts -->
+    <script>
+        /**
+         * Dashboard Application Initialization
+         */
+        class DashboardApp {
+            constructor() {
+                this.isOnline = navigator.onLine;
+                this.privacyMode = false;
+                this.isInitialized = false;
+            }
+            
+            async initialize() {
+                try {
+                    console.log('🚀 Initializing SmartFinanceAI Dashboard...');
                     
-                    <div id="accounts-list">
-                        <div class="account-item" onclick="showAccountDetails('checking')">
-                            <div class="account-info">
-                                <div class="account-name">ANZ Checking</div>
-                                <div class="account-type">Everyday Account</div>
-                            </div>
-                            <div class="account-balance financial-amount">$8,234.56</div>
-                        </div>
+                    // Check authentication
+                    if (!this.checkAuthentication()) {
+                        window.location.href = '/auth/login';
+                        return;
+                    }
+                    
+                    // Initialize service worker
+                    await this.initializeServiceWorker();
+                    
+                    // Set up event listeners
+                    this.setupEventListeners();
+                    
+                    // Initialize dashboard controller
+                    await dashboardController.initialize();
+                    
+                    // Set up periodic sync
+                    this.setupPeriodicSync();
+                    
+                    this.isInitialized = true;
+                    console.log('✅ Dashboard application initialized');
+                    
+                } catch (error) {
+                    console.error('❌ Dashboard initialization failed:', error);
+                    this.showError('Failed to initialize dashboard. Please refresh the page.');
+                }
+            }
+            
+            checkAuthentication() {
+                const session = sessionStorage.getItem('smartfinance_session');
+                if (!session) {
+                    return false;
+                }
+                
+                try {
+                    const sessionData = JSON.parse(session);
+                    return sessionData.userId && sessionData.expiresAt > Date.now();
+                } catch {
+                    return false;
+                }
+            }
+            
+            async initializeServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    try {
+                        const registration = await navigator.serviceWorker.register('/sw.js');
+                        console.log('✅ Service Worker registered:', registration);
                         
-                        <div class="account-item" onclick="showAccountDetails('savings')">
-                            <div class="account-info">
-                                <div class="account-name">ASB Savings</div>
-                                <div class="account-type">High Interest Savings</div>
+                        // Listen for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    this.showUpdateAvailable();
+                                }
+                            });
+                        });
+                        
+                    } catch (error) {
+                        console.error('Service Worker registration failed:', error);
+                    }
+                }
+            }
+            
+            setupEventListeners() {
+                // Online/offline detection
+                window.addEventListener('online', () => {
+                    this.isOnline = true;
+                    this.hideOfflineIndicator();
+                    this.syncData();
+                });
+                
+                window.addEventListener('offline', () => {
+                    this.isOnline = false;
+                    this.showOfflineIndicator();
+                });
+                
+                // Privacy mode toggle
+                document.getElementById('privacy-toggle')?.addEventListener('click', () => {
+                    this.togglePrivacyMode();
+                });
+                
+                // Mobile navigation
+                document.getElementById('mobile-nav-toggle')?.addEventListener('click', () => {
+                    this.toggleMobileNav();
+                });
+                
+                // User menu
+                document.getElementById('user-menu-toggle')?.addEventListener('click', () => {
+                    this.toggleUserMenu();
+                });
+                
+                // Quick actions
+                document.getElementById('quick-action-toggle')?.addEventListener('click', () => {
+                    this.toggleQuickActions();
+                });
+                
+                // Close dropdowns when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.user-menu')) {
+                        document.getElementById('user-dropdown').style.display = 'none';
+                    }
+                    if (!e.target.closest('.quick-actions')) {
+                        document.getElementById('quick-action-menu').style.display = 'none';
+                    }
+                });
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    this.handleKeyboardShortcuts(e);
+                });
+                
+                // Page visibility for sync
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden && this.isInitialized) {
+                        this.syncData();
+                    }
+                });
+            }
+            
+            togglePrivacyMode() {
+                this.privacyMode = !this.privacyMode;
+                const toggle = document.getElementById('privacy-toggle');
+                
+                if (this.privacyMode) {
+                    document.body.classList.add('privacy-mode');
+                    toggle.innerHTML = '🙈';
+                    toggle.title = 'Show financial amounts';
+                } else {
+                    document.body.classList.remove('privacy-mode');
+                    toggle.innerHTML = '👁️';
+                    toggle.title = 'Hide financial amounts';
+                }
+                
+                localStorage.setItem('privacy_mode', this.privacyMode);
+            }
+            
+            toggleMobileNav() {
+                const mobileNav = document.getElementById('mobile-nav');
+                const toggle = document.getElementById('mobile-nav-toggle');
+                
+                if (mobileNav.classList.contains('active')) {
+                    mobileNav.classList.remove('active');
+                    toggle.innerHTML = '☰';
+                } else {
+                    mobileNav.classList.add('active');
+                    toggle.innerHTML = '✕';
+                }
+            }
+            
+            toggleUserMenu() {
+                const dropdown = document.getElementById('user-dropdown');
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            }
+            
+            toggleQuickActions() {
+                const menu = document.getElementById('quick-action-menu');
+                const toggle = document.getElementById('quick-action-toggle');
+                
+                if (menu.style.display === 'block') {
+                    menu.style.display = 'none';
+                    toggle.innerHTML = '➕';
+                } else {
+                    menu.style.display = 'block';
+                    toggle.innerHTML = '✕';
+                }
+            }
+            
+            handleKeyboardShortcuts(e) {
+                // Ctrl/Cmd + combinations
+                if (e.ctrlKey || e.metaKey) {
+                    switch (e.key) {
+                        case 'r':
+                            e.preventDefault();
+                            dashboardController.refreshData();
+                            break;
+                        case 'h':
+                            e.preventDefault();
+                            this.togglePrivacyMode();
+                            break;
+                        case 'n':
+                            e.preventDefault();
+                            window.location.href = '/transactions/add';
+                            break;
+                    }
+                }
+                
+                // Escape key
+                if (e.key === 'Escape') {
+                    document.getElementById('user-dropdown').style.display = 'none';
+                    document.getElementById('quick-action-menu').style.display = 'none';
+                    document.getElementById('mobile-nav').classList.remove('active');
+                }
+            }
+            
+            async syncData() {
+                if (!this.isOnline || !this.isInitialized) return;
+                
+                try {
+                    this.showSyncIndicator();
+                    await dashboardController.refreshData(false);
+                    this.hideSyncIndicator();
+                } catch (error) {
+                    console.error('Sync failed:', error);
+                    this.hideSyncIndicator();
+                }
+            }
+            
+            setupPeriodicSync() {
+                // Sync every 5 minutes when page is visible
+                setInterval(() => {
+                    if (!document.hidden && this.isOnline) {
+                        this.syncData();
+                    }
+                }, 300000); // 5 minutes
+            }
+            
+            showOfflineIndicator() {
+                document.getElementById('offline-indicator').style.display = 'flex';
+            }
+            
+            hideOfflineIndicator() {
+                document.getElementById('offline-indicator').style.display = 'none';
+            }
+            
+            showSyncIndicator() {
+                document.getElementById('sync-overlay').style.display = 'flex';
+            }
+            
+            hideSyncIndicator() {
+                document.getElementById('sync-overlay').style.display = 'none';
+            }
+            
+            showUpdateAvailable() {
+                const notification = this.createNotification(
+                    'App Update Available',
+                    'A new version is ready. Refresh to update.',
+                    'info',
+                    [
+                        {
+                            text: 'Refresh',
+                            action: () => window.location.reload()
+                        },
+                        {
+                            text: 'Later',
+                            action: () => {}
+                        }
+                    ]
+                );
+                
+                document.getElementById('notification-container').appendChild(notification);
+            }
+            
+            showError(message) {
+                const notification = this.createNotification(
+                    'Error',
+                    message,
+                    'error'
+                );
+                
+                document.getElementById('notification-container').appendChild(notification);
+            }
+            
+            createNotification(title, message, type = 'info', actions = null) {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                
+                const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+                
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <span class="notification-icon">${icon}</span>
+                            <span class="notification-title">${title}</span>
+                            <button class="notification-close" onclick="this.closest('.notification').remove()">×</button>
+                        </div>
+                        <div class="notification-message">${message}</div>
+                        ${actions ? `
+                            <div class="notification-actions">
+                                ${actions.map(action => `
+                                    <button class="notification-action" onclick="(${action.action})(); this.closest('.notification').remove();">
+                                        ${action.text}
+                                    </button>
+                                `).join('')}
                             </div>
-                            <div class="account-balance financial-amount">$16,345.89</div>
-                 
+                        ` : ''}
+                    </div>
+                `;
+                
+                // Auto-remove after 8 seconds if no actions
+                if (!actions) {
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.remove();
+                        }
+                    }, 8000);
+                }
+                
+                return notification;
+            }
+        }
+        
+        // Initialize application
+        const dashboardApp = new DashboardApp();
+        
+        // Start when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                dashboardApp.initialize();
+            });
+        } else {
+            dashboardApp.initialize();
+        }
+        
+        // Load privacy mode preference
+        if (localStorage.getItem('privacy_mode') === 'true') {
+            document.addEventListener('DOMContentLoaded', () => {
+                dashboardApp.togglePrivacyMode();
+            });
+        }
+        
+        // Analytics tracking (placeholder)
+        function trackEvent(category, action, label) {
+            console.log('📊 Analytics:', { category, action, label });
+            // In production, send to analytics service
+        }
+        
+        // Performance monitoring
+        window.addEventListener('load', () => {
+            // Track page load performance
+            const perfData = performance.getEntriesByType('navigation')[0];
+            console.log('⚡ Page Load Performance:', {
+                loadTime: perfData.loadEventEnd - perfData.loadEventStart,
+                domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+                firstPaint: performance.getEntriesByType('paint')[0]?.startTime
+            });
+        });
+        
+        console.log('✅ Dashboard application script loaded!');
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
