@@ -1,66 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../styles/main.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Personal Finance Operating System</title>
-    <meta name="description" content="AI-powered personal finance management platform with global banking support">
+    <title>SmartFinanceAI - AI-Powered Personal Finance</title>
+    <meta name="description" content="Transform your financial future with AI-powered insights, investment tracking, and personalized recommendations.">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./public/icons/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./public/icons/apple-touch-icon.png">
     
     <!-- PWA Meta -->
     <meta name="theme-color" content="#8b5cf6">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SmartFinanceAI">
     <link rel="manifest" href="./manifest.json">
     
+    <!-- Open Graph -->
+    <meta property="og:title" content="SmartFinanceAI - AI-Powered Personal Finance">
+    <meta property="og:description" content="Transform your financial future with AI-powered insights">
+    <meta property="og:image" content="./public/icons/icon-512.png">
+    <meta property="og:url" content="https://jkmdale.github.io/SmartFinanceAI/">
+    
     <style>
-        /* Reset and Variables */
+        /* Complete CSS System - Self-Contained */
+        :root {
+            /* Brand Colors */
+            --brand-primary: #8b5cf6;
+            --brand-secondary: #3b82f6;
+            --brand-accent: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #ef4444;
+            
+            /* Glassmorphism */
+            --glass-light: rgba(255, 255, 255, 0.08);
+            --glass-medium: rgba(255, 255, 255, 0.12);
+            --glass-subtle: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --gradient-accent: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            
+            /* Typography */
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            
+            /* Text Colors */
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-tertiary: rgba(255, 255, 255, 0.65);
+            --text-quaternary: rgba(255, 255, 255, 0.5);
+            
+            /* Spacing */
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+            
+            /* Radius */
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-2xl: 2rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        :root {
-            --primary: #8b5cf6;
-            --secondary: #3b82f6;
-            --accent: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --bg-dark: #0f172a;
-            --bg-darker: #1e1b4b;
-            --bg-purple: #312e81;
-            --text-light: rgba(255, 255, 255, 0.95);
-            --text-medium: rgba(255, 255, 255, 0.8);
-            --text-dim: rgba(255, 255, 255, 0.6);
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 25%, var(--bg-purple) 50%, var(--bg-darker) 75%, var(--bg-dark) 100%);
-            color: var(--text-light);
+            font-family: var(--font-primary);
+            background: var(--gradient-bg);
+            color: var(--text-primary);
             min-height: 100vh;
-            line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Header */
-        .header {
-            position: sticky;
+        /* Navigation */
+        .navbar {
+            position: fixed;
             top: 0;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--glass-border);
+            left: 0;
+            right: 0;
             z-index: 1000;
+            background: var(--glass-light);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: var(--space-md) 0;
         }
 
-        .header-content {
+        .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem 1.5rem;
+            padding: 0 var(--space-lg);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -69,80 +117,74 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: var(--space-md);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
             text-decoration: none;
-            color: var(--text-light);
         }
 
         .logo-icon {
             width: 2.5rem;
             height: 2.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 0.75rem;
+            border-radius: var(--radius-md);
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.25rem;
             color: white;
-            box-shadow: var(--shadow);
         }
 
-        .logo-text {
-            font-size: 1.25rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav {
-            display: none;
-            gap: 2rem;
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xl);
         }
 
         .nav-link {
-            color: var(--text-medium);
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s ease;
         }
 
         .nav-link:hover {
-            color: var(--text-light);
+            color: var(--text-primary);
         }
 
-        .header-actions {
+        .nav-actions {
             display: flex;
-            gap: 1rem;
             align-items: center;
+            gap: var(--space-md);
         }
 
-        /* Buttons */
         .btn {
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 0.75rem;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
-            white-space: nowrap;
+            gap: var(--space-sm);
         }
 
-        .btn:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.5);
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--glass-subtle);
+            color: var(--text-primary);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--gradient-primary);
             color: white;
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
         }
@@ -152,430 +194,295 @@
             box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
         }
 
-        .btn-secondary {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            color: var(--text-light);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-1px);
-        }
-
         /* Hero Section */
         .hero {
-            padding: 4rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            padding: var(--space-3xl) var(--space-lg);
             position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
-            z-index: -1;
         }
 
         .hero-content {
             max-width: 800px;
-            margin: 0 auto;
+            z-index: 2;
             position: relative;
-            z-index: 1;
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            background: var(--glass);
+            gap: var(--space-sm);
+            background: var(--glass-light);
             border: 1px solid var(--glass-border);
-            border-radius: 2rem;
-            padding: 0.5rem 1rem;
-            margin-bottom: 2rem;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-sm) var(--space-lg);
             font-size: 0.875rem;
-            color: var(--text-medium);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
         }
 
         .hero-title {
-            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-size: 3.5rem;
             font-weight: 800;
             line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+            margin-bottom: var(--space-lg);
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--brand-primary) 50%, var(--brand-secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .hero-subtitle {
-            font-size: clamp(1rem, 3vw, 1.25rem);
-            color: var(--text-medium);
-            margin-bottom: 2rem;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2xl);
             line-height: 1.6;
         }
 
         .hero-actions {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            gap: var(--space-lg);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: var(--space-lg) var(--space-2xl);
+            font-size: 1.125rem;
+        }
+
+        /* PWA Install Banner */
+        .pwa-install {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: var(--space-lg);
+            right: var(--space-lg);
+            background: var(--glass-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-lg);
+            display: none;
             align-items: center;
+            gap: var(--space-md);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            animation: slideInUp 0.3s ease-out;
         }
 
-        /* Features Section */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pwa-content {
+            flex: 1;
+        }
+
+        .pwa-title {
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .pwa-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .pwa-actions {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .pwa-btn {
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pwa-install-btn {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .pwa-close-btn {
+            background: var(--glass-subtle);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Features Grid */
         .features {
-            padding: 4rem 1.5rem;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .features-content {
+            padding: var(--space-3xl) var(--space-lg);
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .section-title {
-            font-size: clamp(2rem, 5vw, 2.5rem);
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .section-subtitle {
-            font-size: 1.125rem;
-            color: var(--text-medium);
-            text-align: center;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-2xl);
+            margin-top: var(--space-2xl);
         }
 
         .feature-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 1.5rem;
-            padding: 2rem;
+            background: var(--glass-light);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: var(--shadow-2xl);
         }
 
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
+            width: 4rem;
+            height: 4rem;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            font-size: 2rem;
+            color: white;
         }
 
         .feature-title {
             font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-light);
+            font-weight: 700;
+            margin-bottom: var(--space-md);
         }
 
-        .feature-desc {
-            color: var(--text-medium);
-            margin-bottom: 1.5rem;
+        .feature-description {
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        .feature-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: gap 0.2s ease;
-        }
-
-        .feature-link:hover {
-            gap: 0.75rem;
-        }
-
-        /* Status Section */
-        .status {
-            padding: 4rem 1.5rem;
-            text-align: center;
-        }
-
-        .status-content {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 2rem;
-            padding: 0.5rem 1rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .status-item {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .status-number {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .status-label {
-            color: var(--text-dim);
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        /* Footer */
-        .footer {
-            background: rgba(15, 23, 42, 0.5);
-            border-top: 1px solid var(--glass-border);
-            padding: 2rem 1.5rem;
-            text-align: center;
-        }
-
-        .footer-text {
-            color: var(--text-dim);
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-link {
-            color: var(--text-medium);
-            text-decoration: none;
-            font-size: 0.875rem;
-            transition: color 0.2s ease;
-        }
-
-        .footer-link:hover {
-            color: var(--primary);
-        }
-
-        .footer-copyright {
-            color: var(--text-dim);
-            font-size: 0.75rem;
-        }
-
         /* Responsive Design */
-        @media (min-width: 768px) {
-            .nav {
-                display: flex;
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
             }
             
             .hero-actions {
-                flex-direction: row;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .header-content {
-                padding: 1rem;
-            }
-            
-            .hero {
-                padding: 3rem 1rem;
-            }
-            
-            .features {
-                padding: 3rem 1rem;
-            }
-            
-            .status {
-                padding: 3rem 1rem;
-            }
-            
-            .footer-links {
                 flex-direction: column;
-                gap: 0.5rem;
+                align-items: center;
+            }
+            
+            .pwa-install {
+                left: var(--space-md);
+                right: var(--space-md);
+                bottom: var(--space-md);
+            }
+            
+            .pwa-actions {
+                flex-direction: column;
             }
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        .fade-in-delay {
-            animation: fadeIn 0.8s ease-out 0.2s forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeIn {
-            from { 
-                opacity: 0; 
-                transform: translateY(20px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-
-        /* Loading state */
-        body {
-            opacity: 0;
-            animation: fadeIn 0.5s ease-out 0.1s forwards;
-        }
-
-        /* Notification styles */
-        .notification {
+        /* Offline indicator */
+        .offline-indicator {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 0.75rem;
-            padding: 1rem 1.5rem;
-            color: var(--text-light);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 10000;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            max-width: 300px;
-            box-shadow: var(--shadow);
+            top: 4rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--brand-danger);
+            color: white;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: none;
+            z-index: 1001;
         }
 
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.success {
-            border-left: 4px solid var(--accent);
-        }
-
-        .notification.error {
-            border-left: 4px solid var(--danger);
-        }
-
-        .notification.warning {
-            border-left: 4px solid var(--warning);
+        .update-available {
+            position: fixed;
+            top: 4rem;
+            right: var(--space-lg);
+            background: var(--brand-accent);
+            color: white;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: none;
+            z-index: 1001;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
             <a href="./" class="logo">
-                <div class="logo-icon">💰</div>
-                <div class="logo-text">SmartFinanceAI</div>
+                <div class="logo-icon" id="nav-logo">🧠</div>
+                SmartFinanceAI
             </a>
-
-            <nav class="nav">
+            
+            <div class="nav-links">
                 <a href="#features" class="nav-link">Features</a>
-                <a href="#platform" class="nav-link">Platform</a>
-                <a href="#status" class="nav-link">Status</a>
-            </nav>
-
-            <div class="header-actions">
-                <a href="./src/auth/login.html" class="btn btn-secondary">Sign In</a>
-                <a href="./src/core/dashboard.html" class="btn btn-primary">
-                    <span>🚀</span>
-                    Dashboard
-                </a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="./login.html" class="btn btn-ghost">Sign In</a>
+                <a href="./register.html" class="btn btn-primary">Get Started</a>
             </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge fade-in">
-                <span>🤖</span>
-                <span>AI-Powered Financial Intelligence</span>
+            <div class="hero-badge">
+                <span>🚀</span>
+                Now available as a Progressive Web App
             </div>
             
-            <h1 class="hero-title fade-in">
-                Your Personal Finance Operating System
+            <h1 class="hero-title">
+                Transform Your Financial Future with AI
             </h1>
             
-            <p class="hero-subtitle fade-in-delay">
-                Revolutionary AI-powered platform that transforms how you manage money. 
-                Track accounts, achieve goals, and get intelligent coaching across 5+ countries 
-                with beautiful mobile-first design.
+            <p class="hero-subtitle">
+                Get personalized investment insights, track your portfolio performance, 
+                and make smarter financial decisions with our AI-powered platform.
             </p>
             
-            <div class="hero-actions fade-in-delay">
-                <a href="./src/core/dashboard.html" class="btn btn-primary" onclick="trackClick('hero-dashboard')">
-                    <span>🚀</span>
-                    Launch Dashboard
+            <div class="hero-actions">
+                <a href="./register.html" class="btn btn-primary btn-large">
+                    <span>🧠</span>
+                    Start Free Trial
                 </a>
-                <a href="#features" class="btn btn-secondary">
-                    <span>✨</span>
-                    Explore Features
+                <a href="./login.html" class="btn btn-ghost btn-large">
+                    <span>📱</span>
+                    Try Demo
                 </a>
             </div>
         </div>
@@ -583,64 +490,19 @@
 
     <!-- Features Section -->
     <section class="features" id="features">
-        <div class="features-content">
-            <h2 class="section-title">Revolutionary Financial Intelligence</h2>
-            <p class="section-subtitle">
-                Experience the future of personal finance with AI-powered insights, 
-                global banking support, and beautiful design that works everywhere.
-            </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--gradient-primary);">🧠</div>
+                <h3 class="feature-title">AI-Powered Insights</h3>
+                <p class="feature-description">
+                    Get personalized financial advice powered by advanced machine learning algorithms
+                    that analyze market trends and your spending patterns.
+                </p>
+            </div>
             
-            <div class="features-grid">
-                <div class="feature-card">
-                    <span class="feature-icon">🤖</span>
-                    <h3 class="feature-title">AI Financial Coach</h3>
-                    <p class="feature-desc">
-                        Get personalized financial advice powered by advanced AI. Our intelligent coach 
-                        analyzes your spending patterns, predicts cash flow, and provides actionable 
-                        recommendations to optimize your financial health.
-                    </p>
-                    <a href="./src/ai/coach-panel.html" class="feature-link" onclick="trackClick('ai-coach')">
-                        Try AI Coach <span>→</span>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <span class="feature-icon">🌍</span>
-                    <h3 class="feature-title">Global Banking Support</h3>
-                    <p class="feature-desc">
-                        Connect accounts from 50+ banks across New Zealand, Australia, UK, US, and Canada. 
-                        Multi-currency support with real-time exchange rates and country-specific 
-                        financial regulations.
-                    </p>
-                    <a href="./src/csv-import/upload.html" class="feature-link" onclick="trackClick('import-data')">
-                        Import Bank Data <span>→</span>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <span class="feature-icon">🎯</span>
-                    <h3 class="feature-title">Smart Goal Tracking</h3>
-                    <p class="feature-desc">
-                        Set and achieve financial goals with AI-optimized timelines. Track house deposits, 
-                        emergency funds, retirement savings, and more with intelligent progress monitoring 
-                        and milestone celebrations.
-                    </p>
-                    <a href="./src/core/goals.html" class="feature-link" onclick="trackClick('goals')">
-                        Manage Goals <span>→</span>
-                    </a>
-                </div>
-                
-                <div class="feature-card">
-                    <span class="feature-icon">📊</span>
-                    <h3 class="feature-title">Advanced Analytics</h3>
-                    <p class="feature-desc">
-                        Comprehensive financial health scoring, spending pattern analysis, and predictive 
-                        cash flow forecasting. Beautiful charts and insights that help you understand 
-                        your money better.
-                    </p>
-                    <a href="./src/core/reports.html" class="feature-link" onclick="trackClick('reports')">
-                        View Reports <span>→</span>
-                    </a>
-                </div>
-                
- 
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--gradient-secondary);">📊</div>
+                <h3 class="feature-title">Portfolio Tracking</h3>
+                <p class="feature-description">
+                    Monitor your investments in real-time with comprehensive analytics and 
+                    performance metrics
