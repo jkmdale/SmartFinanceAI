@@ -1,906 +1,856 @@
-// 🚀 SmartFinanceAI - Authentication Manager
-// Secure authentication with WebAuthn biometrics, JWT tokens, and multi-factor authentication
+/**
+ * SmartFinanceAI - Authentication Manager
+ * Handles user authentication, session management, and security
+ * File: src/auth/auth-manager.js (REPLACEMENT)
+ */
 
 class AuthManager {
   constructor() {
+    this.baseUrl = window.location.origin;
+    this.sessionKey = 'smartfinance_session';
+    this.refreshKey = 'smartfinance_refresh';
+    this.deviceKey = 'smartfinance_device';
+    
     this.currentUser = null;
-    this.accessToken = null;
-    this.refreshToken = null;
-    this.tokenExpiryTime = null;
-    this.sessionTimeout = 24 * 60 * 60 * 1000; // 24 hours
-    this.refreshThreshold = 5 * 60 * 1000; // 5 minutes before expiry
-    
-    // WebAuthn configuration
-    this.webAuthnSupported = this.checkWebAuthnSupport();
-    this.rpId = window.location.hostname;
-    this.rpName = 'SmartFinanceAI';
-    
-    // Authentication state
-    this.isAuthenticated = false;
-    this.authListeners = [];
-    this.biometricEnabled = false;
-    
-    // Session monitoring
+    this.sessionTimer = null;
     this.refreshTimer = null;
-    this.activityTimer = null;
-    this.lastActivity = Date.now();
     
-    console.log('🔐 AuthManager initialized');
-    this.initializeFromStorage();
+    // WebAuthn support detection
+    this.supportsWebAuthn = !!(navigator.credentials && navigator.credentials.create);
+    
+    // Session configuration
+    this.config = {
+      sessionDuration: 24 * 60 * 60 * 1000, // 24 hours
+      refreshDuration: 7 * 24 * 60 * 60 * 1000, // 7 days
+      autoRefreshMinutes: 30, // Auto-refresh 30 minutes before expiry
+      maxLoginAttempts: 3,
+      lockoutDuration: 15 * 60 * 1000 // 15 minutes
+    };
+
+    // Initialize on construction
+    this.initialize();
   }
-  
-  // === INITIALIZATION === //
-  
-  async initializeFromStorage() {
+
+  /**
+   * Initialize authentication system
+   */
+  async initialize() {
     try {
       // Check for existing session
-      const storedToken = localStorage.getItem('smartfinance_access_token');
-      const storedRefresh = localStorage.getItem('smartfinance_refresh_token');
-      const storedUser = localStorage.getItem('smartfinance_user');
-      const storedExpiry = localStorage.getItem('smartfinance_token_expiry');
+      await this.checkExistingSession();
       
-      if (storedToken && storedRefresh && storedUser && storedExpiry) {
-        const expiryTime = parseInt(storedExpiry);
-        
-        // Check if token is still valid
-        if (Date.now() < expiryTime) {
-          this.accessToken = storedToken;
-          this.refreshToken = storedRefresh;
-          this.tokenExpiryTime = expiryTime;
-          this.currentUser = JSON.parse(storedUser);
-          this.isAuthenticated = true;
-          
-          // Set up auto-refresh
-          this.setupTokenRefresh();
-          this.setupActivityMonitoring();
-          
-          console.log('✅ Session restored for user:', this.currentUser.email);
-          this.notifyAuthListeners('restored');
-          
-        } else {
-          console.log('🔄 Token expired, attempting refresh...');
-          await this.refreshTokens();
-        }
-      }
+      // Set up auto-refresh timer
+      this.setupAutoRefresh();
       
-      // Check biometric availability
-      if (this.webAuthnSupported) {
-        this.biometricEnabled = localStorage.getItem('smartfinance_biometric_enabled') === 'true';
-        console.log('👆 Biometric authentication:', this.biometricEnabled ? 'enabled' : 'disabled');
-      }
+      // Listen for storage changes (multi-tab support)
+      window.addEventListener('storage', this.handleStorageChange.bind(this));
+      
+      // Listen for visibility changes
+      document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+      
+      console.log('✅ AuthManager initialized');
       
     } catch (error) {
-      console.error('❌ Failed to initialize from storage:', error);
-      this.clearStoredAuth();
+      console.error('❌ AuthManager initialization failed:', error);
     }
   }
-  
-  checkWebAuthnSupport() {
-    return !!(window.PublicKeyCredential && 
-              navigator.credentials && 
-              navigator.credentials.create &&
-              navigator.credentials.get);
-  }
-  
-  // === REGISTRATION === //
-  
+
+  /**
+   * USER REGISTRATION
+   */
+
+  /**
+   * Register new user
+   */
   async register(userData) {
     try {
-      console.log('📝 Starting user registration...');
-      
-      const { email, password, firstName, lastName, country, currency } = userData;
-      
-      // Validate input
       this.validateRegistrationData(userData);
+
+      // Generate device ID
+      const deviceId = this.generateDeviceId();
       
-      // Create user ID
-      const userId = this.generateUserId();
-      
-      // Hash password
-      const passwordHash = await this.hashPassword(password);
-      
-      // Create user object
+      // Create user account
       const user = {
-        id: userId,
-        email: email.toLowerCase().trim(),
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        country: country,
-        currency: currency,
-        passwordHash: passwordHash,
+        id: this.generateUserId(),
+        email: userData.email.toLowerCase().trim(),
+        firstName: userData.firstName.trim(),
+        lastName: userData.lastName.trim(),
+        country: userData.country || 'US',
+        currency: userData.currency || 'USD',
+        passwordHash: await this.hashPassword(userData.password),
+        emailVerified: false,
+        mfaEnabled: false,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        isEmailVerified: false,
-        isBiometricEnabled: false,
         lastLoginAt: null,
-        loginCount: 0,
-        failedAttempts: 0,
-        lockedUntil: null,
-        preferences: {
-          theme: 'dark',
+        devices: [{
+          id: deviceId,
+          name: this.getDeviceName(),
+          type: this.getDeviceType(),
+          registeredAt: new Date().toISOString(),
+          lastUsedAt: new Date().toISOString(),
+          isTrusted: true
+        }],
+        settings: {
+          theme: 'auto',
           language: 'en',
-          notifications: true,
           privacyMode: false,
-          currency: currency,
-          dateFormat: this.getDefaultDateFormat(country),
-          numberFormat: this.getDefaultNumberFormat(country)
+          notifications: {
+            email: true,
+            push: true,
+            lowBalance: true,
+            goalReminders: true,
+            weeklyInsights: true
+          }
         }
       };
-      
-      // Store user (in a real app, this would be sent to your backend)
+
+      // Store user (in production, this would call API)
       await this.storeUser(user);
-      
-      // Generate tokens
-      const tokens = await this.generateTokens(user);
-      
-      // Set authentication state
-      this.setAuthenticationState(user, tokens);
-      
-      console.log('✅ User registered successfully:', email);
-      this.notifyAuthListeners('registered');
-      
+
+      // Create session
+      const session = await this.createSession(user, deviceId);
+
+      // Set up WebAuthn if supported
+      if (this.supportsWebAuthn && userData.enableBiometrics) {
+        try {
+          await this.setupWebAuthn(user);
+        } catch (error) {
+          console.warn('WebAuthn setup failed:', error);
+          // Continue with registration even if WebAuthn fails
+        }
+      }
+
       return {
         success: true,
         user: this.sanitizeUser(user),
-        requiresEmailVerification: true
+        session: session,
+        message: 'Account created successfully!'
       };
-      
+
     } catch (error) {
-      console.error('❌ Registration failed:', error);
+      console.error('Registration failed:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Registration failed. Please try again.'
+      };
+    }
+  }
+
+  /**
+   * Validate registration data
+   */
+  validateRegistrationData(data) {
+    const errors = [];
+
+    // Email validation
+    if (!data.email || !this.isValidEmail(data.email)) {
+      errors.push('Valid email address is required');
+    }
+
+    // Password validation
+    if (!data.password || data.password.length < 8) {
+      errors.push('Password must be at least 8 characters long');
+    }
+
+    if (!this.isStrongPassword(data.password)) {
+      errors.push('Password must contain uppercase, lowercase, number, and special character');
+    }
+
+    // Name validation
+    if (!data.firstName || data.firstName.trim().length === 0) {
+      errors.push('First name is required');
+    }
+
+    if (!data.lastName || data.lastName.trim().length === 0) {
+      errors.push('Last name is required');
+    }
+
+    if (errors.length > 0) {
+      throw new Error(errors.join(', '));
+    }
+  }
+
+  /**
+   * USER LOGIN
+   */
+
+  /**
+   * Login with email and password
+   */
+  async login(email, password, rememberMe = false) {
+    try {
+      // Check for rate limiting
+      this.checkRateLimit(email);
+
+      // Find user
+      const user = await this.findUserByEmail(email);
+      if (!user) {
+        this.recordFailedAttempt(email);
+        throw new Error('Invalid email or password');
+      }
+
+      // Verify password
+      const isValidPassword = await this.verifyPassword(password, user.passwordHash);
+      if (!isValidPassword) {
+        this.recordFailedAttempt(email);
+        throw new Error('Invalid email or password');
+      }
+
+      // Clear failed attempts
+      this.clearFailedAttempts(email);
+
+      // Check if device is trusted
+      const deviceId = this.getStoredDeviceId() || this.generateDeviceId();
+      const isTrustedDevice = user.devices.some(device => device.id === deviceId);
+
+      // Update device info
+      await this.updateDeviceInfo(user.id, deviceId);
+
+      // Create session
+      const sessionDuration = rememberMe ? this.config.refreshDuration : this.config.sessionDuration;
+      const session = await this.createSession(user, deviceId, sessionDuration);
+
+      // Update last login
+      await this.updateLastLogin(user.id);
+
+      return {
+        success: true,
+        user: this.sanitizeUser(user),
+        session: session,
+        requiresMFA: user.mfaEnabled && !isTrustedDevice,
+        message: 'Login successful!'
+      };
+
+    } catch (error) {
+      console.error('Login failed:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Login failed. Please check your credentials.'
+      };
+    }
+  }
+
+  /**
+   * Login with WebAuthn (biometric)
+   */
+  async loginWithWebAuthn() {
+    try {
+      if (!this.supportsWebAuthn) {
+        throw new Error('WebAuthn not supported on this device');
+      }
+
+      // Get stored credentials
+      const storedCredentials = this.getStoredCredentials();
+      if (!storedCredentials || storedCredentials.length === 0) {
+        throw new Error('No biometric credentials found. Please set up biometric authentication first.');
+      }
+
+      // Create authentication challenge
+      const challenge = this.generateChallenge();
+      
+      // Request authentication
+      const credential = await navigator.credentials.get({
+        publicKey: {
+          challenge: new TextEncoder().encode(challenge),
+          allowCredentials: storedCredentials.map(cred => ({
+            id: this.base64ToArrayBuffer(cred.id),
+            type: 'public-key',
+            transports: ['internal', 'usb', 'nfc', 'ble']
+          })),
+          timeout: 60000,
+          userVerification: 'preferred'
+        }
+      });
+
+      // Verify credential (in production, verify on server)
+      const user = await this.verifyWebAuthnCredential(credential);
+      if (!user) {
+        throw new Error('Biometric authentication failed');
+      }
+
+      // Create session
+      const deviceId = this.getStoredDeviceId() || this.generateDeviceId();
+      const session = await this.createSession(user, deviceId);
+
+      return {
+        success: true,
+        user: this.sanitizeUser(user),
+        session: session,
+        message: 'Biometric login successful!'
+      };
+
+    } catch (error) {
+      console.error('WebAuthn login failed:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Biometric login failed. Please try again or use password.'
+      };
+    }
+  }
+
+  /**
+   * SESSION MANAGEMENT
+   */
+
+  /**
+   * Create user session
+   */
+  async createSession(user, deviceId, duration = null) {
+    const sessionDuration = duration || this.config.sessionDuration;
+    const refreshDuration = this.config.refreshDuration;
+
+    const session = {
+      userId: user.id,
+      deviceId: deviceId,
+      sessionId: this.generateSessionId(),
+      accessToken: this.generateToken(),
+      refreshToken: this.generateToken(),
+      issuedAt: Date.now(),
+      expiresAt: Date.now() + sessionDuration,
+      refreshExpiresAt: Date.now() + refreshDuration,
+      country: user.country,
+      currency: user.currency,
+      permissions: this.getUserPermissions(user)
+    };
+
+    // Store session
+    sessionStorage.setItem(this.sessionKey, JSON.stringify(session));
+    localStorage.setItem(this.refreshKey, session.refreshToken);
+    localStorage.setItem(this.deviceKey, deviceId);
+
+    // Set current user
+    this.currentUser = user;
+
+    // Start session timer
+    this.startSessionTimer(session.expiresAt);
+
+    return session;
+  }
+
+  /**
+   * Check existing session
+   */
+  async checkExistingSession() {
+    try {
+      const sessionData = sessionStorage.getItem(this.sessionKey);
+      if (!sessionData) {
+        return false;
+      }
+
+      const session = JSON.parse(sessionData);
+      
+      // Check if session is expired
+      if (session.expiresAt <= Date.now()) {
+        // Try to refresh session
+        return await this.refreshSession();
+      }
+
+      // Load user data
+      this.currentUser = await this.findUserById(session.userId);
+      if (!this.currentUser) {
+        this.clearSession();
+        return false;
+      }
+
+      // Start session timer
+      this.startSessionTimer(session.expiresAt);
+
+      return true;
+
+    } catch (error) {
+      console.error('Session check failed:', error);
+      this.clearSession();
+      return false;
+    }
+  }
+
+  /**
+   * Refresh session using refresh token
+   */
+  async refreshSession() {
+    try {
+      const refreshToken = localStorage.getItem(this.refreshKey);
+      if (!refreshToken) {
+        throw new Error('No refresh token available');
+      }
+
+      // Verify refresh token (in production, verify on server)
+      const session = JSON.parse(sessionStorage.getItem(this.sessionKey) || '{}');
+      if (session.refreshExpiresAt <= Date.now()) {
+        throw new Error('Refresh token expired');
+      }
+
+      // Get user
+      const user = await this.findUserById(session.userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      // Create new session
+      const deviceId = localStorage.getItem(this.deviceKey);
+      const newSession = await this.createSession(user, deviceId);
+
+      return true;
+
+    } catch (error) {
+      console.error('Session refresh failed:', error);
+      this.clearSession();
+      return false;
+    }
+  }
+
+  /**
+   * Logout user
+   */
+  async logout() {
+    try {
+      // Clear timers
+      if (this.sessionTimer) {
+        clearTimeout(this.sessionTimer);
+        this.sessionTimer = null;
+      }
+
+      if (this.refreshTimer) {
+        clearTimeout(this.refreshTimer);
+        this.refreshTimer = null;
+      }
+
+      // Clear session data
+      this.clearSession();
+
+      // Clear current user
+      this.currentUser = null;
+
+      return {
+        success: true,
+        message: 'Logged out successfully'
+      };
+
+    } catch (error) {
+      console.error('Logout failed:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Clear session data
+   */
+  clearSession() {
+    sessionStorage.removeItem(this.sessionKey);
+    localStorage.removeItem(this.refreshKey);
+    // Keep device ID for trusted device recognition
+  }
+
+  /**
+   * WEBAUTHN SETUP
+   */
+
+  /**
+   * Setup WebAuthn for user
+   */
+  async setupWebAuthn(user) {
+    try {
+      if (!this.supportsWebAuthn) {
+        throw new Error('WebAuthn not supported');
+      }
+
+      // Generate challenge
+      const challenge = this.generateChallenge();
+      
+      // Create credential
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          challenge: new TextEncoder().encode(challenge),
+          rp: {
+            name: 'SmartFinanceAI',
+            id: window.location.hostname
+          },
+          user: {
+            id: new TextEncoder().encode(user.id),
+            name: user.email,
+            displayName: `${user.firstName} ${user.lastName}`
+          },
+          pubKeyCredParams: [
+            { alg: -7, type: 'public-key' }, // ES256
+            { alg: -257, type: 'public-key' } // RS256
+          ],
+          timeout: 60000,
+          attestation: 'direct',
+          authenticatorSelection: {
+            authenticatorAttachment: 'platform',
+            userVerification: 'preferred',
+            residentKey: 'preferred'
+          }
+        }
+      });
+
+      // Store credential
+      const credentialData = {
+        id: this.arrayBufferToBase64(credential.rawId),
+        publicKey: this.arrayBufferToBase64(credential.response.publicKey),
+        createdAt: new Date().toISOString()
+      };
+
+      await this.storeWebAuthnCredential(user.id, credentialData);
+
+      return {
+        success: true,
+        message: 'Biometric authentication set up successfully!'
+      };
+
+    } catch (error) {
+      console.error('WebAuthn setup failed:', error);
       throw error;
     }
   }
-  
-  validateRegistrationData(userData) {
-    const { email, password, firstName, lastName, country } = userData;
-    
-    if (!email || !this.isValidEmail(email)) {
-      throw new Error('Invalid email address');
-    }
-    
-    if (!password || password.length < 8) {
-      throw new Error('Password must be at least 8 characters long');
-    }
-    
-    if (!firstName || firstName.trim().length < 1) {
-      throw new Error('First name is required');
-    }
-    
-    if (!lastName || lastName.trim().length < 1) {
-      throw new Error('Last name is required');
-    }
-    
-    if (!country || !['NZ', 'AU', 'UK', 'US', 'CA'].includes(country)) {
-      throw new Error('Invalid country selection');
-    }
-    
-    // Check password strength
-    if (!this.isStrongPassword(password)) {
-      throw new Error('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character');
+
+  /**
+   * UTILITY FUNCTIONS
+   */
+
+  /**
+   * Check if user is authenticated
+   */
+  isAuthenticated() {
+    return this.currentUser !== null && this.hasValidSession();
+  }
+
+  /**
+   * Get current user
+   */
+  getCurrentUser() {
+    return this.currentUser ? this.sanitizeUser(this.currentUser) : null;
+  }
+
+  /**
+   * Get current session
+   */
+  getCurrentSession() {
+    try {
+      const sessionData = sessionStorage.getItem(this.sessionKey);
+      return sessionData ? JSON.parse(sessionData) : null;
+    } catch {
+      return null;
     }
   }
-  
+
+  /**
+   * Check if session is valid
+   */
+  hasValidSession() {
+    try {
+      const session = this.getCurrentSession();
+      return session && session.expiresAt > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Validate email format
+   */
   isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
-  
+
+  /**
+   * Check password strength
+   */
   isStrongPassword(password) {
-    // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+    // At least 8 characters, uppercase, lowercase, number, special char
     const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
-    return strongRegex.test(password) && password.length >= 8;
+    return password.length >= 8 && strongRegex.test(password);
   }
-  
-  // === LOGIN === //
-  
-  async login(email, password, rememberMe = false) {
-    try {
-      console.log('🔑 Starting login process...');
-      
-      if (!email || !password) {
-        throw new Error('Email and password are required');
-      }
-      
-      // Get user from storage
-      const user = await this.getUserByEmail(email.toLowerCase().trim());
-      
-      if (!user) {
-        throw new Error('Invalid email or password');
-      }
-      
-      // Check if account is locked
-      if (user.lockedUntil && new Date(user.lockedUntil) > new Date()) {
-        const lockTimeRemaining = Math.ceil((new Date(user.lockedUntil) - new Date()) / 60000);
-        throw new Error(`Account is locked. Try again in ${lockTimeRemaining} minutes.`);
-      }
-      
-      // Verify password
-      const isValidPassword = await this.verifyPassword(password, user.passwordHash);
-      
-      if (!isValidPassword) {
-        await this.handleFailedLogin(user);
-        throw new Error('Invalid email or password');
-      }
-      
-      // Reset failed attempts on successful login
-      await this.resetFailedAttempts(user);
-      
-      // Update login statistics
-      await this.updateLoginStats(user);
-      
-      // Generate tokens
-      const tokens = await this.generateTokens(user, rememberMe);
-      
-      // Set authentication state
-      this.setAuthenticationState(user, tokens);
-      
-      console.log('✅ Login successful:', email);
-      this.notifyAuthListeners('logged_in');
-      
-      return {
-        success: true,
-        user: this.sanitizeUser(user),
-        biometricAvailable: this.webAuthnSupported && !user.isBiometricEnabled
-      };
-      
-    } catch (error) {
-      console.error('❌ Login failed:', error);
-      throw error;
-    }
-  }
-  
-  async handleFailedLogin(user) {
-    user.failedAttempts = (user.failedAttempts || 0) + 1;
-    user.updatedAt = new Date().toISOString();
-    
-    // Lock account after 5 failed attempts
-    if (user.failedAttempts >= 5) {
-      user.lockedUntil = new Date(Date.now() + 30 * 60 * 1000).toISOString(); // 30 minutes
-      console.warn('⚠️ Account locked due to multiple failed attempts:', user.email);
-    }
-    
-    await this.updateUser(user);
-  }
-  
-  async resetFailedAttempts(user) {
-    if (user.failedAttempts > 0) {
-      user.failedAttempts = 0;
-      user.lockedUntil = null;
-      user.updatedAt = new Date().toISOString();
-      await this.updateUser(user);
-    }
-  }
-  
-  async updateLoginStats(user) {
-    user.lastLoginAt = new Date().toISOString();
-    user.loginCount = (user.loginCount || 0) + 1;
-    user.updatedAt = new Date().toISOString();
-    await this.updateUser(user);
-  }
-  
-  // === BIOMETRIC AUTHENTICATION === //
-  
-  async setupBiometric() {
-    try {
-      if (!this.webAuthnSupported) {
-        throw new Error('WebAuthn is not supported in this browser');
-      }
-      
-      if (!this.isAuthenticated) {
-        throw new Error('User must be logged in to setup biometric authentication');
-      }
-      
-      console.log('👆 Setting up biometric authentication...');
-      
-      // Generate challenge
-      const challenge = new Uint8Array(32);
-      window.crypto.getRandomValues(challenge);
-      
-      // Create credential options
-      const createOptions = {
-        publicKey: {
-          rp: {
-            id: this.rpId,
-            name: this.rpName
-          },
-          user: {
-            id: new TextEncoder().encode(this.currentUser.id),
-            name: this.currentUser.email,
-            displayName: `${this.currentUser.firstName} ${this.currentUser.lastName}`
-          },
-          challenge: challenge,
-          pubKeyCredParams: [
-            { alg: -7, type: "public-key" }, // ES256
-            { alg: -257, type: "public-key" } // RS256
-          ],
-          authenticatorSelection: {
-            authenticatorAttachment: "platform",
-            userVerification: "required",
-            requireResidentKey: false
-          },
-          timeout: 60000,
-          attestation: "direct"
-        }
-      };
-      
-      // Create credential
-      const credential = await navigator.credentials.create(createOptions);
-      
-      if (!credential) {
-        throw new Error('Failed to create biometric credential');
-      }
-      
-      // Store credential information
-      const credentialData = {
-        id: credential.id,
-        rawId: Array.from(new Uint8Array(credential.rawId)),
-        type: credential.type,
-        response: {
-          attestationObject: Array.from(new Uint8Array(credential.response.attestationObject)),
-          clientDataJSON: Array.from(new Uint8Array(credential.response.clientDataJSON))
-        }
-      };
-      
-      // Update user record
-      const updatedUser = {
-        ...this.currentUser,
-        isBiometricEnabled: true,
-        biometricCredential: credentialData,
-        updatedAt: new Date().toISOString()
-      };
-      
-      await this.updateUser(updatedUser);
-      this.currentUser = updatedUser;
-      
-      // Store biometric preference
-      localStorage.setItem('smartfinance_biometric_enabled', 'true');
-      this.biometricEnabled = true;
-      
-      console.log('✅ Biometric authentication setup complete');
-      
-      return { success: true };
-      
-    } catch (error) {
-      console.error('❌ Biometric setup failed:', error);
-      throw error;
-    }
-  }
-  
-  async authenticateWithBiometric() {
-    try {
-      if (!this.webAuthnSupported || !this.biometricEnabled) {
-        throw new Error('Biometric authentication not available');
-      }
-      
-      console.log('👆 Starting biometric authentication...');
-      
-      // Get stored user email for credential lookup
-      const lastEmail = localStorage.getItem('smartfinance_last_email');
-      if (!lastEmail) {
-        throw new Error('No previous user found for biometric authentication');
-      }
-      
-      const user = await this.getUserByEmail(lastEmail);
-      if (!user || !user.biometricCredential) {
-        throw new Error('Biometric credential not found');
-      }
-      
-      // Generate challenge
-      const challenge = new Uint8Array(32);
-      window.crypto.getRandomValues(challenge);
-      
-      // Authentication options
-      const getOptions = {
-        publicKey: {
-          challenge: challenge,
-          allowCredentials: [{
-            id: new Uint8Array(user.biometricCredential.rawId),
-            type: 'public-key'
-          }],
-          userVerification: 'required',
-          timeout: 60000
-        }
-      };
-      
-      // Get credential
-      const assertion = await navigator.credentials.get(getOptions);
-      
-      if (!assertion) {
-        throw new Error('Biometric authentication failed');
-      }
-      
-      // Verify assertion (in a real app, this would be done on the server)
-      // For demo purposes, we'll assume it's valid
-      
-      // Generate tokens
-      const tokens = await this.generateTokens(user, true); // Remember me for biometric
-      
-      // Set authentication state
-      this.setAuthenticationState(user, tokens);
-      
-      console.log('✅ Biometric authentication successful');
-      this.notifyAuthListeners('biometric_login');
-      
-      return {
-        success: true,
-        user: this.sanitizeUser(user)
-      };
-      
-    } catch (error) {
-      console.error('❌ Biometric authentication failed:', error);
-      throw error;
-    }
-  }
-  
-  // === TOKEN MANAGEMENT === //
-  
-  async generateTokens(user, rememberMe = false) {
-    try {
-      // Create JWT-like tokens (in production, use proper JWT library)
-      const tokenData = {
-        userId: user.id,
-        email: user.email,
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor((Date.now() + this.sessionTimeout) / 1000)
-      };
-      
-      // Simple token generation (use proper JWT in production)
-      const accessToken = btoa(JSON.stringify(tokenData));
-      const refreshToken = this.generateSecureToken();
-      
-      // Store refresh token with user
-      user.refreshToken = refreshToken;
-      user.refreshTokenExpiry = new Date(Date.now() + (rememberMe ? 30 : 7) * 24 * 60 * 60 * 1000).toISOString();
-      await this.updateUser(user);
-      
-      return {
-        accessToken,
-        refreshToken,
-        expiresIn: this.sessionTimeout
-      };
-      
-    } catch (error) {
-      console.error('❌ Token generation failed:', error);
-      throw error;
-    }
-  }
-  
-  async refreshTokens() {
-    try {
-      if (!this.refreshToken) {
-        throw new Error('No refresh token available');
-      }
-      
-      console.log('🔄 Refreshing authentication tokens...');
-      
-      // Find user with matching refresh token
-      const user = await this.getUserByRefreshToken(this.refreshToken);
-      
-      if (!user || !user.refreshToken || user.refreshToken !== this.refreshToken) {
-        throw new Error('Invalid refresh token');
-      }
-      
-      // Check if refresh token is expired
-      if (user.refreshTokenExpiry && new Date(user.refreshTokenExpiry) < new Date()) {
-        throw new Error('Refresh token expired');
-      }
-      
-      // Generate new tokens
-      const tokens = await this.generateTokens(user, true);
-      
-      // Update authentication state
-      this.setAuthenticationState(user, tokens);
-      
-      console.log('✅ Tokens refreshed successfully');
-      this.notifyAuthListeners('token_refreshed');
-      
-      return tokens;
-      
-    } catch (error) {
-      console.error('❌ Token refresh failed:', error);
-      await this.logout();
-      throw error;
-    }
-  }
-  
-  setupTokenRefresh() {
-    if (this.refreshTimer) {
-      clearTimeout(this.refreshTimer);
-    }
-    
-    if (!this.tokenExpiryTime) {
-      return;
-    }
-    
-    const timeUntilRefresh = this.tokenExpiryTime - Date.now() - this.refreshThreshold;
-    
-    if (timeUntilRefresh > 0) {
-      this.refreshTimer = setTimeout(async () => {
-        try {
-          await this.refreshTokens();
-        } catch (error) {
-          console.error('❌ Automatic token refresh failed:', error);
-        }
-      }, timeUntilRefresh);
-    }
-  }
-  
-  // === SESSION MANAGEMENT === //
-  
-  setAuthenticationState(user, tokens) {
-    this.currentUser = user;
-    this.accessToken = tokens.accessToken;
-    this.refreshToken = tokens.refreshToken;
-    this.tokenExpiryTime = Date.now() + tokens.expiresIn;
-    this.isAuthenticated = true;
-    
-    // Store in localStorage
-    localStorage.setItem('smartfinance_access_token', tokens.accessToken);
-    localStorage.setItem('smartfinance_refresh_token', tokens.refreshToken);
-    localStorage.setItem('smartfinance_user', JSON.stringify(this.sanitizeUser(user)));
-    localStorage.setItem('smartfinance_token_expiry', this.tokenExpiryTime.toString());
-    localStorage.setItem('smartfinance_last_email', user.email);
-    
-    // Setup automatic refresh
-    this.setupTokenRefresh();
-    this.setupActivityMonitoring();
-  }
-  
-  setupActivityMonitoring() {
-    // Track user activity for session timeout
-    const updateActivity = () => {
-      this.lastActivity = Date.now();
-    };
-    
-    // Monitor user interactions
-    document.addEventListener('click', updateActivity);
-    document.addEventListener('keypress', updateActivity);
-    document.addEventListener('touchstart', updateActivity);
-    document.addEventListener('scroll', updateActivity);
-    
-    // Check for inactivity every minute
-    if (this.activityTimer) {
-      clearInterval(this.activityTimer);
-    }
-    
-    this.activityTimer = setInterval(() => {
-      const inactiveTime = Date.now() - this.lastActivity;
-      const maxInactiveTime = 60 * 60 * 1000; // 1 hour
-      
-      if (inactiveTime > maxInactiveTime) {
-        console.log('⏰ Session expired due to inactivity');
-        this.logout();
-      }
-    }, 60 * 1000); // Check every minute
-  }
-  
-  // === LOGOUT === //
-  
-  async logout() {
-    try {
-      console.log('👋 Logging out user...');
-      
-      // Invalidate refresh token on server (in production)
-      if (this.currentUser && this.refreshToken) {
-        try {
-          const user = { ...this.currentUser };
-          user.refreshToken = null;
-          user.refreshTokenExpiry = null;
-          user.updatedAt = new Date().toISOString();
-          await this.updateUser(user);
-        } catch (error) {
-          console.error('❌ Failed to invalidate refresh token:', error);
-        }
-      }
-      
-      // Clear local state
-      this.clearAuthenticationState();
-      
-      console.log('✅ Logout successful');
-      this.notifyAuthListeners('logged_out');
-      
-    } catch (error) {
-      console.error('❌ Logout failed:', error);
-      // Force clear state even if server call fails
-      this.clearAuthenticationState();
-    }
-  }
-  
-  clearAuthenticationState() {
-    this.currentUser = null;
-    this.accessToken = null;
-    this.refreshToken = null;
-    this.tokenExpiryTime = null;
-    this.isAuthenticated = false;
-    
-    // Clear timers
-    if (this.refreshTimer) {
-      clearTimeout(this.refreshTimer);
-      this.refreshTimer = null;
-    }
-    
-    if (this.activityTimer) {
-      clearInterval(this.activityTimer);
-      this.activityTimer = null;
-    }
-    
-    // Clear localStorage (but keep biometric preference)
-    this.clearStoredAuth();
-  }
-  
-  clearStoredAuth() {
-    localStorage.removeItem('smartfinance_access_token');
-    localStorage.removeItem('smartfinance_refresh_token');
-    localStorage.removeItem('smartfinance_user');
-    localStorage.removeItem('smartfinance_token_expiry');
-    // Keep smartfinance_last_email and smartfinance_biometric_enabled for UX
-  }
-  
-  // === PASSWORD MANAGEMENT === //
-  
-  async changePassword(currentPassword, newPassword) {
-    try {
-      if (!this.isAuthenticated) {
-        throw new Error('User must be logged in to change password');
-      }
-      
-      console.log('🔒 Changing user password...');
-      
-      // Verify current password
-      const isValidCurrent = await this.verifyPassword(currentPassword, this.currentUser.passwordHash);
-      if (!isValidCurrent) {
-        throw new Error('Current password is incorrect');
-      }
-      
-      // Validate new password
-      if (!this.isStrongPassword(newPassword)) {
-        throw new Error('New password does not meet security requirements');
-      }
-      
-      // Hash new password
-      const newPasswordHash = await this.hashPassword(newPassword);
-      
-      // Update user
-      const updatedUser = {
-        ...this.currentUser,
-        passwordHash: newPasswordHash,
-        updatedAt: new Date().toISOString()
-      };
-      
-      await this.updateUser(updatedUser);
-      this.currentUser = updatedUser;
-      
-      console.log('✅ Password changed successfully');
-      this.notifyAuthListeners('password_changed');
-      
-      return { success: true };
-      
-    } catch (error) {
-      console.error('❌ Password change failed:', error);
-      throw error;
-    }
-  }
-  
-  async requestPasswordReset(email) {
-    try {
-      console.log('📧 Requesting password reset for:', email);
-      
-      const user = await this.getUserByEmail(email.toLowerCase().trim());
-      if (!user) {
-        // Don't reveal if email exists or not
-        return { success: true, message: 'If the email exists, a reset link has been sent.' };
-      }
-      
-      // Generate reset token
-      const resetToken = this.generateSecureToken();
-      const resetExpiry = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
-      
-      // Update user with reset token
-      const updatedUser = {
-        ...user,
-        passwordResetToken: resetToken,
-        passwordResetExpiry: resetExpiry,
-        updatedAt: new Date().toISOString()
-      };
-      
-      await this.updateUser(updatedUser);
-      
-      // In production, send email with reset link
-      console.log('🔗 Password reset token generated:', resetToken);
-      
-      return { 
-        success: true, 
-        message: 'If the email exists, a reset link has been sent.',
-        // For demo purposes only - remove in production
-        resetToken: resetToken 
-      };
-      
-    } catch (error) {
-      console.error('❌ Password reset request failed:', error);
-      throw error;
-    }
-  }
-  
-  async resetPassword(resetToken, newPassword) {
-    try {
-      console.log('🔒 Resetting password with token...');
-      
-      // Validate new password
-      if (!this.isStrongPassword(newPassword)) {
-        throw new Error('Password does not meet security requirements');
-      }
-      
-      // Find user with reset token
-      const user = await this.getUserByResetToken(resetToken);
-      if (!user) {
-        throw new Error('Invalid or expired reset token');
-      }
-      
-      // Check if token is expired
-      if (user.passwordResetExpiry && new Date(user.passwordResetExpiry) < new Date()) {
-        throw new Error('Reset token has expired');
-      }
-      
-      // Hash new password
-      const newPasswordHash = await this.hashPassword(newPassword);
-      
-      // Update user
-      const updatedUser = {
-        ...user,
-        passwordHash: newPasswordHash,
-        passwordResetToken: null,
-        passwordResetExpiry: null,
-        failedAttempts: 0,
-        lockedUntil: null,
-        updatedAt: new Date().toISOString()
-      };
-      
-      await this.updateUser(updatedUser);
-      
-      console.log('✅ Password reset successful');
-      
-      return { success: true };
-      
-    } catch (error) {
-      console.error('❌ Password reset failed:', error);
-      throw error;
-    }
-  }
-  
-  // === UTILITY METHODS === //
-  
+
+  /**
+   * Hash password
+   */
   async hashPassword(password) {
+    // In production, use proper password hashing (bcrypt, scrypt, Argon2)
+    // For demo, using simple hash
     const encoder = new TextEncoder();
-    const data = encoder.encode(password + 'smartfinance_salt_2024'); // Add salt
+    const data = encoder.encode(password + 'smartfinance_salt');
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
-  
+
+  /**
+   * Verify password
+   */
   async verifyPassword(password, hash) {
     const computedHash = await this.hashPassword(password);
     return computedHash === hash;
   }
-  
-  generateSecureToken() {
-    const array = new Uint8Array(32);
-    window.crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-  }
-  
+
+  /**
+   * Generate unique IDs
+   */
   generateUserId() {
-    return 'user_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2);
+    return 'user_' + Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
-  
+
+  generateSessionId() {
+    return 'sess_' + Date.now().toString(36) + Math.random().toString(36).substr(2);
+  }
+
+  generateDeviceId() {
+    return 'dev_' + Date.now().toString(36) + Math.random().toString(36).substr(2);
+  }
+
+  generateToken() {
+    return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+      .map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  generateChallenge() {
+    return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+      .map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  /**
+   * Device detection
+   */
+  getDeviceName() {
+    const ua = navigator.userAgent;
+    if (ua.includes('iPhone')) return 'iPhone';
+    if (ua.includes('iPad')) return 'iPad';
+    if (ua.includes('Android')) return 'Android Device';
+    if (ua.includes('Mac')) return 'Mac';
+    if (ua.includes('Windows')) return 'Windows PC';
+    return 'Unknown Device';
+  }
+
+  getDeviceType() {
+    const ua = navigator.userAgent;
+    if (/Mobile|Android|iPhone|iPad/.test(ua)) return 'mobile';
+    if (/Tablet|iPad/.test(ua)) return 'tablet';
+    return 'desktop';
+  }
+
+  getStoredDeviceId() {
+    return localStorage.getItem(this.deviceKey);
+  }
+
+  /**
+   * Rate limiting
+   */
+  checkRateLimit(email) {
+    const attempts = this.getFailedAttempts(email);
+    if (attempts.count >= this.config.maxLoginAttempts) {
+      const timeSinceLastAttempt = Date.now() - attempts.lastAttempt;
+      if (timeSinceLastAttempt < this.config.lockoutDuration) {
+        const remainingTime = Math.ceil((this.config.lockoutDuration - timeSinceLastAttempt) / 60000);
+        throw new Error(`Account temporarily locked. Try again in ${remainingTime} minutes.`);
+      } else {
+        this.clearFailedAttempts(email);
+      }
+    }
+  }
+
+  getFailedAttempts(email) {
+    const key = `failed_attempts_${email}`;
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : { count: 0, lastAttempt: 0 };
+  }
+
+  recordFailedAttempt(email) {
+    const key = `failed_attempts_${email}`;
+    const attempts = this.getFailedAttempts(email);
+    attempts.count++;
+    attempts.lastAttempt = Date.now();
+    localStorage.setItem(key, JSON.stringify(attempts));
+  }
+
+  clearFailedAttempts(email) {
+    const key = `failed_attempts_${email}`;
+    localStorage.removeItem(key);
+  }
+
+  /**
+   * Timer management
+   */
+  startSessionTimer(expiresAt) {
+    if (this.sessionTimer) {
+      clearTimeout(this.sessionTimer);
+    }
+
+    const timeUntilExpiry = expiresAt - Date.now();
+    const refreshTime = Math.max(0, timeUntilExpiry - (this.config.autoRefreshMinutes * 60000));
+
+    this.sessionTimer = setTimeout(() => {
+      this.refreshSession();
+    }, refreshTime);
+  }
+
+  setupAutoRefresh() {
+    // Check session every 5 minutes
+    this.refreshTimer = setInterval(() => {
+      if (this.isAuthenticated()) {
+        const session = this.getCurrentSession();
+        const timeUntilExpiry = session.expiresAt - Date.now();
+        
+        // Auto-refresh if less than 30 minutes remaining
+        if (timeUntilExpiry < (this.config.autoRefreshMinutes * 60000)) {
+          this.refreshSession();
+        }
+      }
+    }, 5 * 60000); // 5 minutes
+  }
+
+  /**
+   * Event handlers
+   */
+  handleStorageChange(event) {
+    // Handle logout in other tabs
+    if (event.key === this.sessionKey && event.newValue === null) {
+      this.currentUser = null;
+      window.location.href = '/auth/login';
+    }
+  }
+
+  handleVisibilityChange() {
+    // Refresh session when page becomes visible
+    if (!document.hidden && this.isAuthenticated()) {
+      this.checkExistingSession();
+    }
+  }
+
+  /**
+   * Data access methods (mock implementation)
+   */
+  async storeUser(user) {
+    // In production, this would call your API
+    const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
+    users.push(user);
+    localStorage.setItem('smartfinance_users', JSON.stringify(users));
+  }
+
+  async findUserByEmail(email) {
+    // In production, this would call your API
+    const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
+    return users.find(user => user.email === email.toLowerCase());
+  }
+
+  async findUserById(userId) {
+    // In production, this would call your API
+    const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
+    return users.find(user => user.id === userId);
+  }
+
+  async updateLastLogin(userId) {
+    // In production, this would call your API
+    const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
+    const userIndex = users.findIndex(user => user.id === userId);
+    if (userIndex !== -1) {
+      users[userIndex].lastLoginAt = new Date().toISOString();
+      localStorage.setItem('smartfinance_users', JSON.stringify(users));
+    }
+  }
+
+  async updateDeviceInfo(userId, deviceId) {
+    // In production, this would call your API
+    const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
+    const userIndex = users.findIndex(user => user.id === userId);
+    if (userIndex !== -1) {
+      const user = users[userIndex];
+      const deviceIndex = user.devices.findIndex(device => device.id === deviceId);
+      
+      if (deviceIndex !== -1) {
+        user.devices[deviceIndex].lastUsedAt = new Date().toISOString();
+      } else {
+        user.devices.push({
+          id: deviceId,
+          name: this.getDeviceName(),
+          type: this.getDeviceType(),
+          registeredAt: new Date().toISOString(),
+          lastUsedAt: new Date().toISOString(),
+          isTrusted: false
+        });
+      }
+      
+      localStorage.setItem('smartfinance_users', JSON.stringify(users));
+    }
+  }
+
+  /**
+   * WebAuthn credential storage
+   */
+  async storeWebAuthnCredential(userId, credentialData) {
+    const key = `webauthn_${userId}`;
+    const existing = JSON.parse(localStorage.getItem(key) || '[]');
+    existing.push(credentialData);
+    localStorage.setItem(key, JSON.stringify(existing));
+  }
+
+  getStoredCredentials() {
+    const session = this.getCurrentSession();
+    if (!session) return [];
+    
+    const key = `webauthn_${session.userId}`;
+    return JSON.parse(localStorage.getItem(key) || '[]');
+  }
+
+  async verifyWebAuthnCredential(credential) {
+    // In production, verify credential on server
+    // For demo, just return current user
+    const session = this.getCurrentSession();
+    return session ? await this.findUserById(session.userId) : null;
+  }
+
+  /**
+   * Utility functions
+   */
   sanitizeUser(user) {
-    const { passwordHash, refreshToken, passwordResetToken, biometricCredential, ...sanitized } = user;
+    const { passwordHash, ...sanitized } = user;
     return sanitized;
   }
-  
-  getDefaultDateFormat(country) {
-    const formats = {
-      'US': 'MM/DD/YYYY',
-      'CA': 'DD/MM/YYYY',
-      'UK': 'DD/MM/YYYY',
-      'AU': 'DD/MM/YYYY',
-      'NZ': 'DD/MM/YYYY'
-    };
-    return formats[country] || 'DD/MM/YYYY';
+
+  getUserPermissions(user) {
+    return [
+      'read:accounts',
+      'write:accounts',
+      'read:transactions',
+      'write:transactions',
+      'read:goals',
+      'write:goals',
+      'read:budgets',
+      'write:budgets'
+    ];
   }
-  
-  getDefaultNumberFormat(country) {
-    const formats = {
-      'US': '1,234.56',
-      'CA': '1,234.56',
-      'UK': '1,234.56',
-      'AU': '1,234.56',
-      'NZ': '1,234.56'
-    };
-    return formats[country] || '1,234.56';
-  }
-  
-  // === STORAGE OPERATIONS === //
-  
-  async storeUser(user) {
-    // In production, this would be an API call
-    // For demo, store in localStorage with encryption
-    try {
-      const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
-      
-      // Check if email already exists
-      if (users.find(u => u.email === user.email)) {
-        throw new Error('Email already registered');
-      }
-      
-      users.push(user);
-      localStorage.setItem('smartfinance_users', JSON.stringify(users));
-      
-    } catch (error) {
-      console.error('❌ Failed to store user:', error);
-      throw error;
+
+  arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
     }
+    return btoa(binary);
   }
-  
-  async getUserByEmail(email) {
-    try {
-      const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
-      return users.find(user => user.email === email) || null;
-    } catch (error) {
-      console.error('❌ Failed to get user by email:', error);
-      return null;
+
+  base64ToArrayBuffer(base64) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
     }
+    return bytes.buffer;
   }
-  
-  async getUserByRefreshToken(refreshToken) {
-    try {
-      const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
-      return users.find(user => user.refreshToken === refreshToken) || null;
-    } catch (error) {
-      console.error('❌ Failed to get user by refresh token:', error);
-      return null;
-    }
-  }
-  
-  async getUserByResetToken(resetToken) {
-    try {
-      const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
-      return users.find(user => user.passwordResetToken === resetToken) || null;
-    } catch (error) {
-      console.error('❌ Failed to get user by reset token:', error);
-      return null;
-    }
-  }
-  
-  async updateUser(updatedUser) {
-    try {
-      const users = JSON.parse(localStorage.getItem('smartfinance_users') || '[]');
-      const userIndex = users.findIndex(user => user.id === updatedUser.id);
-      
-      if (userIndex === -1) {
-        throw new Error('User not found');
-      }
-      
-      users[userIndex] = updatedUser;
-      localStorage.setItem('smartfinance_users', JSON.stringify(users));
-      
-    } catch (error) {
-      console.error('❌ Failed to update user:', error);
-      throw error;
-    }
-  }
-  
-  // === EVENT LISTENERS === //
-  
-  addAuthListener(callback) {
-    this.authListeners.push(callback);
-  }
-  
-  removeAuthListener(callback) {
-    this.authListeners = this.authListeners.filter(listener => listener !== callback);
-  }
-  
-  notifyAuthListeners(event) {
-    this.authListeners.forEach(callback => {
-      try {
-        callback(event, this.currentUser ? this.sanitizeUser(this.currentUser) : null);
-      } catch (
+}
+
+// Create global instance
+const authManager = new AuthManager();
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { AuthManager };
+}
+
+console.log('✅ AuthManager loaded - Authentication system ready!');
