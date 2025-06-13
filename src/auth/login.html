@@ -1,25 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - SmartFinanceAI</title>
     <meta name="description" content="Sign in to your SmartFinanceAI account">
     
-    <!-- Favicon and Icons - Updated with Brain Logo -->
-    <link rel="icon" type="image/png" sizes="32x32" href="../../public/icons/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../public/icons/favicon-16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="../../public/icons/apple-touch-icon.png">
+    <!-- Favicon and Icons - Fixed Paths for GitHub Pages -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./public/icons/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./public/icons/apple-touch-icon.png">
     
     <!-- PWA Meta -->
     <meta name="theme-color" content="#8b5cf6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     
-    <!-- Link to main CSS -->
-    <link rel="stylesheet" href="../styles/main.css">
-    
     <style>
+        /* Complete CSS System - Self-Contained */
+        :root {
+            /* Brand Colors */
+            --brand-primary: #8b5cf6;
+            --brand-secondary: #3b82f6;
+            --brand-accent: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #ef4444;
+            
+            /* Glassmorphism */
+            --glass-light: rgba(255, 255, 255, 0.08);
+            --glass-medium: rgba(255, 255, 255, 0.12);
+            --glass-subtle: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            
+            /* Typography */
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            
+            /* Text Colors */
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-tertiary: rgba(255, 255, 255, 0.65);
+            --text-quaternary: rgba(255, 255, 255, 0.5);
+            
+            /* Spacing */
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            /* Radius */
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            
+            /* Shadows */
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
         /* Page-specific styles */
         .auth-container {
             min-height: 100vh;
@@ -405,7 +460,7 @@
 </head>
 <body>
     <!-- Back to Home -->
-    <a href="../../index.html" class="back-home">
+    <a href="./index.html" class="back-home">
         <span>←</span>
         Back to Home
     </a>
@@ -414,7 +469,7 @@
         <div class="auth-card">
             <div class="auth-header">
                 <div class="auth-logo">
-                    <img src="../../public/icons/icon-192.png" alt="SmartFinanceAI" />
+                    <img src="./public/icons/icon-192.png" alt="SmartFinanceAI" />
                 </div>
                 <h1 class="auth-title">Welcome Back</h1>
                 <p class="auth-subtitle">Sign in to your SmartFinanceAI account</p>
@@ -551,7 +606,7 @@
                     console.log('📱 Existing session found');
                     this.showMessage('Welcome back! Redirecting to dashboard...', 'success');
                     setTimeout(() => {
-                        window.location.href = '../core/dashboard.html';
+                        window.location.href = './dashboard.html';
                     }, 1500);
                 }
             }
@@ -590,7 +645,7 @@
                     
                     // Redirect to dashboard
                     setTimeout(() => {
-                        window.location.href = '../core/dashboard.html';
+                        window.location.href = './dashboard.html';
                     }, 1500);
 
                 } catch (error) {
@@ -624,4 +679,167 @@
 
                 try {
                     // Check if WebAuthn is available
-                   
+                    if (window.PublicKeyCredential) {
+                        // Simulate biometric authentication
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        
+                        const userData = {
+                            email: 'biometric@smartfinanceai.com',
+                            name: 'Biometric User',
+                            loginTime: new Date().toISOString(),
+                            method: 'biometric'
+                        };
+
+                        localStorage.setItem('smartfinance_user', JSON.stringify(userData));
+                        
+                        this.showMessage('Biometric authentication successful!', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = './dashboard.html';
+                        }, 1500);
+                    } else {
+                        throw new Error('WebAuthn not supported');
+                    }
+                } catch (error) {
+                    console.error('❌ Biometric login failed:', error);
+                    this.showMessage('Biometric authentication failed. Please try password login.', 'error');
+                } finally {
+                    this.setLoading(false, 'biometric');
+                }
+            }
+
+            handleGoogleLogin() {
+                console.log('🔍 Google login clicked');
+                
+                // Simulate successful Google login
+                setTimeout(() => {
+                    const userData = {
+                        email: 'user@gmail.com',
+                        name: 'Google User',
+                        loginTime: new Date().toISOString(),
+                        method: 'google'
+                    };
+
+                    localStorage.setItem('smartfinance_user', JSON.stringify(userData));
+                    this.showMessage('Google login successful!', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = './dashboard.html';
+                    }, 1500);
+                }, 1000);
+            }
+
+            handleAppleLogin() {
+                console.log('🍎 Apple login clicked');
+                
+                // Simulate successful Apple login
+                setTimeout(() => {
+                    const userData = {
+                        email: 'user@icloud.com',
+                        name: 'Apple User',
+                        loginTime: new Date().toISOString(),
+                        method: 'apple'
+                    };
+
+                    localStorage.setItem('smartfinance_user', JSON.stringify(userData));
+                    this.showMessage('Apple login successful!', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = './dashboard.html';
+                    }, 1500);
+                }, 1000);
+            }
+
+            checkBiometricSupport() {
+                return window.PublicKeyCredential && window.navigator.credentials;
+            }
+
+            getNameFromEmail(email) {
+                const name = email.split('@')[0];
+                return name.charAt(0).toUpperCase() + name.slice(1);
+            }
+
+            setLoading(loading, type = 'login') {
+                this.isLoading = loading;
+                
+                if (type === 'login') {
+                    const btn = document.getElementById('login-btn');
+                    const text = document.getElementById('login-text');
+                    const spinner = document.getElementById('login-spinner');
+                    
+                    btn.disabled = loading;
+                    text.style.display = loading ? 'none' : 'inline';
+                    spinner.style.display = loading ? 'inline-block' : 'none';
+                }
+            }
+
+            showMessage(message, type = 'info') {
+                const errorEl = document.getElementById('error-message');
+                const successEl = document.getElementById('success-message');
+                
+                // Hide all messages first
+                errorEl.style.display = 'none';
+                successEl.style.display = 'none';
+                
+                if (type === 'error') {
+                    errorEl.textContent = message;
+                    errorEl.style.display = 'block';
+                } else if (type === 'success') {
+                    successEl.textContent = message;
+                    successEl.style.display = 'block';
+                } else {
+                    // Info messages go to console for now
+                    console.log(`ℹ️ ${message}`);
+                }
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    errorEl.style.display = 'none';
+                    successEl.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Global functions for HTML onclick handlers
+        function handleLogin(event) {
+            window.authController.handleLogin(event);
+        }
+
+        function handleBiometricLogin() {
+            window.authController.handleBiometricLogin();
+        }
+
+        function handleGoogleLogin() {
+            window.authController.handleGoogleLogin();
+        }
+
+        function handleAppleLogin() {
+            window.authController.handleAppleLogin();
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('password-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.textContent = '👁️';
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.authController = new AuthController();
+            console.log('🚀 SmartFinanceAI Authentication Ready!');
+        });
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            console.log('👋 Leaving authentication page');
+        });
+    </script>
+</body>
+</html>
