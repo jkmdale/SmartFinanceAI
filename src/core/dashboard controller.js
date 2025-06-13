@@ -1,373 +1,173 @@
 /**
  * SmartFinanceAI - Dashboard Controller
- * 
- * Manages the main dashboard state, data loading, and user interactions.
- * Handles both empty state (new users) and data-rich states.
- * 
- * Features:
- * - Dual-state dashboard (empty/populated)
- * - Real-time financial data updates
- * - Interactive widgets and charts
- * - Privacy mode toggle
- * - Smart insights and recommendations
+ * Manages dashboard state, data loading, and real-time updates
+ * Integrates with DatabaseManager and AccountManager for live data
  */
 
 class DashboardController {
   constructor() {
+    this.db = new DatabaseManager();
+    this.accountManager = new AccountManager();
     this.state = {
       isLoading: true,
       hasData: false,
-      privacyMode: false,
-      selectedTimeframe: '30d',
-      widgets: new Map(),
-      alerts: [],
-      insights: [],
-      refreshInterval: null
+      user: null,
+      accounts: [],
+      recentTransactions: [],
+      goals: [],
+      financialSummary: {},
+      budgetOverview: {},
+      notifications: [],
+      lastUpdate: null
     };
-
-    this.config = {
-      refreshInterval: 5 * 60 * 1000, // 5 minutes
-      animationDuration: 300,
-      chartColors: {
-        primary: '#8b5cf6',
-        secondary: '#3b82f6',
-        success: '#10b981',
-        warning: '#f59e0b',
-        danger: '#ef4444'
-      }
+    
+    this.updateInterval = null;
+    this.refreshRate = 30000; // 30 seconds for real-time updates
+    
+    // Chart instances for cleanup
+    this.chartInstances = {};
+    
+    // Dashboard widgets configuration
+    this.widgets = {
+      accountOverview: { enabled: true, order: 1, size: 'large' },
+      goalProgress: { enabled: true, order: 2, size: 'medium' },
+      recentTransactions: { enabled: true, order: 3, size: 'medium' },
+      budgetStatus: { enabled: true, order: 4, size: 'small' },
+      financialHealth: { enabled: true, order: 5, size: 'small' },
+      insights: { enabled: true, order: 6, size: 'large' }
     };
-
-    this.eventHandlers = new Map();
-    this.initialize();
   }
 
+  /**
+   * Initialize the dashboard
+   */
   async initialize() {
     try {
-      console.log('Initializing Dashboard Controller...');
+      console.log('🚀 Initializing Dashboard...');
+      
+      // Initialize core systems
+      await this.db.initializeDB();
+      await this.accountManager.initialize();
       
       // Set up event listeners
       this.setupEventListeners();
       
-      // Load dashboard data
+      // Load initial data
       await this.loadDashboardData();
       
-      // Initialize widgets
-      await this.initializeWidgets();
+      // Start real-time updates if user has data
+      if (this.state.hasData) {
+        this.startRealTimeUpdates();
+      }
       
-      // Start real-time updates
-      this.startRealTimeUpdates();
+      // Render dashboard
+      this.renderDashboard();
       
-      // Check for user guidance needs
-      await this.checkUserGuidance();
-      
-      console.log('Dashboard Controller initialized successfully');
+      console.log('✅ Dashboard initialized successfully');
       
     } catch (error) {
-      console.error('Failed to initialize Dashboard Controller:', error);
-      this.handleError(error);
+      console.error('❌ Dashboard initialization failed:', error);
+      this.showError('Failed to load dashboard. Please refresh the page.');
     }
   }
 
   /**
-   * Load dashboard data based on user state
+   * Load all dashboard data
    */
   async loadDashboardData() {
+    this.showLoadingState();
+    
     try {
-      this.setState({ isLoading: true });
-
-      // Get user's financial data summary
-      const dataSummary = await this.getFinancialDataSummary();
+      // Check if user has any financial data
+      const summary = await this.db.getFinancialSummary();
       
-      // Determine dashboard state
-      const hasData = this.hasFinancialData(dataSummary);
+      if (summary.accounts.total === 0) {
+        // New user - show empty state
+        this.showEmptyState();
+        return;
+      }
       
-      if (hasData) {
-        // Load full dashboard data
-        await this.loadPopulatedDashboard(dataSummary);
-      } else {
-        // Show empty state dashboard
-        await this.loadEmptyStateDashboard();
-      }
-
-      this.setState({ 
-        isLoading: false, 
-        hasData: hasData 
-      });
-
-      // Log dashboard load
-      if (window.auditLogger) {
-        await window.auditLogger.logUserAction('DASHBOARD_LOADED', {
-          hasData: hasData,
-          widgetCount: this.state.widgets.size,
-          timeframe: this.state.selectedTimeframe
-        });
-      }
-
+      // Load all dashboard data in parallel
+      const [
+        accounts,
+        recentTransactions,
+        goals,
+        accountSummary
+      ] = await Promise.all([
+        this.accountManager.getUserAccounts(),
+        this.loadRecentTransactions(),
+        this.loadGoals(),
+        this.accountManager.getAccountSummary()
+      ]);
+      
+      // Update state
+      this.state = {
+        ...this.state,
+        isLoading: false,
+        hasData: true,
+        accounts,
+        recentTransactions,
+        goals,
+        financialSummary: summary,
+        accountSummary,
+        lastUpdate: new Date().toISOString()
+      };
+      
+      // Calculate insights
+      await this.generateInsights();
+      
+      console.log('📊 Dashboard data loaded:', this.state);
+      
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
-      this.setState({ isLoading: false });
-      throw error;
+      this.showError('Unable to load your financial data.');
     }
   }
 
   /**
-   * Load populated dashboard with financial data
-   * @private
+   * Load recent transactions across all accounts
    */
-  async loadPopulatedDashboard(dataSummary) {
+  async loadRecentTransactions(limit = 20) {
     try {
-      // Load financial overview
-      const overview = await this.loadFinancialOverview();
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       
-      // Load recent transactions
-      const recentTransactions = await this.loadRecentTransactions();
-      
-      // Load goals progress
-      const goalsProgress = await this.loadGoalsProgress();
-      
-      // Load budget status
-      const budgetStatus = await this.loadBudgetStatus();
-      
-      // Load AI insights
-      const insights = await this.loadAIInsights();
-      
-      // Load alerts and notifications
-      const alerts = await this.loadAlerts();
-
-      // Update state
-      this.setState({
-        overview: overview,
-        recentTransactions: recentTransactions,
-        goalsProgress: goalsProgress,
-        budgetStatus: budgetStatus,
-        insights: insights,
-        alerts: alerts
-      });
-
-      // Render populated dashboard
-      await this.renderPopulatedDashboard();
+      return await this.db.getUserTransactions(
+        null, 
+        thirtyDaysAgo.toISOString().split('T')[0],
+        null
+      );
       
     } catch (error) {
-      console.error('Failed to load populated dashboard:', error);
-      throw error;
+      console.error('Failed to load recent transactions:', error);
+      return [];
     }
   }
 
   /**
-   * Load empty state dashboard for new users
-   * @private
+   * Load user goals
    */
-  async loadEmptyStateDashboard() {
+  async loadGoals() {
     try {
-      // Get onboarding progress
-      const onboardingProgress = await this.getOnboardingProgress();
+      const goals = await this.db.getUserGoals();
       
-      // Get suggested first steps
-      const suggestedSteps = await this.getSuggestedFirstSteps();
-      
-      // Get demo data for previews
-      const demoData = await this.getDemoData();
-
-      // Update state
-      this.setState({
-        onboardingProgress: onboardingProgress,
-        suggestedSteps: suggestedSteps,
-        demoData: demoData
-      });
-
-      // Render empty state dashboard
-      await this.renderEmptyStateDashboard();
-      
-    } catch (error) {
-      console.error('Failed to load empty state dashboard:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Render populated dashboard
-   * @private
-   */
-  async renderPopulatedDashboard() {
-    const container = document.getElementById('dashboard-container');
-    if (!container) return;
-
-    container.innerHTML = `
-      <div class="dashboard-header">
-        ${this.renderDashboardHeader()}
-      </div>
-      
-      <div class="dashboard-grid">
-        ${this.renderFinancialOverview()}
-        ${this.renderQuickActions()}
-        ${this.renderGoalsWidget()}
-        ${this.renderBudgetWidget()}
-        ${this.renderTransactionsWidget()}
-        ${this.renderInsightsWidget()}
-        ${this.renderChartsWidget()}
-        ${this.renderAlertsWidget()}
-      </div>
-    `;
-
-    // Initialize interactive elements
-    await this.initializeInteractiveElements();
-    
-    // Apply animations
-    this.applyEntryAnimations();
-  }
-
-  /**
-   * Render empty state dashboard
-   * @private
-   */
-  async renderEmptyStateDashboard() {
-    const container = document.getElementById('dashboard-container');
-    if (!container) return;
-
-    container.innerHTML = `
-      <div class="empty-state-dashboard">
-        ${this.renderWelcomeSection()}
-        ${this.renderOnboardingProgress()}
-        ${this.renderQuickSetupActions()}
-        ${this.renderFeaturePreview()}
-        ${this.renderGettingStartedGuide()}
-      </div>
-    `;
-
-    // Initialize empty state interactions
-    await this.initializeEmptyStateInteractions();
-  }
-
-  /**
-   * Render dashboard header
-   * @private
-   */
-  renderDashboardHeader() {
-    const currentUser = this.getCurrentUser();
-    const greeting = this.getTimeBasedGreeting();
-    
-    return `
-      <div class="dashboard-welcome">
-        <h1 class="welcome-title">
-          ${greeting}, ${currentUser.displayName || 'there'}! 👋
-        </h1>
-        <p class="welcome-subtitle">
-          Here's your financial overview for ${this.formatTimeframe(this.state.selectedTimeframe)}
-        </p>
-      </div>
-      
-      <div class="dashboard-controls">
-        <div class="timeframe-selector">
-          ${this.renderTimeframeSelector()}
-        </div>
+      // Calculate progress for each goal
+      return goals.map(goal => {
+        const progressPercentage = (goal.currentAmount / goal.targetAmount) * 100;
+        const isCompleted = progressPercentage >= 100;
         
-        <div class="dashboard-actions">
-          ${this.renderPrivacyToggle()}
-          ${this.renderRefreshButton()}
-          ${this.renderQuickAddButton()}
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Render financial overview widget
-   * @private
-   */
-  renderFinancialOverview() {
-    const overview = this.state.overview;
-    if (!overview) return '';
-
-    return `
-      <div class="widget financial-overview glass" data-widget="overview">
-        <div class="widget-header">
-          <h3 class="widget-title">Financial Overview</h3>
-          <button class="widget-expand" data-action="expand-overview">
-            <i class="icon-expand"></i>
-          </button>
-        </div>
+        // Calculate months remaining
+        const today = new Date();
+        const targetDate = new Date(goal.targetDate);
+        const monthsRemaining = Math.max(0, 
+          (targetDate.getFullYear() - today.getFullYear()) * 12 + 
+          (targetDate.getMonth() - today.getMonth())
+        );
         
-        <div class="overview-grid">
-          <div class="overview-item">
-            <div class="overview-label">Total Balance</div>
-            <div class="overview-value financial-amount ${this.state.privacyMode ? 'privacy-blur' : ''}" 
-                 data-financial="${overview.totalBalance}">
-              ${this.formatCurrency(overview.totalBalance)}
-            </div>
-            <div class="overview-change ${overview.balanceChange >= 0 ? 'positive' : 'negative'}">
-              ${overview.balanceChange >= 0 ? '+' : ''}${this.formatCurrency(overview.balanceChange)} this month
-            </div>
-          </div>
-          
-          <div class="overview-item">
-            <div class="overview-label">Monthly Income</div>
-            <div class="overview-value financial-amount ${this.state.privacyMode ? 'privacy-blur' : ''}"
-                 data-financial="${overview.monthlyIncome}">
-              ${this.formatCurrency(overview.monthlyIncome)}
-            </div>
-            <div class="overview-change ${overview.incomeChange >= 0 ? 'positive' : 'negative'}">
-              ${overview.incomeChange >= 0 ? '+' : ''}${this.formatCurrency(overview.incomeChange)} vs last month
-            </div>
-          </div>
-          
-          <div class="overview-item">
-            <div class="overview-label">Monthly Spending</div>
-            <div class="overview-value financial-amount ${this.state.privacyMode ? 'privacy-blur' : ''}"
-                 data-financial="${overview.monthlySpending}">
-              ${this.formatCurrency(overview.monthlySpending)}
-            </div>
-            <div class="overview-change ${overview.spendingChange <= 0 ? 'positive' : 'negative'}">
-              ${overview.spendingChange >= 0 ? '+' : ''}${this.formatCurrency(overview.spendingChange)} vs last month
-            </div>
-          </div>
-          
-          <div class="overview-item">
-            <div class="overview-label">Savings Rate</div>
-            <div class="overview-value">
-              ${overview.savingsRate.toFixed(1)}%
-            </div>
-            <div class="overview-change ${overview.savingsRateChange >= 0 ? 'positive' : 'negative'}">
-              ${overview.savingsRateChange >= 0 ? '+' : ''}${overview.savingsRateChange.toFixed(1)}% vs last month
-            </div>
-          </div>
-        </div>
+        // Calculate required monthly contribution
+        const remainingAmount = Math.max(0, goal.targetAmount - goal.currentAmount);
+        const requiredMonthly = monthsRemaining > 0 ? remainingAmount / monthsRemaining : 0;
         
-        <div class="financial-health">
-          <div class="health-score">
-            <div class="health-label">Financial Health Score</div>
-            <div class="health-value">
-              <span class="health-number">${overview.healthScore}</span>
-              <span class="health-max">/100</span>
-            </div>
-          </div>
-          <div class="health-progress">
-            <div class="health-bar">
-              <div class="health-fill" style="width: ${overview.healthScore}%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  /**
-   * Render goals widget
-   * @private
-   */
-  renderGoalsWidget() {
-    const goals = this.state.goalsProgress;
-    if (!goals || goals.length === 0) {
-      return this.renderEmptyGoalsWidget();
-    }
-
-    return `
-      <div class="widget goals-widget glass" data-widget="goals">
-        <div class="widget-header">
-          <h3 class="widget-title">
-            Goals Progress
-            <span class="goals-count">${goals.length}</span>
-          </h3>
-          <button class="widget-action" data-action="view-all-goals">
-            View All
-          </button>
-        </div>
+        return {
+          ...goal,
+          progressPercentage: Math.
