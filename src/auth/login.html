@@ -1,166 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sign In - SmartFinanceAI</title>
-    <meta name="description" content="Sign in to your SmartFinanceAI account">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/favicon-32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./public/icons/apple-touch-icon.png">
-    
-    <!-- PWA Meta -->
-    <meta name="theme-color" content="#8b5cf6">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="./manifest.json">
     
     <style>
-        /* Mobile-First, Properly Sized CSS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 16px;
-            -webkit-text-size-adjust: 100%;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            color: rgba(255, 255, 255, 0.95);
+            color: white;
             min-height: 100vh;
-            min-height: 100svh; /* Better mobile support */
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            margin: 0;
-            width: 100%;
-            overflow-x: hidden;
-            position: relative;
         }
-
-        .back-home {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(20px);
-            z-index: 10;
-        }
-
-        .back-home:hover {
-            color: rgba(255, 255, 255, 0.95);
-            background: rgba(255, 255, 255, 0.12);
-        }
-
+        
         .auth-card {
             width: 100%;
-            max-width: 360px;
+            max-width: 350px;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 1rem;
             padding: 1.5rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            animation: slideInUp 0.6s ease-out;
         }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .auth-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
+        
         .auth-logo {
-            width: 3.5rem;
-            height: 3.5rem;
+            width: 3rem;
+            height: 3rem;
             border-radius: 0.75rem;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            background: linear-gradient(135deg, #8b5cf6, #9333ea);
             font-size: 1.5rem;
-            color: white;
-            overflow: hidden;
-            position: relative;
         }
-
-        .auth-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: white;
-            border-radius: 0.75rem;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        /* Show brain emoji by default */
-        .auth-logo::before {
-            content: '🧠';
-            font-size: 1.5rem;
-            z-index: 1;
-        }
-
-        /* Hide emoji when image loads */
-        .auth-logo.has-image::before {
-            display: none;
-        }
-
+        
         .auth-title {
+            text-align: center;
             font-size: 1.5rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
             margin-bottom: 0.5rem;
         }
-
+        
         .auth-subtitle {
+            text-align: center;
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.875rem;
+            margin-bottom: 1.5rem;
         }
-
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #9333ea);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 1rem 0;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-1px);
+        }
+        
         .demo-notice {
             background: rgba(245, 158, 11, 0.1);
             border: 1px solid rgba(245, 158, 11, 0.3);
@@ -171,540 +110,66 @@
             margin-bottom: 1rem;
             text-align: center;
         }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.875rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 0.5rem;
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            min-height: 44px;
-            -webkit-appearance: none;
-        }
-
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-        }
-
-        .password-field {
-            position: relative;
-        }
-
-        .password-toggle {
+        
+        .back-home {
             position: absolute;
-            right: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            padding: 0.5rem;
-            font-size: 1rem;
-            transition: color 0.2s ease;
-            min-width: 44px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .password-toggle:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .forgot-password {
-            text-align: right;
-            margin-top: 0.5rem;
-        }
-
-        .forgot-password a {
-            color: #8b5cf6;
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-            margin-bottom: 1rem;
-        }
-
-        .auth-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
-        }
-
-        .auth-btn:active {
-            transform: translateY(0);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin: 1rem 0;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .divider-text {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .social-btn {
-            width: 100%;
-            padding: 0.875rem;
-            background: rgba(255, 255, 255, 0.05);
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 0.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            min-height: 44px;
-            margin-bottom: 0.75rem;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .social-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-1px);
-        }
-
-        .biometric-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-color: rgba(16, 185, 129, 0.3);
-            color: white;
-        }
-
-        .biometric-btn:hover {
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .auth-footer {
-            text-align: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .auth-footer p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .auth-footer a {
-            color: #8b5cf6;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* Messages */
-        .message {
             padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .success-message {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10b981;
-        }
-
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
-
-        .loading-spinner {
-            width: 1rem;
-            height: 1rem;
-            border: 2px solid transparent;
-            border-top: 2px solid currentColor;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            body {
-                padding: 0.75rem;
-            }
-            
-            .auth-card {
-                padding: 1.25rem;
-                max-width: 100%;
-            }
-            
-            .auth-title {
-                font-size: 1.375rem;
-            }
-
-            .back-home {
-                top: 0.75rem;
-                left: 0.75rem;
-                padding: 0.5rem;
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-height: 700px) {
-            .auth-card {
-                margin: 0.5rem 0;
-            }
-            
-            .auth-header {
-                margin-bottom: 1rem;
-            }
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
-    <!-- Back to Home -->
-    <a href="./index.html" class="back-home">
-        <span>←</span>
-        Home
-    </a>
-
+    <a href="./index.html" class="back-home">← Home</a>
+    
     <div class="auth-card">
-        <div class="auth-header">
-            <div class="auth-logo" id="auth-logo"></div>
-            <h1 class="auth-title">Welcome Back</h1>
-            <p class="auth-subtitle">Sign in to your SmartFinanceAI account</p>
-        </div>
-
-        <!-- Demo Notice -->
+        <div class="auth-logo" id="logo">🧠</div>
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to your SmartFinanceAI account</p>
+        
         <div class="demo-notice">
             <strong>Demo Mode:</strong> Use any email/password
         </div>
-
-        <!-- Messages -->
-        <div id="success-message" class="message success-message"></div>
-        <div id="error-message" class="message error-message"></div>
-
-        <!-- Login Form -->
-        <form id="login-form">
+        
+        <form onsubmit="handleLogin(event)">
             <div class="form-group">
-                <label class="form-label" for="email">Email Address</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    class="form-input" 
-                    placeholder="your.email@example.com"
-                    required
-                    autocomplete="email"
-                >
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" placeholder="your.email@example.com" required>
             </div>
-
+            
             <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <div class="password-field">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        class="form-input" 
-                        placeholder="Enter your password"
-                        required
-                        autocomplete="current-password"
-                    >
-                    <button 
-                        type="button" 
-                        class="password-toggle" 
-                        onclick="togglePassword()"
-                        aria-label="Toggle password visibility"
-                    >
-                        <span id="password-icon">👁️</span>
-                    </button>
-                </div>
-                <div class="forgot-password">
-                    <a href="./forgot-password.html">Forgot password?</a>
-                </div>
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="Enter your password" required>
             </div>
-
-            <button type="submit" class="auth-btn" id="login-btn">
-                <span id="login-text">Sign In</span>
-                <div id="login-spinner" class="loading-spinner"></div>
-            </button>
+            
+            <button type="submit" class="auth-btn">Sign In</button>
         </form>
-
-        <div class="divider">
-            <span class="divider-text">Or continue with</span>
-        </div>
-
-        <!-- Social Login -->
-        <button class="social-btn biometric-btn" onclick="handleBiometricLogin()">
-            <span>🔒</span>
-            Biometric Authentication
-        </button>
-        
-        <button class="social-btn" onclick="handleGoogleLogin()">
-            <span>🔍</span>
-            Continue with Google
-        </button>
-        
-        <button class="social-btn" onclick="handleAppleLogin()">
-            <span>🍎</span>
-            Continue with Apple
-        </button>
-
-        <div class="auth-footer">
-            <p>Don't have an account?</p>
-            <a href="./register.html">Create Account</a>
-        </div>
     </div>
-
+    
     <script>
-        console.log('🔐 SmartFinanceAI Mobile Login Loading...');
-
-        let isLoading = false;
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ Mobile login page loaded');
-            
-            // Focus on email input (but not on mobile to prevent zoom)
-            if (window.innerWidth > 768) {
-                document.getElementById('email').focus();
-            }
-            
-            // Setup form submission
-            document.getElementById('login-form').addEventListener('submit', handleLogin);
-            
-            // Load logo with multiple fallback attempts
-            loadLogo();
-            
-            console.log('🚀 Mobile login system ready');
-        });
-
-        // Smart logo loading with multiple paths
+        // Try to load actual logo
         function loadLogo() {
-            const logoContainer = document.getElementById('auth-logo');
-            const logoPaths = [
-                './public/icons/icon-192.png',
-                './icon-192.png',
-                './public/icons/apple-touch-icon.png',
-                './apple-touch-icon.png',
-                './public/icons/favicon-48.png',
-                './favicon-48.png'
-            ];
-
-            let currentIndex = 0;
-
-            function tryNextPath() {
-                if (currentIndex >= logoPaths.length) {
-                    console.log('🧠 All logo paths failed, using brain emoji');
-                    return; // CSS will show brain emoji
-                }
-
-                const img = new Image();
-                img.onload = function() {
-                    console.log(`✅ Logo loaded successfully from: ${logoPaths[currentIndex]}`);
-                    logoContainer.innerHTML = `<img src="${logoPaths[currentIndex]}" alt="SmartFinanceAI" style="width: 100%; height: 100%; object-fit: contain; background: white; border-radius: 0.75rem;" />`;
-                    logoContainer.classList.add('has-image');
-                };
-                img.onerror = function() {
-                    console.log(`❌ Failed to load logo from: ${logoPaths[currentIndex]}`);
-                    currentIndex++;
-                    tryNextPath();
-                };
-                img.src = logoPaths[currentIndex];
-            }
-
-            tryNextPath();
+            const logo = document.getElementById('logo');
+            const img = new Image();
+            img.onload = function() {
+                logo.innerHTML = '<img src="./public/icons/icon-192.png" style="width:100%;height:100%;object-fit:contain;background:white;border-radius:0.75rem">';
+            };
+            img.src = './public/icons/icon-192.png';
         }
-
-        // Toggle password visibility
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const passwordIcon = document.getElementById('password-icon');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                passwordIcon.textContent = '🙈';
-            } else {
-                passwordInput.type = 'password';
-                passwordIcon.textContent = '👁️';
-            }
+        
+        function handleLogin(e) {
+            e.preventDefault();
+            alert('Demo login successful!');
+            window.location.href = './dashboard.html';
         }
-
-        // Show message function
-        function showMessage(message, type = 'success') {
-            const messageEl = document.getElementById(type + '-message');
-            messageEl.textContent = message;
-            messageEl.style.display = 'block';
-            
-            // Hide other message type
-            const otherType = type === 'success' ? 'error' : 'success';
-            document.getElementById(otherType + '-message').style.display = 'none';
-            
-            // Auto-hide after 4 seconds
-            setTimeout(() => {
-                messageEl.style.display = 'none';
-            }, 4000);
-        }
-
-        // Set loading state
-        function setLoading(loading) {
-            isLoading = loading;
-            const btn = document.getElementById('login-btn');
-            const text = document.getElementById('login-text');
-            const spinner = document.getElementById('login-spinner');
-            
-            if (loading) {
-                btn.disabled = true;
-                text.style.display = 'none';
-                spinner.style.display = 'block';
-            } else {
-                btn.disabled = false;
-                text.style.display = 'block';
-                spinner.style.display = 'none';
-            }
-        }
-
-        // Handle login
-        async function handleLogin(event) {
-            event.preventDefault();
-            
-            if (isLoading) return;
-
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-
-            if (!email || !password) {
-                showMessage('Please fill in all fields', 'error');
-                return;
-            }
-
-            setLoading(true);
-
-            try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                console.log('🎯 Login successful (demo mode)');
-                showMessage('Login successful! Redirecting...');
-                
-                // Save demo session
-                localStorage.setItem('smartfinance_user', JSON.stringify({
-                    email: email,
-                    name: email.split('@')[0],
-                    loginTime: new Date().toISOString()
-                }));
-                
-                // Redirect to dashboard
-                setTimeout(() => {
-                    window.location.href = './dashboard.html';
-                }, 1000);
-                
-            } catch (error) {
-                console.error('❌ Login error:', error);
-                showMessage('Login failed. Please try again.', 'error');
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // Handle biometric login
-        function handleBiometricLogin() {
-            console.log('🔒 Biometric login (demo)');
-            showMessage('Biometric authentication successful!');
-            setTimeout(() => {
-                window.location.href = './dashboard.html';
-            }, 1000);
-        }
-
-        // Handle Google login
-        function handleGoogleLogin() {
-            console.log('🔍 Google login (demo)');
-            showMessage('Google login successful!');
-            setTimeout(() => {
-                window.location.href = './dashboard.html';
-            }, 1000);
-        }
-
-        // Handle Apple login
-        function handleAppleLogin() {
-            console.log('🍎 Apple login (demo)');
-            showMessage('Apple login successful!');
-            setTimeout(() => {
-                window.location.href = './dashboard.html';
-            }, 1000);
-        }
-
-        // Prevent zoom on iOS when focusing inputs
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('focus', function() {
-                    if (this.style.fontSize !== '16px') {
-                        this.style.fontSize = '16px';
-                    }
-                });
-            });
-        }
-
-        console.log('🚀 Mobile login JavaScript loaded!');
+        
+        loadLogo();
     </script>
 </body>
 </html>
