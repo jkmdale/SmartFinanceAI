@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="../styles/main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - SmartFinanceAI</title>
+    <meta name="description" content="View and manage all your financial transactions">
+    
+    <!-- PWA Meta -->
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="../../manifest.json">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../styles/main.css">
+    
+    <style>
+        /* Additional transaction-specific styles */
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--glass-subtle);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        .transaction-item:hover {
+            background: var(--glass-light);
+            transform: translateX(4px);
+        }
+        
+        .transaction-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+        }
+        
+        .transaction-icon.income {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .transaction-icon.expense {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .transaction-icon.transfer {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .transaction-details {
+            flex: 1;
+        }
+        
+        .transaction-merchant {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .transaction-category {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .transaction-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .transaction-amount {
+            text-align: right;
+        }
+        
+        .transaction-balance {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 0.25rem;
+        }
+        
+        .filter-bar {
+            background: var(--glass-light);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem 1rem;
+            background: var(--glass-subtle);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+        
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+        
+        .filter-select {
+            padding: 0.75rem 1rem;
+            background: var(--glass-subtle);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            min-width: 120px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--glass-light);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .floating-add-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+        
+        .floating-add-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-tertiary);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                min-width: auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .transaction-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            
+            .transaction-content {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
+            
+            .transaction-amount {
+                text-align: left;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <div class="navbar-logo">💰</div>
+                SmartFinanceAI
+            </a>
+            <div class="navbar-nav">
+                <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+                <a href="accounts.html" class="nav-link">🏦 Accounts</a>
+                <a href="transactions.html" class="nav-link active">💸 Transactions</a>
+                <a href="budget.html" class="nav-link">📈 Budget</a>
+                <a href="goals.html" class="nav-link">🎯 Goals</a>
+                <a href="reports.html" class="nav-link">📋 Reports</a>
+                <a href="../auth/login.html" class="nav-link">👤 Account</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 2rem; padding-bottom: 6rem;">
+        <!-- Page Header -->
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-4xl font-bold mb-2">Transactions</h1>
+                <p class="text-secondary">View and manage all your financial transactions</p>
+            </div>
+            <button class="btn btn-primary" onclick="showAddTransactionModal()">
+                ➕ Add Transaction
+            </button>
+        </div>
+
+        <!-- Transaction Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value financial-amount financial-positive" id="totalIncome">+$4,250.00</div>
+                <div class="stat-label">Total Income</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value financial-amount financial-negative" id="totalExpenses">-$3,180.45</div>
+                <div class="stat-label">Total Expenses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value financial-amount financial-positive" id="netFlow">+$1,069.55</div>
+                <div class="stat-label">Net Cash Flow</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="transactionCount">47</div>
+                <div class="stat-label">Total Transactions</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+            <input type="text" 
+                   class="search-input" 
+                   placeholder="🔍 Search transactions..." 
+                   id="searchInput"
+                   oninput="filterTransactions()">
+            
+            <select class="filter-select" id="accountFilter" onchange="filterTransactions()">
+                <option value="">All Accounts</option>
+                <option value="checking">Checking Account</option>
+                <option value="savings">Savings Account</option>
+                <option value="credit">Credit Card</option>
+            </select>
+            
+            <select class="filter-select" id="categoryFilter" onchange="filterTransactions()">
+                <option value="">All Categories</option>
+                <option value="food">🍕 Food & Dining</option>
+                <option value="transport">🚗 Transport</option>
+                <option value="shopping">🛍️ Shopping</option>
+                <option value="bills">💡 Bills & Utilities</option>
+                <option value="income">💰 Income</option>
+                <option value="entertainment">🎬 Entertainment</option>
+            </select>
+            
+            <select class="filter-select" id="timeFilter" onchange="filterTransactions()">
+                <option value="all">All Time</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="quarter">This Quarter</option>
+            </select>
+        </div>
+
+        <!-- Transactions List -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Transactions</h3>
+                <p class="card-subtitle">Your latest financial activity</p>
+            </div>
+            <div class="card-body">
+                <div id="transactionsList">
+                    <!-- Transactions will be loaded here -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-icon">📭</div>
+                    <h3>No transactions found</h3>
+                    <p>Try adjusting your filters or add your first transaction</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button class="floating-add-btn" onclick="showAddTransactionModal()" title="Add Transaction">+</button>
+
+    <!-- Add Transaction Modal (Hidden) -->
+    <div id="addTransactionModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; padding: 2rem;">
+        <div class="card" style="max-width: 500px; margin: 2rem auto; max-height: 90vh; overflow-y: auto;">
+            <div class="card-header">
+                <h3 class="card-title">Add New Transaction</h3>
+                <button onclick="closeAddTransactionModal()" style="float: right; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;">×</button>
+            </div>
+            <div class="card-body">
+                <form id="addTransactionForm">
+                    <div class="form-group">
+                        <label class="form-label">Transaction Type</label>
+                        <select class="form-input" id="transactionType" required>
+                            <option value="expense">💸 Expense</option>
+                            <option value="income">💰 Income</option>
+                            <option value="transfer">↔️ Transfer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Amount</label>
+                        <input type="number" class="form-input" id="transactionAmount" placeholder="0.00" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Merchant/Description</label>
+                        <input type="text" class="form-input" id="transactionMerchant" placeholder="e.g. Countdown, Salary" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-input" id="transactionCategory" required>
+                            <option value="food">🍕 Food & Dining</option>
+                            <option value="transport">🚗 Transport</option>
+                            <option value="shopping">🛍️ Shopping</option>
+                            <option value="bills">💡 Bills & Utilities</option>
+                            <option value="income">💰 Income</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="health">🏥 Health & Medical</option>
+                            <option value="education">📚 Education</option>
+                            <option value="other">🏷️ Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Account</label>
+                        <select class="form-input" id="transactionAccount" required>
+                            <option value="checking">Checking Account</option>
+                            <option value="savings">Savings Account</option>
+                            <option value="credit">Credit Card</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="transactionDate" required>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="button" class="btn btn-secondary flex-1" onclick="closeAddTransactionModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary flex-1">Add Transaction</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample transaction data
+        let transactions = [
+            {
+                id: 1,
+                type: 'expense',
+                amount: -85.50,
+                merchant: 'Countdown Supermarket',
+                category: 'food',
+                account: 'checking',
+                date: '2025-06-12',
+                balance: 2150.45,
+                icon: '🍕'
+            },
+            {
+                id: 2,
+                type: 'income',
+                amount: 4250.00,
+                merchant: 'Salary - ABC Company',
+                category: 'income',
+                account: 'checking',
+                date: '2025-06-10',
+                balance: 2235.95,
+                icon: '💰'
+            },
+            {
+                id: 3,
+                type: 'expense',
+                amount: -45.00,
+                merchant: 'BP Petrol Station',
+                category: 'transport',
+                account: 'checking',
+                date: '2025-06-09',
+                balance: -2014.05,
+                icon: '⛽'
+            },
+            {
+                id: 4,
+                type: 'expense',
+                amount: -120.00,
+                merchant: 'Spark Mobile',
+                category: 'bills',
+                account: 'checking',
+                date: '2025-06-08',
+                balance: 1969.05,
+                icon: '📱'
+            },
+            {
+                id: 5,
+                type: 'expense',
+                amount: -35.80,
+                merchant: 'Netflix Subscription',
+                category: 'entertainment',
+                account: 'credit',
+                date: '2025-06-07',
+                balance: 2089.05,
+                icon: '🎬'
+            },
+            {
+                id: 6,
+                type: 'transfer',
+                amount: -500.00,
+                merchant: 'Transfer to Savings',
+                category: 'transfer',
+                account: 'checking',
+                date: '2025-06-05',
+                balance: 2124.85,
+                icon: '↔️'
+            },
+            {
+                id: 7,
+                type: 'expense',
+                amount: -67.90,
+                merchant: 'The Warehouse',
+                category: 'shopping',
+                account: 'checking',
+                date: '2025-06-04',
+                balance: 2624.85,
+                icon: '🛍️'
+            }
+        ];
+
+        // Load transactions on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            displayTransactions(transactions);
+            updateStats();
+            
+            // Set today's date as default
+            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
+        });
+
+        // Display transactions
+        function displayTransactions(transactionList) {
+            const container = document.getElementById('transactionsList');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (transactionList.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            container.innerHTML = transactionList.map(transaction => `
+                <div class="transaction-item" data-id="${transaction.id}">
+                    <div class="transaction-content" style="display: flex; align-items: center; flex: 1;">
+                        <div class="transaction-icon ${transaction.type}">
+                            ${transaction.icon}
+                        </div>
+                        <div class="transaction-details">
+                            <div class="transaction-merchant">${transaction.merchant}</div>
+                            <div class="transac
