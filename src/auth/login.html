@@ -199,7 +199,7 @@
 
         .password-toggle {
             position: absolute;
-            right: 1.5rem;
+            right: 1rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
@@ -207,7 +207,7 @@
             color: rgba(255, 255, 255, 0.8);
             cursor: pointer;
             padding: 0.5rem;
-            font-size: 1.125rem;
+            font-size: 1rem;
             transition: color 0.2s ease;
         }
 
@@ -510,8 +510,45 @@
             // Setup form submission
             document.getElementById('login-form').addEventListener('submit', handleLogin);
             
+            // Try to load logo from multiple paths
+            tryLoadLogo();
+            
             console.log('🚀 Login system ready');
         });
+
+        // Try loading logo from different paths
+        function tryLoadLogo() {
+            const logoContainer = document.getElementById('auth-logo');
+            const logoPaths = [
+                './public/icons/icon-192.png',
+                './icon-192.png',
+                './public/icons/apple-touch-icon.png',
+                './apple-touch-icon.png',
+                './assets/logo.png',
+                './logo.png'
+            ];
+
+            function loadLogoFromPath(paths, index) {
+                if (index >= paths.length) {
+                    console.log('🧠 Using brain emoji fallback for logo');
+                    return; // Use CSS emoji fallback
+                }
+
+                const img = new Image();
+                img.onload = function() {
+                    console.log(`✅ Logo loaded from: ${paths[index]}`);
+                    logoContainer.innerHTML = `<img src="${paths[index]}" alt="SmartFinanceAI" onload="this.parentElement.classList.add('has-image')" style="width: 100%; height: 100%; object-fit: contain; background: white; border-radius: 1rem;" />`;
+                    logoContainer.classList.add('has-image');
+                };
+                img.onerror = function() {
+                    console.log(`❌ Failed to load logo from: ${paths[index]}`);
+                    loadLogoFromPath(paths, index + 1);
+                };
+                img.src = paths[index];
+            }
+
+            loadLogoFromPath(logoPaths, 0);
+        }
 
         // Toggle password visibility
         function togglePassword() {
