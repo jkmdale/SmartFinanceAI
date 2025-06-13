@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="../styles/main.css">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
     <title>Sign In - SmartFinanceAI</title>
     <meta name="description" content="Sign in to your SmartFinanceAI account">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../../public/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../public/icons/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../public/icons/apple-touch-icon.png">
     
     <!-- PWA Meta -->
     <meta name="theme-color" content="#8b5cf6">
@@ -58,15 +62,20 @@
         .auth-logo {
             width: 4rem;
             height: 4rem;
-            background: var(--gradient-primary);
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: white;
             margin: 0 auto var(--space-lg);
             box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .auth-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: var(--radius-lg);
         }
 
         .auth-title {
@@ -146,6 +155,8 @@
             padding: var(--space-sm);
             font-size: 1.125rem;
             transition: color 0.2s ease;
+            min-height: 44px;
+            min-width: 44px;
         }
 
         .password-toggle:hover {
@@ -303,6 +314,7 @@
             font-weight: 500;
             transition: all 0.2s ease;
             backdrop-filter: blur(20px);
+            min-height: 44px;
         }
 
         .back-home:hover {
@@ -401,7 +413,9 @@
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
-                <div class="auth-logo">💰</div>
+                <div class="auth-logo">
+                    <img src="../../public/icons/icon-192.png" alt="SmartFinanceAI" />
+                </div>
                 <h1 class="auth-title">Welcome Back</h1>
                 <p class="auth-subtitle">Sign in to your SmartFinanceAI account</p>
             </div>
