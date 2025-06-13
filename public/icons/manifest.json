@@ -1,0 +1,330 @@
+{
+  "name": "SmartFinanceAI - Global Personal Finance Operating System",
+  "short_name": "SmartFinanceAI",
+  "description": "Intelligent money management with AI coaching, multi-country support, and collaborative features for individuals, couples, and families worldwide.",
+  "version": "1.0.0",
+  "start_url": "/",
+  "scope": "/",
+  "id": "smartfinanceai-pwa",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#8b5cf6",
+  "background_color": "#1e1b4b",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "finance",
+    "productivity",
+    "utilities",
+    "business"
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/dashboard-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "SmartFinanceAI Dashboard - Desktop View"
+    },
+    {
+      "src": "screenshots/dashboard-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "SmartFinanceAI Dashboard - Mobile View"
+    },
+    {
+      "src": "screenshots/budget-overview.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Budget Management Interface"
+    },
+    {
+      "src": "screenshots/goals-tracking.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Goal Tracking and Progress"
+    },
+    {
+      "src": "screenshots/ai-coach.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "AI Financial Coach Interface"
+    }
+  ],
+  "icons": [
+    {
+      "src": "icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "density": "1.5"
+    },
+    {
+      "src": "icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "density": "2.0"
+    },
+    {
+      "src": "icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "density": "2.7"
+    },
+    {
+      "src": "icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "density": "3.0"
+    },
+    {
+      "src": "icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/monochrome-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "monochrome"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your financial overview and insights",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "icons/shortcut-dashboard.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Add Transaction",
+      "short_name": "Add Transaction",
+      "description": "Quickly record a new transaction",
+      "url": "/transactions/add",
+      "icons": [
+        {
+          "src": "icons/shortcut-add.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Budget",
+      "short_name": "Budget",
+      "description": "Check your budget and spending",
+      "url": "/budget",
+      "icons": [
+        {
+          "src": "icons/shortcut-budget.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Goals",
+      "short_name": "Goals",
+      "description": "Track your financial goals",
+      "url": "/goals",
+      "icons": [
+        {
+          "src": "icons/shortcut-goals.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "AI Coach",
+      "short_name": "AI Coach",
+      "description": "Get personalized financial advice",
+      "url": "/ai-coach",
+      "icons": [
+        {
+          "src": "icons/shortcut-ai.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/share-target/",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": [
+            "text/csv",
+            ".csv",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          ]
+        }
+      ]
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/csv-import",
+      "accept": {
+        "text/csv": [".csv"],
+        "application/vnd.ms-excel": [".xls"],
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+smartfinance",
+      "url": "/handle-protocol?url=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "handle_links": "preferred",
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://smartfinanceai.com/manifest.json"
+    }
+  ],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "permissions": [
+    "storage",
+    "notifications",
+    "background-sync",
+    "periodic-background-sync"
+  ],
+  "features": [
+    "CrossOriginIsolated"
+  ],
+  "display_override": [
+    "window-controls-overlay",
+    "minimal-ui",
+    "standalone",
+    "fullscreen"
+  ],
+  "custom": {
+    "country_configs": {
+      "NZ": {
+        "theme_color": "#047857",
+        "accent_color": "#10b981",
+        "currency_symbol": "$",
+        "currency_code": "NZD"
+      },
+      "AU": {
+        "theme_color": "#d97706",
+        "accent_color": "#f59e0b",
+        "currency_symbol": "$",
+        "currency_code": "AUD"
+      },
+      "UK": {
+        "theme_color": "#dc2626",
+        "accent_color": "#ef4444",
+        "currency_symbol": "£",
+        "currency_code": "GBP"
+      },
+      "US": {
+        "theme_color": "#2563eb",
+        "accent_color": "#3b82f6",
+        "currency_symbol": "$",
+        "currency_code": "USD"
+      },
+      "CA": {
+        "theme_color": "#dc2626",
+        "accent_color": "#ef4444",
+        "currency_symbol": "$",
+        "currency_code": "CAD"
+      }
+    },
+    "subscription_tiers": {
+      "free": {
+        "name": "SmartFinance Essentials",
+        "features": ["basic_budgeting", "manual_csv", "3_goals", "basic_ai"]
+      },
+      "premium": {
+        "name": "SmartFinance Pro", 
+        "price": "$9.99/month",
+        "features": ["unlimited_goals", "advanced_ai", "auto_bank_sync", "multi_currency", "family_sharing"]
+      },
+      "professional": {
+        "name": "SmartFinance Business",
+        "price": "$19.99/month", 
+        "features": ["business_expenses", "tax_optimization", "api_access", "white_label", "dedicated_support"]
+      }
+    },
+    "supported_banks": {
+      "NZ": ["ANZ", "ASB", "BNZ", "Kiwibank", "Westpac", "TSB"],
+      "AU": ["CommBank", "Westpac", "ANZ", "NAB", "Bendigo", "ING"],
+      "UK": ["Barclays", "HSBC", "Lloyds", "NatWest", "Santander", "Nationwide"],
+      "US": ["Chase", "Bank of America", "Wells Fargo", "Citi", "Capital One", "PNC"],
+      "CA": ["RBC", "TD", "Scotiabank", "BMO", "CIBC", "Desjardins"]
+    },
+    "security_features": {
+      "encryption": "AES-256",
+      "authentication": ["WebAuthn", "biometric", "2FA"],
+      "data_protection": "zero_knowledge",
+      "compliance": ["GDPR", "CCPA", "PCI_DSS"]
+    },
+    "ai_capabilities": {
+      "coaching": "personalized_financial_advice",
+      "categorization": "95_percent_accuracy",
+      "predictions": "cashflow_forecasting",
+      "insights": "spending_pattern_analysis",
+      "optimization": "goal_timeline_suggestions"
+    }
+  }
+}

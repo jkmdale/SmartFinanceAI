@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartFinanceAI - Your offline financial companion">
+  <title>SmartFinanceAI - Offline Mode</title>
+  
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#8b5cf6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SmartFinanceAI">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+  
+  <!-- Preload Critical Resources -->
+  <link rel="preload" href="/src/styles/main.css" as="style">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style">
+  
+  <!-- Critical CSS Inline for Offline -->
+  <style>
+    /* === CRITICAL OFFLINE STYLES === */
+    :root {
+      /* Brand Colors */
+      --brand-primary: #8b5cf6;
+      --brand-secondary: #3b82f6;
+      --brand-accent: #10b981;
+      --brand-warning: #f59e0b;
+      --brand-danger: #ef4444;
+      
+      /* Gradients */
+      --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+      --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+      
+      /* Glass Effects */
+      --glass-light: rgba(255, 255, 255, 0.08);
+      --glass-medium: rgba(255, 255, 255, 0.12);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      
+      /* Text Colors */
+      --text-primary: rgba(255, 255, 255, 0.95);
+      --text-secondary: rgba(255, 255, 255, 0.8);
+      --text-tertiary: rgba(255, 255, 255, 0.65);
+      
+      /* Fonts */
+      --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: var(--font-primary);
+      background: var(--gradient-bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-x: hidden;
+    }
+    
+    /* Glass Container */
+    .offline-container {
+      background: var(--glass-light);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 1.5rem;
+      padding: 3rem 2rem;
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Logo */
+    .offline-logo {
+      width: 80px;
+      height: 80px;
+      background: var(--gradient-primary);
+      border-radius: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    /* Typography */
+    .offline-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .offline-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    .offline-description {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    /* Status Indicator */
+    .connection-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: var(--glass-medium);
+      border-radius: 0.75rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--brand-danger);
+      border-radius: 50%;
+      animation: blink 1.5s infinite;
+    }
+    
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.3; }
+    }
+    
+    .status-text {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    
+    /* Offline Features */
+    .offline-features {
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+    
+    .features-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+    
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      background: var(--brand-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+    
+    .feature-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.75rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-family: var(--font-primary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      margin-right: 1rem;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+    }
+    
+    .btn-secondary {
+      background: var(--glass-light);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--glass-medium);
+      transform: translateY(-1px);
+    }
+    
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    
+    /* Cached Data Summary */
+    .cached-summary {
+      background: var(--glass-medium);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      text-align: left;
+    }
+    
+    .summary-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+    
+    .summary-label {
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+    }
+    
+    .summary-value {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    /* Connection Check Animation */
+    .checking-connection {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-tertiary);
+    }
+    
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-top: 2px solid var(--brand-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 480px) {
+      .offline-container {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+      }
+      
+      .offline-title {
+        font-size: 1.5rem;
+      }
+      
+      .offline-subtitle {
+        font-size: 1rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .btn-primary {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+    }
+    
+    /* Hidden by default */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Offline Container -->
+  <div class="offline-container">
+    <!-- Logo -->
+    <div class="offline-logo" id="offlineLogo">
+      💰
+    </div>
+    
+    <!-- Title & Description -->
+    <h1 class="offline-title">You're Offline</h1>
+    <p class="offline-subtitle">Don't worry - your financial data is safe and accessible</p>
+    <p class="offline-description">
+      SmartFinanceAI works offline so you can continue managing your finances even without an internet connection.
+    </p>
+    
+    <!-- Connection Status -->
+    <div class="connection-status" id="connectionStatus">
+      <div class="status-dot"></div>
+      <span class="status-text">No internet connection</span>
+    </div>
+    
+    <!-- Connection Check (Hidden by default) -->
+    <div class="checking-connection hidden" id="checkingConnection">
+      <div class="spinner"></div>
+      <span>Checking connection...</span>
+    </div>
+    
+    <!-- Available Offline Features -->
+    <div class="offline-features">
+      <h3 class="features-title">Available Offline Features</h3>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <span class="feature-text">View your account balances and transaction history</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎯</div>
+        <span class="feature-text">Track progress on your financial goals</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💳</div>
+        <span class="feature-text">Add new transactions (will sync when online)</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📈</div>
+        <span class="feature-text">Review budgets and spending categories</span>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🤖</div>
+        <span class="feature-text">Access cached AI insights and recommendations</span>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="retryConnection()">
+        <span>🔄</span>
+        Try Again
+      </button>
+      <button class="btn btn-secondary" onclick="goOfflineMode()">
+        <span>📱</span>
+        Continue Offline
+      </button>
+    </div>
+    
+    <!-- Cached Data Summary -->
+    <div class="cached-summary" id="cachedSummary">
+      <h3 class="summary-title">Your Offline Data</h3>
+      <div class="summary-item">
+        <span class="summary-label">Accounts</span>
+        <span class="summary-value" id="cachedAccounts">-</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Transactions</span>
+        <span class="summary-value" id="cachedTransactions">-</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Goals</span>
+        <span class="summary-value" id="cachedGoals">-</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Last Updated</span>
+        <span class="summary-value" id="lastUpdated">-</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offline Functionality Script -->
+  <script>
+    // === OFFLINE PAGE FUNCTIONALITY === //
+    
+    let isCheckingConnection = false;
+    let connectionCheckInterval = null;
+    
+    // Initialize offline page
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 SmartFinanceAI Offline Page loaded');
+      
+      // Load cached data summary
+      loadCachedDataSummary();
+      
+      // Start connection monitoring
+      startConnectionMonitoring();
+      
+      // Update last online time
+      updateLastOnlineTime();
+    });
+    
+    // === CONNECTION MANAGEMENT === //
+    
+    function retryConnection() {
+      if (isCheckingConnection) return;
+      
+      isCheckingConnection = true;
+      showCheckingStatus();
+      
+      console.log('🔄 Checking internet connection...');
+      
+      // Try multiple connection checks
+      Promise.race([
+        fetch('/', { 
+          method: 'HEAD',
+          cache: 'no-cache',
+          timeout: 5000 
+        }),
+        fetch('/manifest.json', { 
+          method: 'HEAD',
+          cache: 'no-cache',
+          timeout: 5000 
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), 5000)
+        )
+      ])
+      .then(response => {
+        if (response.ok) {
+          console.log('✅ Connection restored!');
+          handleConnectionRestored();
+        } else {
+          throw new Error('Response not OK');
+        }
+      })
+      .catch(error => {
+        console.warn('❌ Still offline:', error.message);
+        handleConnectionFailed();
+      })
+      .finally(() => {
+        isCheckingConnection = false;
+        hideCheckingStatus();
+      });
+    }
+    
+    function handleConnectionRestored() {
+      // Update status
+      const statusEl = document.getElementById('connectionStatus');
+      statusEl.innerHTML = `
+        <div style="width: 12px; height: 12px; background: var(--brand-accent); border-radius: 50%;"></div>
+        <span class="status-text">Connection restored! Redirecting...</span>
+      `;
+      
+      // Redirect to main app after brief delay
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
+    }
+    
+    function handleConnectionFailed() {
+      // Update status with retry suggestion
+      const statusEl = document.getElementById('connectionStatus');
+      statusEl.innerHTML = `
+        <div class="status-dot"></div>
+        <span class="status-text">Still offline - check your connection</span>
+      `;
+    }
+    
+    function showCheckingStatus() {
+      document.getElementById('connectionStatus').classList.add('hidden');
+      document.getElementById('checkingConnection').classList.remove('hidden');
+    }
+    
+    function hideCheckingStatus() {
+      document.getElementById('connectionStatus').classList.remove('hidden');
+      document.getElementById('checkingConnection').classList.add('hidden');
+    }
+    
+    // === OFFLINE MODE === //
+    
+    function goOfflineMode() {
+      console.log('📱 Entering offline mode...');
+      
+      // Try to load the cached main application
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        // Service worker is active, try to load cached app
+        window.location.href = '/';
+      } else {
+        // No service worker, show basic offline interface
+        showBasicOfflineInterface();
+      }
+    }
+    
+    function showBasicOfflineInterface() {
+      alert('Offline mode requires the main app to be cached. Please connect to the internet first to enable offline functionality.');
+    }
+    
+    // === CACHED DATA SUMMARY === //
+    
+    async function loadCachedDataSummary() {
+      try {
+        // Try to get cached data from IndexedDB or localStorage
+        const cachedData = await getCachedFinancialData();
+        
+        if (cachedData) {
+          updateCachedDataDisplay(cachedData);
+        } else {
+          showNoCachedData();
+        }
+      } catch (error) {
+        console.warn('⚠️ Could not load cached data:', error);
+        showNoCachedData();
+      }
+    }
+    
+    async function getCachedFinancialData() {
+      // This would integrate with the actual data storage system
+      // For now, return mock data or check localStorage
+      
+      const mockData = {
+        accounts: 3,
+        transactions: 127,
+        goals: 4,
+        lastSync: localStorage.getItem('smartfinance_last_sync') || new Date().toISOString()
+      };
+      
+      return mockData;
+    }
+    
+    function updateCachedDataDisplay(data) {
+      document.getElementById('cachedAccounts').textContent = data.accounts || '0';
+      document.getElementById('cachedTransactions').textContent = data.transactions || '0';
+      document.getElementById('cachedGoals').textContent = data.goals || '0';
+      
+      const lastUpdated = new Date(data.lastSync);
+      document.getElementById('lastUpdated').textContent = formatRelativeTime(lastUpdated);
+    }
+    
+    function showNoCachedData() {
+      document.getElementById('cachedAccounts').textContent = '0';
+      document.getElementById('cachedTransactions').textContent = '0';
+      document.getElementById('cachedGoals').textContent = '0';
+      document.getElementById('lastUpdated').textContent = 'Never';
+    }
+    
+    // === CONNECTION MONITORING === //
+    
+    function startConnectionMonitoring() {
+      // Listen for online/offline events
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+      
+      // Periodic connection check
+      connectionCheckInterval = setInterval(() => {
+        if (navigator.onLine) {
+          checkActualConnectivity();
+        }
+      }, 30000); // Check every 30 seconds
+    }
+    
+    function handleOnline() {
+      console.log('🌐 Browser reports online');
+      // Browser thinks we're online, but verify with actual request
+      setTimeout(retryConnection, 1000);
+    }
+    
+    function handleOffline() {
+      console.log('📵 Browser reports offline');
+      const statusEl = document.getElementById('connectionStatus');
+      statusEl.innerHTML = `
+        <div class="status-dot"></div>
+        <span class="status-text">Connection lost</span>
+      `;
+    }
+    
+    function checkActualConnectivity() {
+      // Verify we can actually reach our servers
+      fetch('/api/ping', { 
+        method: 'HEAD',
+        cache: 'no-cache',
+        timeout: 3000 
+      })
+      .then(response => {
+        if (response.ok) {
+          handleConnectionRestored();
+        }
+      })
+      .catch(() => {
+        // Still offline despite browser saying we're online
+        handleOffline();
+      });
+    }
+    
+    // === UTILITY FUNCTIONS === //
+    
+    function updateLastOnlineTime() {
+      const lastOnline = localStorage.getItem('smartfinance_last_online');
+      if (lastOnline) {
+        const date = new Date(lastOnline);
+        console.log('📅 Last online:', formatRelativeTime(date));
+      }
+    }
+    
+    function formatRelativeTime(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+      
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins} minutes ago`;
+      if (diffHours < 24) return `${diffHours} hours ago`;
+      if (diffDays < 7) return `${diffDays} days ago`;
+      return date.toLocaleDateString();
+    }
+    
+    // === CLEANUP === //
+    
+    window.addEventListener('beforeunload', () => {
+      if (connectionCheckInterval) {
+        clearInterval(connectionCheckInterval);
+      }
+    });
+    
+    // === SERVICE WORKER COMMUNICATION === //
+    
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', event => {
+        const { type, data } = event.data;
+        
+        if (type === 'CACHE_UPDATED') {
+          console.log('📦 Cache updated, refreshing data summary');
+          loadCachedDataSummary();
+        } else if (type === 'CONNECTION_STATUS') {
+          console.log('🌐 Connection status update:', data.online);
+        }
+      });
+    }
+    
+    console.log('🚀 SmartFinanceAI Offline Page ready');
+  </script>
+</body>
+</html>
