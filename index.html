@@ -3,506 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - AI-Powered Personal Finance</title>
-    <meta name="description" content="Transform your financial future with AI-powered insights, investment tracking, and personalized recommendations.">
-    
-    <!-- Favicon and Icons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./public/icons/favicon-16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./public/icons/apple-touch-icon.png">
-    
-    <!-- PWA Meta -->
-    <meta name="theme-color" content="#8b5cf6">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SmartFinanceAI">
-    <link rel="manifest" href="./manifest.json">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="SmartFinanceAI - AI-Powered Personal Finance">
-    <meta property="og:description" content="Transform your financial future with AI-powered insights">
-    <meta property="og:image" content="./public/icons/icon-512.png">
-    <meta property="og:url" content="https://jkmdale.github.io/SmartFinanceAI/">
-    
+    <title>SmartFinanceAI - Loading...</title>
+    <meta http-equiv="refresh" content="0; url=./src/auth/login.html">
     <style>
-        /* Complete CSS System - Self-Contained */
-        :root {
-            /* Brand Colors */
-            --brand-primary: #8b5cf6;
-            --brand-secondary: #3b82f6;
-            --brand-accent: #10b981;
-            --brand-warning: #f59e0b;
-            --brand-danger: #ef4444;
-            
-            /* Glassmorphism */
-            --glass-light: rgba(255, 255, 255, 0.08);
-            --glass-medium: rgba(255, 255, 255, 0.12);
-            --glass-subtle: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            
-            /* Gradients */
-            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-            --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            --gradient-accent: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            --gradient-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            
-            /* Typography */
-            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            
-            /* Text Colors */
-            --text-primary: rgba(255, 255, 255, 0.95);
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --text-tertiary: rgba(255, 255, 255, 0.65);
-            --text-quaternary: rgba(255, 255, 255, 0.5);
-            
-            /* Spacing */
-            --space-sm: 0.5rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
-            --space-3xl: 4rem;
-            
-            /* Radius */
-            --radius-sm: 0.5rem;
-            --radius-md: 0.75rem;
-            --radius-lg: 1rem;
-            --radius-xl: 1.5rem;
-            --radius-2xl: 2rem;
-            
-            /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-        }
-
-        * {
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             box-sizing: border-box;
         }
-
-        body {
-            font-family: var(--font-primary);
-            background: var(--gradient-bg);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Navigation */
-        .navbar {
-            position: fixed;
+        
+        /* Animated background */
+        body::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1000;
-            background: var(--glass-light);
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
+            animation: backgroundShift 10s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .loading-container {
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: var(--space-md) 0;
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            padding: 3rem;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
+            transform: rotate(-45deg);
+            animation: shimmer 3s ease-in-out infinite;
         }
 
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 var(--space-lg);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        @keyframes shimmer {
+            0% { transform: rotate(-45deg) translateX(-100%); }
+            100% { transform: rotate(-45deg) translateX(100%); }
         }
-
+        
         .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            border-radius: 1.5rem;
             display: flex;
             align-items: center;
-            gap: var(--space-md);
-            font-size: 1.25rem;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
+            font-size: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .company-name {
+            font-size: 1.75rem;
             font-weight: 700;
-            color: var(--text-primary);
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: var(--radius-md);
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            color: white;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: var(--space-xl);
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
-        }
-
-        .btn {
-            padding: var(--space-md) var(--space-lg);
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--glass-border);
-        }
-
-        .btn-ghost:hover {
-            background: var(--glass-subtle);
-            color: var(--text-primary);
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: var(--space-3xl) var(--space-lg);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
+            z-index: 1;
         }
-
-        .hero-content {
-            max-width: 800px;
-            z-index: 2;
+        
+        .tagline {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
             position: relative;
+            z-index: 1;
         }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-sm);
-            background: var(--glass-light);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-2xl);
-            padding: var(--space-sm) var(--space-lg);
-            font-size: 0.875rem;
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
             font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-xl);
-            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 1;
         }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: var(--space-lg);
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--brand-primary) 50%, var(--brand-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-2xl);
-            line-height: 1.6;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: var(--space-lg);
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-large {
-            padding: var(--space-lg) var(--space-2xl);
-            font-size: 1.125rem;
-        }
-
-        /* PWA Install Banner */
-        .pwa-install {
-            position: fixed;
-            bottom: var(--space-lg);
-            left: var(--space-lg);
-            right: var(--space-lg);
-            background: var(--glass-medium);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: var(--space-lg);
-            display: none;
-            align-items: center;
-            gap: var(--space-md);
-            box-shadow: var(--shadow-xl);
-            z-index: 1000;
-            animation: slideInUp 0.3s ease-out;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .pwa-content {
-            flex: 1;
-        }
-
-        .pwa-title {
+        
+        .manual-link {
+            color: #8b5cf6;
+            text-decoration: none;
             font-weight: 600;
-            margin-bottom: var(--space-sm);
-        }
-
-        .pwa-description {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .pwa-actions {
-            display: flex;
-            gap: var(--space-md);
-        }
-
-        .pwa-btn {
-            padding: var(--space-md) var(--space-lg);
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .pwa-install-btn {
-            background: var(--gradient-primary);
-            color: white;
-        }
-
-        .pwa-close-btn {
-            background: var(--glass-subtle);
-            color: var(--text-secondary);
-            border: 1px solid var(--glass-border);
-        }
-
-        /* Features Grid */
-        .features {
-            padding: var(--space-3xl) var(--space-lg);
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-2xl);
-            margin-top: var(--space-2xl);
-        }
-
-        .feature-card {
-            background: var(--glass-light);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: var(--space-2xl);
-            text-align: center;
-            box-shadow: var(--shadow-lg);
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-2xl);
+        
+        .manual-link:hover {
+            color: #a855f7;
+            text-decoration: underline;
         }
-
-        .feature-icon {
-            width: 4rem;
-            height: 4rem;
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto var(--space-lg);
-            font-size: 2rem;
-            color: white;
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
-
-        .feature-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: var(--space-md);
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #10b981);
+            border-radius: 2px;
+            width: 0%;
+            animation: loadProgress 3s ease-in-out forwards;
         }
-
-        .feature-description {
-            color: var(--text-secondary);
-            line-height: 1.6;
+        
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
         }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .hero-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .pwa-install {
-                left: var(--space-md);
-                right: var(--space-md);
-                bottom: var(--space-md);
-            }
-            
-            .pwa-actions {
-                flex-direction: column;
-            }
-        }
-
-        /* Offline indicator */
-        .offline-indicator {
-            position: fixed;
-            top: 4rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--brand-danger);
-            color: white;
-            padding: var(--space-sm) var(--space-lg);
-            border-radius: var(--radius-md);
+        
+        .feature-list {
+            text-align: left;
             font-size: 0.875rem;
-            font-weight: 600;
-            display: none;
-            z-index: 1001;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 1.5rem 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-list li {
+            margin: 0.5rem 0;
+            list-style: none;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .feature-list li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 0;
         }
 
-        .update-available {
-            position: fixed;
-            top: 4rem;
-            right: var(--space-lg);
-            background: var(--brand-accent);
-            color: white;
-            padding: var(--space-sm) var(--space-lg);
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            cursor: pointer;
-            display: none;
-            z-index: 1001;
+        /* Mobile responsive */
+        @media (max-width: 480px) {
+            .loading-container {
+                margin: 1rem;
+                padding: 2rem;
+                border-radius: 1.5rem;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+            
+            .company-name {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="./" class="logo">
-                <div class="logo-icon" id="nav-logo">🧠</div>
-                SmartFinanceAI
-            </a>
-            
-            <div class="nav-links">
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#pricing" class="nav-link">Pricing</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </div>
-            
-            <div class="nav-actions">
-                <a href="./login.html" class="btn btn-ghost">Sign In</a>
-                <a href="./register.html" class="btn btn-primary">Get Started</a>
-            </div>
+    <div class="loading-container">
+        <div class="logo">🧠</div>
+        <h1 class="company-name">SmartFinanceAI</h1>
+        <p class="tagline">Your Intelligent Financial Operating System</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">
-                <span>🚀</span>
-                Now available as a Progressive Web App
-            </div>
+        
+        <div class="spinner"></div>
+        <div class="loading-text">Initializing secure login...</div>
+        
+        <ul class="feature-list">
+            <li>AI-Powered Financial Coaching</li>
+            <li>Multi-Country Banking Support</li>
+            <li>Biometric Authentication</li>
+            <li>Real-time Financial Intelligence</li>
+        </ul>
+        
+        <p>If you're not redirected automatically, 
+           <a href="./src/auth/login.html" class="manual-link">click here to login</a>
+        </p>
+    </div>
+    
+    <script>
+        // Enhanced redirect with loading simulation
+        let progress = 0;
+        const loadingMessages = [
+            'Loading SmartFinanceAI...',
+            'Initializing secure systems...',
+            'Preparing your financial dashboard...',
+            'Almost ready...'
+        ];
+        
+        const loadingText = document.querySelector('.loading-text');
+        
+        function updateLoadingMessage() {
+            const messageIndex = Math.floor(progress / 25);
+            if (messageIndex < loadingMessages.length) {
+                loadingText.textContent = loadingMessages[messageIndex];
+            }
+        }
+        
+        const loadingInterval = setInterval(() => {
+            progress += 2;
+            updateLoadingMessage();
             
-            <h1 class="hero-title">
-                Transform Your Financial Future with AI
-            </h1>
-            
-            <p class="hero-subtitle">
-                Get personalized investment insights, track your portfolio performance, 
-                and make smarter financial decisions with our AI-powered platform.
-            </p>
-            
-            <div class="hero-actions">
-                <a href="./register.html" class="btn btn-primary btn-large">
-                    <span>🧠</span>
-                    Start Free Trial
-                </a>
-                <a href="./login.html" class="btn btn-ghost btn-large">
-                    <span>📱</span>
-                    Try Demo
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon" style="background: var(--gradient-primary);">🧠</div>
-                <h3 class="feature-title">AI-Powered Insights</h3>
-                <p class="feature-description">
-                    Get personalized financial advice powered by advanced machine learning algorithms
-                    that analyze market trends and your spending patterns.
-                </p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon" style="background: var(--gradient-secondary);">📊</div>
-                <h3 class="feature-title">Portfolio Tracking</h3>
-                <p class="feature-description">
-                    Monitor your investments in real-time with comprehensive analytics and 
-                    performance metrics
+            if (progress >= 100) {
+                clearInterval(loadingInterval);
+                loadingText.textContent = 'Redirecting to login...';
+                setTimeout(() => {
+                    window.location.href = './src/auth/login.html';
+                }, 500);
+            }
+        }, 60);
+        
+        // Fallback redirect in case everything else fails
+        setTimeout(() => {
+            window.location.href = './src/auth/login.html';
+        }, 4000);
+        
+        // Handle manual link click
+        document.querySelector('.manual-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            clearInterval(loadingInterval);
+            window.location.href = './src/auth/login.html';
+        });
+        
+        console.log('🧠 SmartFinanceAI Loading...');
+        console.log('📱 Redirecting to: ./src/auth/login.html');
+    </script>
+</body>
+</html>
