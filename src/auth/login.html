@@ -2,193 +2,130 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartFinanceAI - Login</title>
-    <link rel="manifest" href="../manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - SmartFinanceAI</title>
+    <meta name="description" content="Sign in to your SmartFinanceAI account">
+    
+    <!-- PWA Meta -->
     <meta name="theme-color" content="#8b5cf6">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Link to main CSS -->
+    <link rel="stylesheet" href="../styles/main.css">
+    
     <style>
-        /* CSS Variables for Premium Design System */
-        :root {
-            --primary-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-premium: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.15) 50%, rgba(147, 51, 234, 0.15) 100%);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-premium-border: rgba(255, 255, 255, 0.2);
-            --text-primary: rgba(255, 255, 255, 0.9);
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-muted: rgba(255, 255, 255, 0.5);
-            --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-            --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
-            --gradient-green: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-            --gradient-red: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
-            --success: #10b981;
-            --error: #ef4444;
-            --warning: #f59e0b;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--primary-bg);
-            color: var(--text-primary);
+        /* Page-specific styles */
+        .auth-container {
             min-height: 100vh;
-            overflow-x: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: var(--space-lg);
+            background: var(--gradient-bg);
         }
 
-        /* Glass Effects */
-        .glass-premium {
-            background: var(--glass-premium);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-premium-border);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--glass-light);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Background Decorative Elements */
-        .bg-decoration {
-            position: fixed;
+        .auth-card::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
         }
 
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.1;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .bg-circle:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            background: var(--gradient-purple);
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .bg-circle:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            background: var(--gradient-blue);
-            top: 60%;
-            right: 10%;
-            animation-delay: 5s;
-        }
-
-        .bg-circle:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            background: var(--gradient-green);
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 10s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* Login Container */
-        .login-container {
-            width: 100%;
-            max-width: 480px;
-            padding: 48px 40px;
-            border-radius: 24px;
+        .auth-header {
             text-align: center;
-            position: relative;
-            backdrop-filter: blur(20px);
+            margin-bottom: var(--space-2xl);
         }
 
-        /* Logo Section */
-        .logo-section {
-            margin-bottom: 40px;
-        }
-
-        .logo-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: var(--gradient-green);
-            border-radius: 20px;
+        .auth-logo {
+            width: 4rem;
+            height: 4rem;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            font-weight: bold;
+            font-size: 2rem;
             color: white;
-            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+            margin: 0 auto var(--space-lg);
+            box-shadow: var(--shadow-lg);
         }
 
-        .app-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .auth-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
         }
 
-        .app-subtitle {
-            font-size: 16px;
+        .auth-subtitle {
             color: var(--text-secondary);
-            margin-bottom: 32px;
+            font-size: 0.875rem;
         }
 
-        /* Form Styles */
-        .login-form {
-            margin-bottom: 32px;
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
         }
 
         .form-group {
-            margin-bottom: 24px;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
         }
 
         .form-label {
-            display: block;
-            font-size: 14px;
             font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
         }
 
         .form-input {
             width: 100%;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            padding: var(--space-lg);
+            background: var(--glass-subtle);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            min-height: 48px;
         }
 
         .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--text-quaternary);
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--brand-primary);
+            background: var(--glass-light);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .form-input:invalid {
+            border-color: var(--brand-danger);
+        }
+
+        .form-input:invalid:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
         }
 
         .password-field {
@@ -197,84 +134,78 @@
 
         .password-toggle {
             position: absolute;
-            right: 16px;
+            right: var(--space-lg);
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-secondary);
             cursor: pointer;
-            font-size: 18px;
-            padding: 4px;
+            padding: var(--space-sm);
+            font-size: 1.125rem;
+            transition: color 0.2s ease;
         }
 
         .password-toggle:hover {
-            color: white;
+            color: var(--text-primary);
         }
 
-        /* Buttons */
-        .btn {
+        .forgot-password {
+            text-align: right;
+            margin-top: var(--space-sm);
+        }
+
+        .forgot-password a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-password a:hover {
+            color: var(--brand-secondary);
+        }
+
+        .auth-btn {
             width: 100%;
-            padding: 16px 24px;
+            padding: var(--space-lg);
+            background: var(--gradient-primary);
+            color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: var(--radius-md);
             font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            min-height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: var(--space-sm);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
         }
 
-        .btn-primary {
-            background: var(--gradient-purple);
-            color: white;
-        }
-
-        .btn-primary:hover {
+        .auth-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .auth-btn:active {
+            transform: translateY(0);
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .btn-biometric {
-            background: var(--gradient-blue);
-            color: white;
-        }
-
-        .btn-biometric:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
+        .auth-btn:disabled {
+            opacity: 0.7;
             cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* Social Login */
-        .social-login {
-            margin-bottom: 32px;
+            transform: none;
         }
 
         .divider {
             display: flex;
             align-items: center;
-            margin: 24px 0;
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
         }
 
         .divider::before,
@@ -282,85 +213,128 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--glass-border);
         }
 
-        .divider span {
-            padding: 0 16px;
-            color: var(--text-muted);
-            font-size: 14px;
+        .divider-text {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+            font-weight: 500;
         }
 
         .social-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
         }
 
         .social-btn {
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: white;
+            width: 100%;
+            padding: var(--space-lg);
+            background: var(--glass-subtle);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 20px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            min-height: 48px;
         }
 
         .social-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--glass-light);
             transform: translateY(-1px);
         }
 
-        /* Footer Links */
-        .footer-links {
-            margin-top: 32px;
+        .biometric-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: white;
         }
 
-        .footer-link {
-            color: var(--text-muted);
+        .biometric-btn:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--space-xl);
+            padding-top: var(--space-xl);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .auth-footer p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .auth-footer a {
+            color: var(--brand-primary);
             text-decoration: none;
-            font-size: 14px;
-            margin: 0 12px;
-            transition: color 0.3s ease;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
 
-        .footer-link:hover {
-            color: #8b5cf6;
+        .auth-footer a:hover {
+            color: var(--brand-secondary);
         }
 
-        /* Error/Success Messages */
-        .message {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
+        .back-home {
+            position: absolute;
+            top: var(--space-lg);
+            left: var(--space-lg);
+            background: var(--glass-light);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .back-home:hover {
+            color: var(--text-primary);
+            background: var(--glass-medium);
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--brand-danger);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
             display: none;
         }
 
-        .message.error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-        }
-
-        .message.success {
+        .success-message {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #10b981;
+            color: var(--brand-accent);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
+            display: none;
         }
 
-        .message.warning {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            color: #f59e0b;
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
+        /* Loading animation */
+        .loading-spinner {
+            width: 1rem;
+            height: 1rem;
             border: 2px solid transparent;
             border-top: 2px solid currentColor;
             border-radius: 50%;
@@ -368,548 +342,435 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
-        /* Country Selector */
-        .country-info {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            color: #10b981;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .login-container {
-                padding: 32px 24px;
-                margin: 10px;
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: var(--space-md);
             }
-
-            .logo-icon {
-                width: 64px;
-                height: 64px;
-                font-size: 24px;
+            
+            .auth-card {
+                padding: var(--space-xl);
             }
-
-            .app-title {
-                font-size: 28px;
-            }
-
-            .social-buttons {
-                grid-template-columns: 1fr;
+            
+            .auth-title {
+                font-size: 1.5rem;
             }
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
+        /* Animation for card entrance */
+        .auth-card {
+            animation: slideInUp 0.6s ease-out;
         }
 
-        @keyframes fadeIn {
+        @keyframes slideInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
+        /* Demo mode styling */
+        .demo-notice {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--brand-warning);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <!-- Background Decoration -->
-    <div class="bg-decoration">
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-        <div class="bg-circle"></div>
-    </div>
+    <!-- Back to Home -->
+    <a href="../../index.html" class="back-home">
+        <span>←</span>
+        Back to Home
+    </a>
 
-    <!-- Login Container -->
-    <div class="login-container glass-premium fade-in">
-        <!-- Logo Section -->
-        <div class="logo-section">
-            <div class="logo-icon">$</div>
-            <h1 class="app-title">SmartFinanceAI</h1>
-            <p class="app-subtitle">Your Global Financial Operating System</p>
-        </div>
-
-        <!-- Country Detection -->
-        <div class="country-info" id="countryInfo">
-            <span>🌏</span>
-            <span>Detected location: <strong id="detectedCountry">New Zealand</strong></span>
-        </div>
-
-        <!-- Messages -->
-        <div class="message" id="messageContainer">
-            <span id="messageText"></span>
-        </div>
-
-        <!-- Login Form -->
-        <form class="login-form" id="loginForm">
-            <div class="form-group">
-                <label class="form-label" for="email">Email Address</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    class="form-input" 
-                    placeholder="Enter your email address"
-                    required
-                    autocomplete="email"
-                >
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">💰</div>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to your SmartFinanceAI account</p>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <div class="password-field">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        class="form-input" 
-                        placeholder="Enter your password"
-                        required
-                        autocomplete="current-password"
-                    >
-                    <button type="button" class="password-toggle" id="passwordToggle">
-                        👁️
+            <!-- Demo Notice -->
+            <div class="demo-notice">
+                <strong>Demo Mode:</strong> Use any email/password or try biometric authentication
+            </div>
+
+            <!-- Error/Success Messages -->
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+
+            <div class="auth-form">
+                <!-- Email/Password Form -->
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            class="form-input" 
+                            placeholder="your.email@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="password-field">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                            <button 
+                                type="button" 
+                                class="password-toggle" 
+                                onclick="togglePassword()"
+                                aria-label="Toggle password visibility"
+                            >
+                                <span id="password-icon">👁️</span>
+                            </button>
+                        </div>
+                        <div class="forgot-password">
+                            <a href="./forgot-password.html">Forgot password?</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="auth-btn" id="login-btn">
+                        <span id="login-text">Sign In</span>
+                        <div id="login-spinner" class="loading-spinner" style="display: none;"></div>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span class="divider-text">Or continue with</span>
+                </div>
+
+                <!-- Social/Biometric Login -->
+                <div class="social-buttons">
+                    <button class="social-btn biometric-btn" onclick="handleBiometricLogin()">
+                        <span>🔒</span>
+                        Use Biometric Authentication
+                    </button>
+                    
+                    <button class="social-btn" onclick="handleGoogleLogin()">
+                        <span>🔍</span>
+                        Continue with Google
+                    </button>
+                    
+                    <button class="social-btn" onclick="handleAppleLogin()">
+                        <span>🍎</span>
+                        Continue with Apple
                     </button>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary" id="loginBtn">
-                <span class="btn-text">Sign In</span>
-            </button>
-        </form>
-
-        <!-- Biometric Login -->
-        <div id="biometricSection">
-            <div class="divider">
-                <span>or</span>
+            <div class="auth-footer">
+                <p>Don't have an account?</p>
+                <a href="./register.html">Create Account</a>
             </div>
-
-            <button type="button" class="btn btn-biometric" id="biometricBtn">
-                <span>🔐</span>
-                <span>Sign in with Biometrics</span>
-            </button>
-        </div>
-
-        <!-- Social Login -->
-        <div class="social-login">
-            <div class="divider">
-                <span>or continue with</span>
-            </div>
-
-            <div class="social-buttons">
-                <button type="button" class="social-btn" data-provider="google">
-                    <span>🇬</span>
-                </button>
-                <button type="button" class="social-btn" data-provider="apple">
-                    <span>🍎</span>
-                </button>
-                <button type="button" class="social-btn" data-provider="microsoft">
-                    <span>Ⓜ️</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Footer Links -->
-        <div class="footer-links">
-            <a href="register.html" class="footer-link">Create Account</a>
-            <a href="forgot-password.html" class="footer-link">Forgot Password?</a>
-            <a href="help.html" class="footer-link">Help</a>
         </div>
     </div>
 
     <script>
-        // Application State
-        let isLoading = false;
-        let biometricAvailable = false;
+        console.log('🔐 SmartFinanceAI Authentication Loading...');
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            detectCountry();
-            checkBiometricSupport();
-            setupEventListeners();
-            checkExistingSession();
-        });
-
-        // Country Detection
-        async function detectCountry() {
-            try {
-                // Try to detect country from various sources
-                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const locale = navigator.language || 'en-US';
-                
-                let detectedCountry = 'Unknown';
-                
-                // Basic timezone to country mapping
-                if (timezone.includes('Auckland') || timezone.includes('New_Zealand')) {
-                    detectedCountry = 'New Zealand';
-                } else if (timezone.includes('Sydney') || timezone.includes('Australia')) {
-                    detectedCountry = 'Australia';
-                } else if (timezone.includes('London') || timezone.includes('Europe')) {
-                    detectedCountry = 'United Kingdom';
-                } else if (timezone.includes('New_York') || timezone.includes('America')) {
-                    detectedCountry = 'United States';
-                }
-                
-                document.getElementById('detectedCountry').textContent = detectedCountry;
-                
-                // Store for onboarding
-                localStorage.setItem('smartfinance_detected_country', detectedCountry);
-                localStorage.setItem('smartfinance_timezone', timezone);
-                localStorage.setItem('smartfinance_locale', locale);
-                
-            } catch (error) {
-                console.log('Country detection failed:', error);
+        // Authentication Controller
+        class AuthController {
+            constructor() {
+                this.isLoading = false;
+                this.biometricSupported = this.checkBiometricSupport();
+                this.init();
             }
-        }
 
-        // Biometric Support Check
-        async function checkBiometricSupport() {
-            if ('PublicKeyCredential' in window && 'credentials' in navigator) {
-                try {
-                    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-                    biometricAvailable = available;
-                    
-                    if (!available) {
-                        document.getElementById('biometricSection').style.display = 'none';
+            init() {
+                this.setupEventListeners();
+                this.checkExistingSession();
+                console.log('✅ Authentication system ready');
+            }
+
+            setupEventListeners() {
+                // Auto-focus first input
+                document.getElementById('email').focus();
+
+                // Enter key handling
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !this.isLoading) {
+                        this.handleLogin(e);
                     }
-                } catch (error) {
-                    console.log('Biometric check failed:', error);
-                    document.getElementById('biometricSection').style.display = 'none';
-                }
-            } else {
-                document.getElementById('biometricSection').style.display = 'none';
-            }
-        }
-
-        // Event Listeners
-        function setupEventListeners() {
-            // Form submission
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
-            
-            // Password toggle
-            document.getElementById('passwordToggle').addEventListener('click', togglePassword);
-            
-            // Biometric login
-            document.getElementById('biometricBtn').addEventListener('click', handleBiometricLogin);
-            
-            // Social login buttons
-            document.querySelectorAll('.social-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const provider = e.target.closest('.social-btn').dataset.provider;
-                    handleSocialLogin(provider);
                 });
-            });
-            
-            // Input validation
-            document.getElementById('email').addEventListener('input', validateEmail);
-            document.getElementById('password').addEventListener('input', validatePassword);
-        }
 
-        // Check for existing session
-        function checkExistingSession() {
-            const existingAuth = localStorage.getItem('smartfinance_auth');
-            const biometricEnabled = localStorage.getItem('smartfinance_biometric_enabled');
-            
-            if (existingAuth) {
-                try {
-                    const authData = JSON.parse(existingAuth);
-                    if (authData.expires && authData.expires > Date.now()) {
-                        // Valid session exists
-                        showMessage('Existing session found. Redirecting...', 'success');
-                        setTimeout(() => {
-                            window.location.href = '../dashboard.html';
-                        }, 1500);
-                        return;
-                    }
-                } catch (error) {
-                    localStorage.removeItem('smartfinance_auth');
-                }
+                // Form validation
+                const inputs = document.querySelectorAll('.form-input');
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => this.validateInput(input));
+                    input.addEventListener('blur', () => this.validateInput(input));
+                });
             }
-            
-            // Pre-fill email if remembered
-            const rememberedEmail = localStorage.getItem('smartfinance_remembered_email');
-            if (rememberedEmail) {
-                document.getElementById('email').value = rememberedEmail;
-            }
-        }
 
-        // Login Handler
-        async function handleLogin(e) {
-            e.preventDefault();
-            
-            if (isLoading) return;
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
-            if (!validateForm(email, password)) return;
-            
-            setLoading(true);
-            
-            try {
-                // Simulate API call - replace with real authentication
-                const response = await authenticateUser(email, password);
-                
-                if (response.success) {
-                    // Store authentication data
-                    const authData = {
-                        token: response.token,
-                        user: response.user,
-                        expires: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
-                        loginMethod: 'password'
-                    };
-                    
-                    localStorage.setItem('smartfinance_auth', JSON.stringify(authData));
-                    localStorage.setItem('smartfinance_remembered_email', email);
-                    
-                    showMessage('Login successful! Redirecting...', 'success');
-                    
-                    // Redirect based on user status
+            validateInput(input) {
+                const isValid = input.checkValidity();
+                input.style.borderColor = isValid ? 'var(--glass-border)' : 'var(--brand-danger)';
+                return isValid;
+            }
+
+            checkExistingSession() {
+                const savedUser = localStorage.getItem('smartfinance_user');
+                if (savedUser) {
+                    console.log('📱 Existing session found');
+                    this.showMessage('Welcome back! Redirecting to dashboard...', 'success');
                     setTimeout(() => {
-                        if (response.user.isFirstLogin) {
-                            window.location.href = '../onboarding/welcome.html';
-                        } else {
-                            window.location.href = '../dashboard.html';
-                        }
+                        window.location.href = '../core/dashboard.html';
                     }, 1500);
-                    
-                } else {
-                    showMessage(response.message || 'Invalid email or password', 'error');
                 }
-                
-            } catch (error) {
-                console.error('Login error:', error);
-                showMessage('Login failed. Please try again.', 'error');
             }
-            
-            setLoading(false);
-        }
 
-        // Biometric Login Handler
-        async function handleBiometricLogin() {
-            if (!biometricAvailable) {
-                showMessage('Biometric authentication not available', 'warning');
-                return;
-            }
-            
-            if (isLoading) return;
-            setLoading(true, 'biometricBtn');
-            
-            try {
-                // Check if biometric is set up
-                const biometricData = localStorage.getItem('smartfinance_biometric_data');
-                if (!biometricData) {
-                    showMessage('Biometric authentication not set up. Please log in with password first.', 'warning');
-                    setLoading(false, 'biometricBtn');
+            async handleLogin(event) {
+                if (event) event.preventDefault();
+                
+                if (this.isLoading) return;
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (!email || !password) {
+                    this.showMessage('Please enter both email and password', 'error');
                     return;
                 }
+
+                this.setLoading(true);
+                console.log('🔑 Attempting login...');
+
+                try {
+                    // Simulate authentication (replace with real auth)
+                    await this.simulateAuth(email, password);
+                    
+                    // Store user session
+                    const userData = {
+                        email: email,
+                        name: this.getNameFromEmail(email),
+                        loginTime: new Date().toISOString(),
+                        method: 'password'
+                    };
+
+                    localStorage.setItem('smartfinance_user', JSON.stringify(userData));
+                    
+                    this.showMessage('Login successful! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '../core/dashboard.html';
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('❌ Login failed:', error);
+                    this.showMessage(error.message || 'Login failed. Please try again.', 'error');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            async simulateAuth(email, password) {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                // Perform biometric authentication
-                const credential = await navigator.credentials.get({
-                    publicKey: {
-                        challenge: new Uint8Array(32),
-                        timeout: 60000,
-                        userVerification: "required"
+                // Demo mode - accept any credentials
+                if (email && password.length >= 6) {
+                    return Promise.resolve();
+                } else {
+                    throw new Error('Password must be at least 6 characters');
+                }
+            }
+
+            async handleBiometricLogin() {
+                if (!this.biometricSupported) {
+                    this.showMessage('Biometric authentication not supported on this device', 'error');
+                    return;
+                }
+
+                console.log('🔒 Attempting biometric login...');
+                this.setLoading(true, 'biometric');
+
+                try {
+                    // Check if WebAuthn is available
+                    if (window.PublicKeyCredential) {
+                        // Simulate biometric authentication
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        
+                        const userData = {
+                            email: 'biometric@smartfinanceai.com',
+                            name: 'Biometric User',
+                            loginTime: new Date().toISOString(),
+                            method: 'biometric'
+                        };
+
+                        localStorage.setItem('smartfinance_user', JSON.stringify(userData));
+                        
+                        this.showMessage('Biometric authentication successful!', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = '../core/dashboard.html';
+                        }, 1500);
+                    } else {
+                        throw new Error('WebAuthn not supported');
                     }
-                });
+                } catch (error) {
+                    console.error('❌ Biometric login failed:', error);
+                    this.showMessage('Biometric authentication failed. Please try password login.', 'error');
+                } finally {
+                    this.setLoading(false, 'biometric');
+                }
+            }
+
+            handleGoogleLogin() {
+                console.log('🔍 Google login clicked');
+                this.showMessage('Google login would open here in production', 'info');
                 
-                if (credential) {
-                    // Simulate successful biometric auth
-                    const authData = JSON.parse(biometricData);
-                    authData.expires = Date.now() + (7 * 24 * 60 * 60 * 1000);
-                    authData.loginMethod = 'biometric';
-                    
-                    localStorage.setItem('smartfinance_auth', JSON.stringify(authData));
-                    
-                    showMessage('Biometric authentication successful!', 'success');
+                // Simulate successful Google login
+                setTimeout(() => {
+                    const userData = {
+                        email: 'user@gmail.com',
+                        name: 'Google User',
+                        loginTime: new Date().toISOString(),
+                        method: 'google'
+                    };
+
+                    localStorage.setItem('smartfinance_user', JSON.stringify(userData));
+                    this.showMessage('Google login successful!', 'success');
                     
                     setTimeout(() => {
-                        window.location.href = '../dashboard.html';
+                        window.location.href = '../core/dashboard.html';
                     }, 1500);
-                }
+                }, 1000);
+            }
+
+            handleAppleLogin() {
+                console.log('🍎 Apple login clicked');
+                this.showMessage('Apple login would open here in production', 'info');
                 
-            } catch (error) {
-                console.error('Biometric auth error:', error);
-                showMessage('Biometric authentication failed. Please try password login.', 'error');
-            }
-            
-            setLoading(false, 'biometricBtn');
-        }
-
-        // Social Login Handler
-        async function handleSocialLogin(provider) {
-            if (isLoading) return;
-            
-            showMessage(`Redirecting to ${provider} authentication...`, 'success');
-            
-            // Simulate social login - replace with real OAuth
-            setTimeout(() => {
-                const authData = {
-                    token: 'social_token_' + Date.now(),
-                    user: {
-                        id: 'social_' + Date.now(),
-                        email: `user@${provider}.com`,
-                        name: 'Social User',
-                        provider: provider,
-                        isFirstLogin: true
-                    },
-                    expires: Date.now() + (7 * 24 * 60 * 60 * 1000),
-                    loginMethod: 'social_' + provider
-                };
-                
-                localStorage.setItem('smartfinance_auth', JSON.stringify(authData));
-                window.location.href = '../onboarding/welcome.html';
-            }, 2000);
-        }
-
-        // Authentication API Simulation
-        async function authenticateUser(email, password) {
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Demo accounts for testing
-            const demoAccounts = {
-                'demo@smartfinance.ai': {
-                    password: 'demo123',
-                    user: {
-                        id: 'demo_user',
-                        email: 'demo@smartfinance.ai',
-                        name: 'Demo User',
-                        country: 'New Zealand',
-                        currency: 'NZD',
-                        isFirstLogin: false
-                    }
-                },
-                'new@smartfinance.ai': {
-                    password: 'new123',
-                    user: {
-                        id: 'new_user',
-                        email: 'new@smartfinance.ai',
-                        name: 'New User',
-                        country: null,
-                        currency: null,
-                        isFirstLogin: true
-                    }
-                }
-            };
-            
-            const account = demoAccounts[email.toLowerCase()];
-            
-            if (account && account.password === password) {
-                return {
-                    success: true,
-                    token: 'auth_token_' + Date.now(),
-                    user: account.user
-                };
-            } else {
-                return {
-                    success: false,
-                    message: 'Invalid email or password'
-                };
-            }
-        }
-
-        // Utility Functions
-        function validateForm(email, password) {
-            if (!email || !isValidEmail(email)) {
-                showMessage('Please enter a valid email address', 'error');
-                return false;
-            }
-            
-            if (!password || password.length < 6) {
-                showMessage('Password must be at least 6 characters', 'error');
-                return false;
-            }
-            
-            return true;
-        }
-
-        function validateEmail() {
-            const email = document.getElementById('email').value;
-            const emailField = document.getElementById('email');
-            
-            if (email && !isValidEmail(email)) {
-                emailField.style.borderColor = '#ef4444';
-            } else {
-                emailField.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            }
-        }
-
-        function validatePassword() {
-            const password = document.getElementById('password').value;
-            const passwordField = document.getElementById('password');
-            
-            if (password && password.length < 6) {
-                passwordField.style.borderColor = '#ef4444';
-            } else {
-                passwordField.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            }
-        }
-
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        function togglePassword() {
-            const passwordField = document.getElementById('password');
-            const passwordToggle = document.getElementById('passwordToggle');
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                passwordToggle.textContent = '👁️‍🗨️';
-            } else {
-                passwordField.type = 'password';
-                passwordToggle.textContent = '👁️';
-            }
-        }
-
-        function setLoading(loading, buttonId = 'loginBtn') {
-            isLoading = loading;
-            const button = document.getElementById(buttonId);
-            const btnText = button.querySelector('.btn-text') || button;
-            
-            if (loading) {
-                button.disabled = true;
-                const originalText = btnText.textContent;
-                btnText.innerHTML = '<div class="spinner"></div> Signing in...';
-                button.dataset.originalText = originalText;
-            } else {
-                button.disabled = false;
-                const originalText = button.dataset.originalText || 'Sign In';
-                btnText.textContent = originalText;
-            }
-        }
-
-        function showMessage(message, type = 'error') {
-            const messageContainer = document.getElementById('messageContainer');
-            const messageText = document.getElementById('messageText');
-            
-            messageText.textContent = message;
-            messageContainer.className = `message ${type}`;
-            messageContainer.style.display = 'block';
-            
-            // Auto-hide success/warning messages
-            if (type === 'success' || type === 'warning') {
+                // Simulate successful Apple login
                 setTimeout(() => {
-                    messageContainer.style.display = 'none';
+                    const userData = {
+                        email: 'user@icloud.com',
+                        name: 'Apple User',
+                        loginTime: new Date().toISOString(),
+                        method: 'apple'
+                    };
+
+                    localStorage.setItem('smartfinance_user', JSON.stringify(userData));
+                    this.showMessage('Apple login successful!', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = '../core/dashboard.html';
+                    }, 1500);
+                }, 1000);
+            }
+
+            checkBiometricSupport() {
+                return window.PublicKeyCredential && window.navigator.credentials;
+            }
+
+            getNameFromEmail(email) {
+                const name = email.split('@')[0];
+                return name.charAt(0).toUpperCase() + name.slice(1);
+            }
+
+            setLoading(loading, type = 'login') {
+                this.isLoading = loading;
+                
+                if (type === 'login') {
+                    const btn = document.getElementById('login-btn');
+                    const text = document.getElementById('login-text');
+                    const spinner = document.getElementById('login-spinner');
+                    
+                    btn.disabled = loading;
+                    text.style.display = loading ? 'none' : 'inline';
+                    spinner.style.display = loading ? 'inline-block' : 'none';
+                }
+            }
+
+            showMessage(message, type = 'info') {
+                const errorEl = document.getElementById('error-message');
+                const successEl = document.getElementById('success-message');
+                
+                // Hide all messages first
+                errorEl.style.display = 'none';
+                successEl.style.display = 'none';
+                
+                if (type === 'error') {
+                    errorEl.textContent = message;
+                    errorEl.style.display = 'block';
+                } else if (type === 'success') {
+                    successEl.textContent = message;
+                    successEl.style.display = 'block';
+                } else {
+                    // Info messages go to console for now
+                    console.log(`ℹ️ ${message}`);
+                }
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    errorEl.style.display = 'none';
+                    successEl.style.display = 'none';
                 }, 5000);
             }
         }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !isLoading) {
-                const activeElement = document.activeElement;
-                if (activeElement
+        // Global functions for HTML onclick handlers
+        function handleLogin(event) {
+            window.authController.handleLogin(event);
+        }
+
+        function handleBiometricLogin() {
+            window.authController.handleBiometricLogin();
+        }
+
+        function handleGoogleLogin() {
+            window.authController.handleGoogleLogin();
+        }
+
+        function handleAppleLogin() {
+            window.authController.handleAppleLogin();
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('password-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.textContent = '👁️';
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.authController = new AuthController();
+            console.log('🚀 SmartFinanceAI Authentication Ready!');
+        });
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            console.log('👋 Leaving authentication page');
+        });
+    </script>
+</body>
+</html>
