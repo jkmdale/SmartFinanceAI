@@ -1,0 +1,20 @@
+/**
+ * SmartFinanceAI - Dashboard Styles
+ * Complete styling system for dashboard and widgets
+ */
+
+/* Import base styles */
+@import url('/styles/main.css');
+@import url('/styles/variables.css');
+
+/* Dashboard Layout */
+.dashboard-page {
+  background: var(--bg-primary);
+  min-height: 100vh;
+  color: var(--text-primary);
+}
+
+.main-content {
+  margin-top: 80px; /* Account for fixed navbar */
+  padding: 2rem;
+  max-width
