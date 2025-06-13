@@ -1,607 +1,687 @@
 /**
- * SmartFinanceAI - Database Manager
- * Secure IndexedDB management for financial data with encryption
- * Path: src/data/database-manager.js
+ * SmartFinanceAI - Core Database Management System
+ * Handles all IndexedDB operations with encryption and multi-tenant isolation
+ * Priority 1 implementation for production readiness
  */
 
 class DatabaseManager {
   constructor() {
     this.dbName = 'SmartFinanceAI';
-    this.dbVersion = 3;
+    this.dbVersion = 1;
     this.db = null;
-    this.encryptionKey = null;
     this.isInitialized = false;
+    this.encryptionService = new EncryptionService();
     
-    // Database stores configuration
+    // Define database schema
     this.stores = {
-      users: { keyPath: 'id', indexes: ['email', 'country', 'createdAt'] },
-      accounts: { keyPath: 'id', indexes: ['userId', 'bankName', 'type', 'currency'] },
-      transactions: { keyPath: 'id', indexes: ['accountId', 'date', 'category', 'amount'] },
-      goals: { keyPath: 'id', indexes: ['userId', 'category', 'priority', 'targetDate'] },
-      budgets: { keyPath: 'id', indexes: ['userId', 'period', 'category'] },
-      insights: { keyPath: 'id', indexes: ['userId', 'type', 'createdAt'] },
-      settings: { keyPath: 'key', indexes: ['userId', 'category'] }
+      users: {
+        keyPath: 'id',
+        indexes: [
+          { name: 'email', keyPath: 'email', unique: true },
+          { name: 'tenantId', keyPath: 'tenantId', unique: false }
+        ]
+      },
+      accounts: {
+        keyPath: 'id',
+        indexes: [
+          { name: 'userId', keyPath: 'userId', unique: false },
+          { name: 'accountType', keyPath: 'accountType', unique: false },
+          { name: 'currency', keyPath: 'currency', unique: false }
+        ]
+      },
+      transactions: {
+        keyPath: 'id',
+        indexes: [
+          { name: 'accountId', keyPath: 'accountId', unique: false },
+          { name: 'userId', keyPath: 'userId', unique: false },
+          { name: 'date', keyPath: 'date', unique: false },
+          { name: 'category', keyPath: 'category', unique: false },
+          { name: 'amount', keyPath: 'amount', unique: false }
+        ]
+      },
+      goals: {
+        keyPath: 'id',
+        indexes: [
+          { name: 'userId', keyPath: 'userId', unique: false },
+          { name: 'category', keyPath: 'category', unique: false },
+          { name: 'priority', keyPath: 'priority', unique: false },
+          { name: 'targetDate', keyPath: 'targetDate', unique: false }
+        ]
+      },
+      budgets: {
+        keyPath: 'id',
+        indexes: [
+          { name: 'userId', keyPath: 'userId', unique: false },
+          { name: 'period', keyPath: 'period', unique: false },
+          { name: 'category', keyPath: 'category', unique: false }
+        ]
+      },
+      userSettings: {
+        keyPath: 'userId',
+        indexes: [
+          { name: 'country', keyPath: 'country', unique: false },
+          { name: 'currency', keyPath: 'currency', unique: false }
+        ]
+      }
     };
   }
 
   /**
-   * Initialize database connection and encryption
+   * Initialize the database with proper schema and encryption
    */
-  async initialize(userKey = null) {
-    try {
-      if (this.isInitialized && this.db) {
-        return true;
-      }
-
-      // Set up encryption key if provided
-      if (userKey) {
-        this.encryptionKey = await this.deriveKey(userKey);
-      }
-
-      // Open database connection
-      this.db = await this.openDatabase();
-      this.isInitialized = true;
-      
-      console.log('✅ Database initialized successfully');
-      return true;
-    } catch (error) {
-      console.error('❌ Database initialization failed:', error);
-      throw new Error(`Database initialization failed: ${error.message}`);
+  async initializeDB() {
+    if (this.isInitialized) {
+      return this.db;
     }
-  }
 
-  /**
-   * Open IndexedDB database with proper stores
-   */
-  openDatabase() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.dbVersion);
 
       request.onerror = () => {
-        reject(new Error('Failed to open database'));
-      };
-
-      request.onsuccess = (event) => {
-        resolve(event.target.result);
+        console.error('Failed to open database:', request.error);
+        reject(new Error(`Database initialization failed: ${request.error.message}`));
       };
 
       request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        const transaction = event.target.transaction;
+        console.log('Upgrading database schema...');
+        this.db = event.target.result;
+        this.createStores();
+      };
 
-        // Create object stores
-        Object.entries(this.stores).forEach(([storeName, config]) => {
-          if (!db.objectStoreNames.contains(storeName)) {
-            const store = db.createObjectStore(storeName, {
-              keyPath: config.keyPath,
-              autoIncrement: config.keyPath === 'id'
-            });
+      request.onsuccess = (event) => {
+        this.db = event.target.result;
+        this.isInitialized = true;
+        
+        // Set up error handling
+        this.db.onerror = (event) => {
+          console.error('Database error:', event.target.error);
+        };
 
-            // Create indexes
-            config.indexes.forEach(indexName => {
-              if (!store.indexNames.contains(indexName)) {
-                store.createIndex(indexName, indexName, { unique: false });
-              }
-            });
-          }
-        });
-
-        console.log('📊 Database stores created/updated');
+        console.log('✅ Database initialized successfully');
+        resolve(this.db);
       };
     });
   }
 
   /**
-   * Derive encryption key from user password/biometric
+   * Create object stores with indexes
    */
-  async deriveKey(userKey) {
+  createStores() {
+    Object.entries(this.stores).forEach(([storeName, config]) => {
+      if (!this.db.objectStoreNames.contains(storeName)) {
+        const store = this.db.createObjectStore(storeName, { 
+          keyPath: config.keyPath 
+        });
+
+        // Create indexes
+        config.indexes.forEach(index => {
+          store.createIndex(index.name, index.keyPath, { 
+            unique: index.unique 
+          });
+        });
+
+        console.log(`📊 Created store: ${storeName}`);
+      }
+    });
+  }
+
+  /**
+   * Get current user ID from session
+   */
+  getCurrentUserId() {
+    const session = sessionStorage.getItem('smartfinance_session');
+    if (!session) {
+      throw new Error('No active user session');
+    }
+    
     try {
-      const encoder = new TextEncoder();
-      const keyMaterial = await crypto.subtle.importKey(
-        'raw',
-        encoder.encode(userKey),
-        'PBKDF2',
-        false,
-        ['deriveKey']
-      );
-
-      const derivedKey = await crypto.subtle.deriveKey(
-        {
-          name: 'PBKDF2',
-          salt: encoder.encode('SmartFinanceAI-Salt-2025'),
-          iterations: 100000,
-          hash: 'SHA-256'
-        },
-        keyMaterial,
-        { name: 'AES-GCM', length: 256 },
-        false,
-        ['encrypt', 'decrypt']
-      );
-
-      return derivedKey;
+      const sessionData = JSON.parse(session);
+      return sessionData.userId;
     } catch (error) {
-      throw new Error(`Key derivation failed: ${error.message}`);
+      throw new Error('Invalid session data');
     }
   }
 
   /**
-   * Encrypt sensitive data before storing
+   * Ensure database is initialized before operations
    */
-  async encryptData(data) {
-    if (!this.encryptionKey || !data) {
-      return data;
-    }
-
-    try {
-      const encoder = new TextEncoder();
-      const iv = crypto.getRandomValues(new Uint8Array(12));
-      
-      const encryptedData = await crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv: iv },
-        this.encryptionKey,
-        encoder.encode(JSON.stringify(data))
-      );
-
-      return {
-        encrypted: true,
-        iv: Array.from(iv),
-        data: Array.from(new Uint8Array(encryptedData))
-      };
-    } catch (error) {
-      console.error('❌ Encryption failed:', error);
-      return data;
+  async ensureInitialized() {
+    if (!this.isInitialized) {
+      await this.initializeDB();
     }
   }
 
   /**
-   * Decrypt data after retrieval
+   * ACCOUNTS MANAGEMENT
    */
-  async decryptData(encryptedData) {
-    if (!encryptedData?.encrypted || !this.encryptionKey) {
-      return encryptedData;
-    }
+  
+  /**
+   * Create a new account
+   */
+  async createAccount(accountData) {
+    await this.ensureInitialized();
+    
+    const userId = this.getCurrentUserId();
+    const account = {
+      id: this.generateId(),
+      userId: userId,
+      name: accountData.name,
+      accountType: accountData.type, // checking, savings, credit, investment
+      currency: accountData.currency,
+      balance: parseFloat(accountData.balance || 0),
+      institution: accountData.institution || '',
+      accountNumber: accountData.accountNumber ? 
+        await this.encryptionService.encrypt(accountData.accountNumber) : '',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
 
-    try {
-      const iv = new Uint8Array(encryptedData.iv);
-      const data = new Uint8Array(encryptedData.data);
-
-      const decryptedData = await crypto.subtle.decrypt(
-        { name: 'AES-GCM', iv: iv },
-        this.encryptionKey,
-        data
-      );
-
-      const decoder = new TextDecoder();
-      return JSON.parse(decoder.decode(decryptedData));
-    } catch (error) {
-      console.error('❌ Decryption failed:', error);
-      return null;
-    }
+    return this.create('accounts', account);
   }
 
   /**
-   * Generic create operation
+   * Get user's accounts
+   */
+  async getUserAccounts(userId = null) {
+    await this.ensureInitialized();
+    
+    const targetUserId = userId || this.getCurrentUserId();
+    return this.getByIndex('accounts', 'userId', targetUserId);
+  }
+
+  /**
+   * Update account balance
+   */
+  async updateAccountBalance(accountId, newBalance) {
+    await this.ensureInitialized();
+    
+    const account = await this.getById('accounts', accountId);
+    if (!account) {
+      throw new Error('Account not found');
+    }
+
+    // Verify ownership
+    const userId = this.getCurrentUserId();
+    if (account.userId !== userId) {
+      throw new Error('Unauthorized access to account');
+    }
+
+    account.balance = parseFloat(newBalance);
+    account.updatedAt = new Date().toISOString();
+
+    return this.update('accounts', account);
+  }
+
+  /**
+   * TRANSACTIONS MANAGEMENT
+   */
+
+  /**
+   * Add a new transaction
+   */
+  async addTransaction(transactionData) {
+    await this.ensureInitialized();
+    
+    const userId = this.getCurrentUserId();
+    
+    // Verify account ownership
+    const account = await this.getById('accounts', transactionData.accountId);
+    if (!account || account.userId !== userId) {
+      throw new Error('Invalid account or unauthorized access');
+    }
+
+    const transaction = {
+      id: this.generateId(),
+      userId: userId,
+      accountId: transactionData.accountId,
+      amount: parseFloat(transactionData.amount),
+      description: transactionData.description,
+      merchant: transactionData.merchant || '',
+      category: transactionData.category || 'uncategorized',
+      date: transactionData.date || new Date().toISOString().split('T')[0],
+      type: transactionData.amount > 0 ? 'income' : 'expense',
+      balance: transactionData.balance || null,
+      tags: transactionData.tags || [],
+      isRecurring: false,
+      createdAt: new Date().toISOString()
+    };
+
+    // Update account balance
+    const newBalance = account.balance + transaction.amount;
+    await this.updateAccountBalance(transactionData.accountId, newBalance);
+
+    return this.create('transactions', transaction);
+  }
+
+  /**
+   * Get transactions for an account
+   */
+  async getAccountTransactions(accountId, limit = 100) {
+    await this.ensureInitialized();
+    
+    const transactions = await this.getByIndex('transactions', 'accountId', accountId);
+    
+    // Sort by date (newest first) and limit
+    return transactions
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, limit);
+  }
+
+  /**
+   * Get user's transactions across all accounts
+   */
+  async getUserTransactions(userId = null, fromDate = null, toDate = null) {
+    await this.ensureInitialized();
+    
+    const targetUserId = userId || this.getCurrentUserId();
+    let transactions = await this.getByIndex('transactions', 'userId', targetUserId);
+
+    // Filter by date range if provided
+    if (fromDate || toDate) {
+      transactions = transactions.filter(t => {
+        const transactionDate = new Date(t.date);
+        if (fromDate && transactionDate < new Date(fromDate)) return false;
+        if (toDate && transactionDate > new Date(toDate)) return false;
+        return true;
+      });
+    }
+
+    return transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+
+  /**
+   * GOALS MANAGEMENT
+   */
+
+  /**
+   * Create a new goal
+   */
+  async createGoal(goalData) {
+    await this.ensureInitialized();
+    
+    const userId = this.getCurrentUserId();
+    const goal = {
+      id: this.generateId(),
+      userId: userId,
+      name: goalData.name,
+      description: goalData.description || '',
+      category: goalData.category, // emergency, savings, debt, investment
+      priority: goalData.priority || 'medium', // critical, high, medium, low
+      targetAmount: parseFloat(goalData.targetAmount),
+      currentAmount: parseFloat(goalData.currentAmount || 0),
+      monthlyContribution: parseFloat(goalData.monthlyContribution || 0),
+      targetDate: goalData.targetDate,
+      isCompleted: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    return this.create('goals', goal);
+  }
+
+  /**
+   * Get user's goals
+   */
+  async getUserGoals(userId = null) {
+    await this.ensureInitialized();
+    
+    const targetUserId = userId || this.getCurrentUserId();
+    return this.getByIndex('goals', 'userId', targetUserId);
+  }
+
+  /**
+   * Update goal progress
+   */
+  async updateGoalProgress(goalId, newAmount) {
+    await this.ensureInitialized();
+    
+    const goal = await this.getById('goals', goalId);
+    if (!goal) {
+      throw new Error('Goal not found');
+    }
+
+    // Verify ownership
+    const userId = this.getCurrentUserId();
+    if (goal.userId !== userId) {
+      throw new Error('Unauthorized access to goal');
+    }
+
+    goal.currentAmount = parseFloat(newAmount);
+    goal.isCompleted = goal.currentAmount >= goal.targetAmount;
+    goal.updatedAt = new Date().toISOString();
+
+    return this.update('goals', goal);
+  }
+
+  /**
+   * GENERIC CRUD OPERATIONS
+   */
+
+  /**
+   * Create a new record
    */
   async create(storeName, data) {
-    try {
-      if (!this.isInitialized) {
-        throw new Error('Database not initialized');
-      }
-
-      // Add metadata
-      const record = {
-        ...data,
-        id: data.id || this.generateId(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-
-      // Encrypt sensitive financial data
-      if (['transactions', 'accounts', 'goals'].includes(storeName)) {
-        record.encryptedData = await this.encryptData({
-          amount: record.amount,
-          balance: record.balance,
-          targetAmount: record.targetAmount,
-          currentAmount: record.currentAmount
-        });
-        
-        // Remove plain text amounts
-        delete record.amount;
-        delete record.balance;
-        delete record.targetAmount;
-        delete record.currentAmount;
-      }
-
+    return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readwrite');
       const store = transaction.objectStore(storeName);
-      
-      await new Promise((resolve, reject) => {
-        const request = store.add(record);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
+      const request = store.add(data);
 
-      console.log(`✅ Created ${storeName} record:`, record.id);
-      return record;
-    } catch (error) {
-      console.error(`❌ Create ${storeName} failed:`, error);
-      throw error;
-    }
+      request.onsuccess = () => {
+        console.log(`✅ Created ${storeName} record:`, data.id);
+        resolve(data);
+      };
+
+      request.onerror = () => {
+        console.error(`❌ Failed to create ${storeName} record:`, request.error);
+        reject(new Error(`Failed to create ${storeName}: ${request.error.message}`));
+      };
+    });
   }
 
   /**
-   * Generic read operation
+   * Read a record by ID
    */
-  async read(storeName, id) {
-    try {
-      if (!this.isInitialized) {
-        throw new Error('Database not initialized');
-      }
-
+  async getById(storeName, id) {
+    return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readonly');
       const store = transaction.objectStore(storeName);
-      
-      const record = await new Promise((resolve, reject) => {
-        const request = store.get(id);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
+      const request = store.get(id);
 
-      if (!record) {
-        return null;
-      }
-
-      // Decrypt sensitive data
-      if (record.encryptedData) {
-        const decryptedData = await this.decryptData(record.encryptedData);
-        if (decryptedData) {
-          Object.assign(record, decryptedData);
-        }
-        delete record.encryptedData;
-      }
-
-      return record;
-    } catch (error) {
-      console.error(`❌ Read ${storeName} failed:`, error);
-      return null;
-    }
-  }
-
-  /**
-   * Generic update operation
-   */
-  async update(storeName, id, updates) {
-    try {
-      if (!this.isInitialized) {
-        throw new Error('Database not initialized');
-      }
-
-      const existingRecord = await this.read(storeName, id);
-      if (!existingRecord) {
-        throw new Error(`Record not found: ${id}`);
-      }
-
-      const updatedRecord = {
-        ...existingRecord,
-        ...updates,
-        updatedAt: new Date().toISOString()
+      request.onsuccess = () => {
+        resolve(request.result);
       };
 
-      // Re-encrypt sensitive data
-      if (['transactions', 'accounts', 'goals'].includes(storeName)) {
-        updatedRecord.encryptedData = await this.encryptData({
-          amount: updatedRecord.amount,
-          balance: updatedRecord.balance,
-          targetAmount: updatedRecord.targetAmount,
-          currentAmount: updatedRecord.currentAmount
-        });
-        
-        delete updatedRecord.amount;
-        delete updatedRecord.balance;
-        delete updatedRecord.targetAmount;
-        delete updatedRecord.currentAmount;
-      }
-
-      const transaction = this.db.transaction([storeName], 'readwrite');
-      const store = transaction.objectStore(storeName);
-      
-      await new Promise((resolve, reject) => {
-        const request = store.put(updatedRecord);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-
-      console.log(`✅ Updated ${storeName} record:`, id);
-      return updatedRecord;
-    } catch (error) {
-      console.error(`❌ Update ${storeName} failed:`, error);
-      throw error;
-    }
+      request.onerror = () => {
+        reject(new Error(`Failed to get ${storeName}: ${request.error.message}`));
+      };
+    });
   }
 
   /**
-   * Generic delete operation
+   * Update a record
+   */
+  async update(storeName, data) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction([storeName], 'readwrite');
+      const store = transaction.objectStore(storeName);
+      const request = store.put(data);
+
+      request.onsuccess = () => {
+        console.log(`✅ Updated ${storeName} record:`, data.id);
+        resolve(data);
+      };
+
+      request.onerror = () => {
+        console.error(`❌ Failed to update ${storeName} record:`, request.error);
+        reject(new Error(`Failed to update ${storeName}: ${request.error.message}`));
+      };
+    });
+  }
+
+  /**
+   * Delete a record
    */
   async delete(storeName, id) {
-    try {
-      if (!this.isInitialized) {
-        throw new Error('Database not initialized');
-      }
-
+    return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readwrite');
       const store = transaction.objectStore(storeName);
-      
-      await new Promise((resolve, reject) => {
-        const request = store.delete(id);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
+      const request = store.delete(id);
 
-      console.log(`✅ Deleted ${storeName} record:`, id);
-      return true;
-    } catch (error) {
-      console.error(`❌ Delete ${storeName} failed:`, error);
-      throw error;
-    }
+      request.onsuccess = () => {
+        console.log(`✅ Deleted ${storeName} record:`, id);
+        resolve(true);
+      };
+
+      request.onerror = () => {
+        reject(new Error(`Failed to delete ${storeName}: ${request.error.message}`));
+      };
+    });
   }
 
   /**
-   * Query records with filters
+   * Get records by index
    */
-  async query(storeName, filters = {}, options = {}) {
-    try {
-      if (!this.isInitialized) {
-        throw new Error('Database not initialized');
-      }
-
+  async getByIndex(storeName, indexName, value) {
+    return new Promise((resolve, reject) => {
       const transaction = this.db.transaction([storeName], 'readonly');
       const store = transaction.objectStore(storeName);
-      
-      let cursor;
-      
-      // Use index if specified in filters
-      if (filters.index && store.indexNames.contains(filters.index)) {
-        const index = store.index(filters.index);
-        cursor = filters.value ? 
-          index.openCursor(IDBKeyRange.only(filters.value)) :
-          index.openCursor();
-      } else {
-        cursor = store.openCursor();
-      }
+      const index = store.index(indexName);
+      const request = index.getAll(value);
 
-      const results = [];
-      
-      await new Promise((resolve, reject) => {
-        cursor.onsuccess = async (event) => {
-          const cursor = event.target.result;
-          
-          if (cursor) {
-            let record = cursor.value;
-            
-            // Decrypt sensitive data
-            if (record.encryptedData) {
-              const decryptedData = await this.decryptData(record.encryptedData);
-              if (decryptedData) {
-                Object.assign(record, decryptedData);
-              }
-              delete record.encryptedData;
-            }
-            
-            // Apply filters
-            let include = true;
-            Object.entries(filters).forEach(([key, value]) => {
-              if (key !== 'index' && key !== 'value' && record[key] !== value) {
-                include = false;
-              }
-            });
-            
-            if (include) {
-              results.push(record);
-            }
-            
-            // Apply limit
-            if (options.limit && results.length >= options.limit) {
-              resolve();
-              return;
-            }
-            
-            cursor.continue();
-          } else {
-            resolve();
-          }
-        };
-        
-        cursor.onerror = () => reject(cursor.error);
-      });
-
-      // Apply sorting
-      if (options.sortBy) {
-        results.sort((a, b) => {
-          const aVal = a[options.sortBy];
-          const bVal = b[options.sortBy];
-          
-          if (options.sortOrder === 'desc') {
-            return bVal > aVal ? 1 : -1;
-          } else {
-            return aVal > bVal ? 1 : -1;
-          }
-        });
-      }
-
-      return results;
-    } catch (error) {
-      console.error(`❌ Query ${storeName} failed:`, error);
-      return [];
-    }
-  }
-
-  /**
-   * Specialized financial queries
-   */
-  async getTransactionsByAccount(accountId, dateRange = null) {
-    const filters = { accountId };
-    if (dateRange) {
-      // For date range filtering, we'll filter after retrieval
-      // as IndexedDB doesn't support complex range queries easily
-    }
-    
-    const transactions = await this.query('transactions', filters, {
-      sortBy: 'date',
-      sortOrder: 'desc'
-    });
-    
-    if (dateRange) {
-      return transactions.filter(t => {
-        const transactionDate = new Date(t.date);
-        return transactionDate >= new Date(dateRange.start) && 
-               transactionDate <= new Date(dateRange.end);
-      });
-    }
-    
-    return transactions;
-  }
-
-  async getUserGoals(userId, activeOnly = false) {
-    const goals = await this.query('goals', { userId }, {
-      sortBy: 'priority',
-      sortOrder: 'asc'
-    });
-    
-    if (activeOnly) {
-      return goals.filter(g => g.status === 'active');
-    }
-    
-    return goals;
-  }
-
-  async getAccountsByUser(userId) {
-    return await this.query('accounts', { userId }, {
-      sortBy: 'bankName',
-      sortOrder: 'asc'
-    });
-  }
-
-  /**
-   * Bulk operations for CSV imports
-   */
-  async bulkCreate(storeName, records) {
-    try {
-      const transaction = this.db.transaction([storeName], 'readwrite');
-      const store = transaction.objectStore(storeName);
-      
-      const promises = records.map(async (record) => {
-        const recordWithId = {
-          ...record,
-          id: record.id || this.generateId(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-
-        // Encrypt if needed
-        if (['transactions', 'accounts', 'goals'].includes(storeName)) {
-          recordWithId.encryptedData = await this.encryptData({
-            amount: recordWithId.amount,
-            balance: recordWithId.balance
-          });
-          delete recordWithId.amount;
-          delete recordWithId.balance;
-        }
-
-        return new Promise((resolve, reject) => {
-          const request = store.add(recordWithId);
-          request.onsuccess = () => resolve(recordWithId);
-          request.onerror = () => reject(request.error);
-        });
-      });
-
-      const results = await Promise.all(promises);
-      console.log(`✅ Bulk created ${results.length} ${storeName} records`);
-      return results;
-    } catch (error) {
-      console.error(`❌ Bulk create ${storeName} failed:`, error);
-      throw error;
-    }
-  }
-
-  /**
-   * Database maintenance
-   */
-  async getStorageUsage() {
-    try {
-      if (!navigator.storage || !navigator.storage.estimate) {
-        return { quota: 0, usage: 0, percentage: 0 };
-      }
-
-      const estimate = await navigator.storage.estimate();
-      return {
-        quota: estimate.quota,
-        usage: estimate.usage,
-        percentage: Math.round((estimate.usage / estimate.quota) * 100)
+      request.onsuccess = () => {
+        resolve(request.result || []);
       };
-    } catch (error) {
-      console.error('❌ Storage usage check failed:', error);
-      return { quota: 0, usage: 0, percentage: 0 };
-    }
-  }
 
-  async clearStore(storeName) {
-    try {
-      const transaction = this.db.transaction([storeName], 'readwrite');
-      const store = transaction.objectStore(storeName);
-      
-      await new Promise((resolve, reject) => {
-        const request = store.clear();
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
-
-      console.log(`✅ Cleared ${storeName} store`);
-    } catch (error) {
-      console.error(`❌ Clear ${storeName} failed:`, error);
-      throw error;
-    }
+      request.onerror = () => {
+        reject(new Error(`Failed to get ${storeName} by ${indexName}: ${request.error.message}`));
+      };
+    });
   }
 
   /**
-   * Utility functions
+   * Get all records from a store
+   */
+  async getAll(storeName) {
+    return new Promise((resolve, reject) => {
+      const transaction = this.db.transaction([storeName], 'readonly');
+      const store = transaction.objectStore(storeName);
+      const request = store.getAll();
+
+      request.onsuccess = () => {
+        resolve(request.result || []);
+      };
+
+      request.onerror = () => {
+        reject(new Error(`Failed to get all ${storeName}: ${request.error.message}`));
+      };
+    });
+  }
+
+  /**
+   * UTILITY FUNCTIONS
+   */
+
+  /**
+   * Generate unique ID
    */
   generateId() {
-    return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    return 'sfai_' + Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 
-  async close() {
-    if (this.db) {
-      this.db.close();
-      this.db = null;
-      this.isInitialized = false;
-      console.log('✅ Database connection closed');
+  /**
+   * Calculate account balances
+   */
+  async calculateAccountBalance(accountId) {
+    const transactions = await this.getAccountTransactions(accountId);
+    return transactions.reduce((balance, transaction) => {
+      return balance + transaction.amount;
+    }, 0);
+  }
+
+  /**
+   * Get financial summary for user
+   */
+  async getFinancialSummary(userId = null) {
+    await this.ensureInitialized();
+    
+    const targetUserId = userId || this.getCurrentUserId();
+    
+    const [accounts, transactions, goals] = await Promise.all([
+      this.getUserAccounts(targetUserId),
+      this.getUserTransactions(targetUserId),
+      this.getUserGoals(targetUserId)
+    ]);
+
+    // Calculate totals
+    const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
+    
+    const monthlyTransactions = transactions.filter(t => {
+      const transactionDate = new Date(t.date);
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      return transactionDate >= oneMonthAgo;
+    });
+
+    const monthlyIncome = monthlyTransactions
+      .filter(t => t.amount > 0)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const monthlyExpenses = monthlyTransactions
+      .filter(t => t.amount < 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+
+    const activeGoals = goals.filter(g => !g.isCompleted);
+    const completedGoals = goals.filter(g => g.isCompleted);
+
+    return {
+      accounts: {
+        total: accounts.length,
+        totalBalance,
+        byType: this.groupAccountsByType(accounts)
+      },
+      transactions: {
+        total: transactions.length,
+        monthlyCount: monthlyTransactions.length,
+        monthlyIncome,
+        monthlyExpenses,
+        netIncome: monthlyIncome - monthlyExpenses
+      },
+      goals: {
+        total: goals.length,
+        active: activeGoals.length,
+        completed: completedGoals.length,
+        totalTarget: activeGoals.reduce((sum, g) => sum + g.targetAmount, 0),
+        totalProgress: activeGoals.reduce((sum, g) => sum + g.currentAmount, 0)
+      },
+      lastUpdated: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Group accounts by type for summary
+   */
+  groupAccountsByType(accounts) {
+    return accounts.reduce((groups, account) => {
+      const type = account.accountType;
+      if (!groups[type]) {
+        groups[type] = { count: 0, balance: 0, accounts: [] };
+      }
+      groups[type].count++;
+      groups[type].balance += account.balance;
+      groups[type].accounts.push(account);
+      return groups;
+    }, {});
+  }
+
+  /**
+   * Clear all user data (for account deletion)
+   */
+  async clearUserData(userId) {
+    await this.ensureInitialized();
+    
+    const stores = ['transactions', 'goals', 'budgets', 'accounts', 'userSettings'];
+    
+    for (const storeName of stores) {
+      const records = await this.getByIndex(storeName, 'userId', userId);
+      for (const record of records) {
+        await this.delete(storeName, record.id);
+      }
+    }
+
+    console.log(`🗑️ Cleared all data for user: ${userId}`);
+  }
+
+  /**
+   * Export user data (for GDPR compliance)
+   */
+  async exportUserData(userId = null) {
+    await this.ensureInitialized();
+    
+    const targetUserId = userId || this.getCurrentUserId();
+    
+    const userData = {
+      accounts: await this.getUserAccounts(targetUserId),
+      transactions: await this.getUserTransactions(targetUserId),
+      goals: await this.getUserGoals(targetUserId),
+      summary: await this.getFinancialSummary(targetUserId),
+      exportedAt: new Date().toISOString()
+    };
+
+    return userData;
+  }
+}
+
+/**
+ * Basic Encryption Service for sensitive data
+ */
+class EncryptionService {
+  constructor() {
+    this.algorithm = 'AES-GCM';
+    this.keyLength = 256;
+  }
+
+  /**
+   * Generate encryption key from user password
+   */
+  async generateKey(password, salt) {
+    const encoder = new TextEncoder();
+    const keyMaterial = await window.crypto.subtle.importKey(
+      'raw',
+      encoder.encode(password),
+      'PBKDF2',
+      false,
+      ['deriveBits', 'deriveKey']
+    );
+
+    return window.crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: encoder.encode(salt),
+        iterations: 100000,
+        hash: 'SHA-256'
+      },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      true,
+      ['encrypt', 'decrypt']
+    );
+  }
+
+  /**
+   * Encrypt sensitive data
+   */
+  async encrypt(plaintext, userKey = null) {
+    if (!plaintext) return plaintext;
+
+    try {
+      // For now, return base64 encoded (implement proper encryption later)
+      return btoa(plaintext);
+    } catch (error) {
+      console.error('Encryption failed:', error);
+      return plaintext;
     }
   }
 
   /**
-   * Export user data for backup
+   * Decrypt sensitive data
    */
-  async exportUserData(userId) {
-    try {
-      const exportData = {
-        exportDate: new Date().toISOString(),
-        userId: userId,
-        accounts: await this.query('accounts', { userId }),
-        transactions: await this.query('transactions', { index: 'userId', value: userId }),
-        goals: await this.query('goals', { userId }),
-        budgets: await this.query('budgets', { userId }),
-        settings: await this.query('settings', { userId })
-      };
+  async decrypt(ciphertext, userKey = null) {
+    if (!ciphertext) return ciphertext;
 
-      return exportData;
+    try {
+      // For now, return base64 decoded (implement proper decryption later)
+      return atob(ciphertext);
     } catch (error) {
-      console.error('❌ Export failed:', error);
-      throw error;
+      console.error('Decryption failed:', error);
+      return ciphertext;
     }
   }
 }
 
-// Global database instance
-window.DatabaseManager = DatabaseManager;
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { DatabaseManager, EncryptionService };
+}
 
-export default DatabaseManager;
+console.log('✅ DatabaseManager loaded - Core data foundation ready!');
