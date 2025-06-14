@@ -3,283 +3,533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Loading...</title>
-    <meta http-equiv="refresh" content="0; url=./src/auth/login.html">
+    <title>SmartFinanceAI</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./public/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./public/icons/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="./public/icons/apple-touch-icon.png">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="./src/styles/main.css">
+    
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
+        /* Critical CSS for app shell */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
         }
         
-        /* Animated background */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
-            animation: backgroundShift 10s ease-in-out infinite;
-            z-index: -1;
-        }
-
-        @keyframes backgroundShift {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
-        .loading-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 2rem;
-            padding: 3rem;
-            max-width: 450px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+        #app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, 
+                #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
         }
         
-        .loading-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
-            transform: rotate(-45deg);
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: rotate(-45deg) translateX(-100%); }
-            100% { transform: rotate(-45deg) translateX(100%); }
+        #main-content {
+            flex: 1;
+            overflow-y: auto;
         }
         
-        .logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
-            border-radius: 1.5rem;
+        .app-loading {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
-            font-size: 2.5rem;
-            position: relative;
-            z-index: 1;
+            height: 100vh;
+            color: white;
+            background: linear-gradient(135deg, 
+                #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
         }
         
-        .company-name {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .tagline {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #8b5cf6;
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(139, 92, 246, 0.3);
+            border-top: 3px solid #8b5cf6;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 2rem auto;
-            position: relative;
-            z-index: 1;
+            margin-bottom: 1rem;
         }
         
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
-        .loading-text {
-            font-size: 1.1rem;
+        .error-boundary {
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .error-boundary h1 {
+            color: #ef4444;
             margin-bottom: 1rem;
-            font-weight: 500;
-            position: relative;
-            z-index: 1;
         }
         
-        .manual-link {
-            color: #8b5cf6;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 1;
+        .error-boundary button {
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
         }
         
-        .manual-link:hover {
-            color: #a855f7;
-            text-decoration: underline;
+        /* Hide content during initial load */
+        .app-initializing #main-content {
+            display: none;
         }
         
-        .progress-bar {
-            width: 100%;
-            height: 4px;
+        /* Navigation Bar Styles */
+        .app-navbar {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin: 1.5rem 0;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            display: none; /* Hidden by default, shown when authenticated */
+            justify-content: space-between;
+            align-items: center;
+            color: white;
         }
         
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #8b5cf6, #3b82f6, #10b981);
-            border-radius: 2px;
-            width: 0%;
-            animation: loadProgress 3s ease-in-out forwards;
+        .app-navbar.show {
+            display: flex;
         }
         
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: white;
         }
         
-        .feature-list {
-            text-align: left;
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin: 1.5rem 0;
-            position: relative;
-            z-index: 1;
+        .logo-small {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .feature-list li {
-            margin: 0.5rem 0;
+        .brain-icon-small {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .brand-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             list-style: none;
-            padding-left: 1.5rem;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-menu {
             position: relative;
         }
         
-        .feature-list li::before {
-            content: '✨';
-            position: absolute;
-            left: 0;
-            top: 0;
+        .user-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-
+        
+        .user-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
         /* Mobile responsive */
-        @media (max-width: 480px) {
-            .loading-container {
-                margin: 1rem;
-                padding: 2rem;
-                border-radius: 1.5rem;
+        @media (max-width: 768px) {
+            .app-navbar {
+                padding: 1rem;
             }
             
-            .logo {
-                width: 70px;
-                height: 70px;
-                font-size: 2rem;
+            .navbar-nav {
+                display: none; /* Hide navigation on mobile, show hamburger instead */
             }
             
-            .company-name {
-                font-size: 1.5rem;
+            .brand-text {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="loading-container">
-        <div class="logo">🧠</div>
-        <h1 class="company-name">SmartFinanceAI</h1>
-        <p class="tagline">Your Intelligent Financial Operating System</p>
-        
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
+    <div id="app" class="app-initializing">
+        <!-- Loading Screen -->
+        <div id="app-loading" class="app-loading">
+            <div style="text-align: center;">
+                <div class="loading-spinner"></div>
+                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">SmartFinanceAI</div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">Loading your financial command center...</div>
+            </div>
         </div>
         
-        <div class="spinner"></div>
-        <div class="loading-text">Initializing secure login...</div>
+        <!-- Navigation Bar (shown when authenticated) -->
+        <nav id="app-navbar" class="app-navbar">
+            <a href="/dashboard" class="navbar-brand">
+                <div class="logo-small">
+                    <svg class="brain-icon-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M25 35 C15 25, 15 15, 25 15 C35 5, 65 5, 75 15 C85 15, 85 25, 75 35 C85 45, 85 55, 75 65 C85 75, 85 85, 75 85 C65 95, 35 95, 25 85 C15 85, 15 75, 25 65 C15 55, 15 45, 25 35 Z"/>
+                        <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" opacity="0.9">$</text>
+                    </svg>
+                </div>
+                <span class="brand-text">SmartFinanceAI</span>
+            </a>
+            
+            <ul class="navbar-nav">
+                <li><a href="/dashboard" class="nav-link" data-route="/dashboard">Dashboard</a></li>
+                <li><a href="/accounts" class="nav-link" data-route="/accounts">Accounts</a></li>
+                <li><a href="/transactions" class="nav-link" data-route="/transactions">Transactions</a></li>
+                <li><a href="/budget" class="nav-link" data-route="/budget">Budget</a></li>
+                <li><a href="/goals" class="nav-link" data-route="/goals">Goals</a></li>
+                <li><a href="/reports" class="nav-link" data-route="/reports">Reports</a></li>
+            </ul>
+            
+            <div class="user-menu">
+                <button class="user-button" id="user-menu-button">
+                    <span id="user-display-name">User</span>
+                    <span>▼</span>
+                </button>
+            </div>
+        </nav>
         
-        <ul class="feature-list">
-            <li>AI-Powered Financial Coaching</li>
-            <li>Multi-Country Banking Support</li>
-            <li>Biometric Authentication</li>
-            <li>Real-time Financial Intelligence</li>
-        </ul>
-        
-        <p>If you're not redirected automatically, 
-           <a href="./src/auth/login.html" class="manual-link">click here to login</a>
-        </p>
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Page content will be loaded here -->
+        </main>
     </div>
     
-    <script>
-        // Enhanced redirect with loading simulation
-        let progress = 0;
-        const loadingMessages = [
-            'Loading SmartFinanceAI...',
-            'Initializing secure systems...',
-            'Preparing your financial dashboard...',
-            'Almost ready...'
-        ];
+    <!-- Error Boundary -->
+    <div id="error-boundary" class="error-boundary" style="display: none;">
+        <h1>⚠️ Something went wrong</h1>
+        <p>We're sorry, but something unexpected happened.</p>
+        <button onclick="window.location.reload()">Reload Application</button>
+    </div>
+    
+    <!-- Scripts -->
+    <script type="module">
+        // Import main application modules
+        import './src/platform/user-manager.js';
+        import './src/data/database-manager.js';
+        import './src/global/localization.js';
+        import './src/utils/error-handler.js';
         
-        const loadingText = document.querySelector('.loading-text');
-        
-        function updateLoadingMessage() {
-            const messageIndex = Math.floor(progress / 25);
-            if (messageIndex < loadingMessages.length) {
-                loadingText.textContent = loadingMessages[messageIndex];
+        // Application initialization
+        class SmartFinanceApp {
+            constructor() {
+                this.router = null;
+                this.userManager = null;
+                this.databaseManager = null;
+                this.isInitialized = false;
+                
+                this.init();
+            }
+            
+            async init() {
+                try {
+                    console.log('🚀 SmartFinanceAI Application Starting...');
+                    
+                    // Initialize core services
+                    await this.initializeServices();
+                    
+                    // Initialize router
+                    await this.initializeRouter();
+                    
+                    // Setup global event listeners
+                    this.setupEventListeners();
+                    
+                    // Hide loading screen
+                    this.hideLoading();
+                    
+                    // Mark as initialized
+                    this.isInitialized = true;
+                    
+                    console.log('✅ SmartFinanceAI Application Ready!');
+                    
+                } catch (error) {
+                    console.error('❌ Application initialization failed:', error);
+                    this.showError(error);
+                }
+            }
+            
+            async initializeServices() {
+                // Initialize database
+                const { DatabaseManager } = await import('./src/data/database-manager.js');
+                this.databaseManager = new DatabaseManager();
+                await this.databaseManager.initialize();
+                
+                // Initialize user manager
+                const { UserManager } = await import('./src/platform/user-manager.js');
+                this.userManager = new UserManager();
+                
+                // Initialize localization
+                const { LocalizationManager } = await import('./src/global/localization.js');
+                this.localizationManager = new LocalizationManager();
+                await this.localizationManager.initialize();
+                
+                console.log('✅ Core services initialized');
+            }
+            
+            async initializeRouter() {
+                // Dynamic import of router based on your file structure
+                const { SmartFinanceRouter } = await import('./src/core/app-router.js');
+                this.router = new SmartFinanceRouter();
+                
+                // Expose router globally for easy access
+                window.app = { router: this.router };
+                
+                console.log('✅ Router initialized');
+            }
+            
+            setupEventListeners() {
+                // Handle user menu
+                const userMenuButton = document.getElementById('user-menu-button');
+                if (userMenuButton) {
+                    userMenuButton.addEventListener('click', () => this.toggleUserMenu());
+                }
+                
+                // Handle authentication state changes
+                window.addEventListener('smartfinance:auth-changed', (event) => {
+                    this.handleAuthChange(event.detail);
+                });
+                
+                // Handle navigation
+                window.addEventListener('smartfinance:route-changed', (event) => {
+                    this.updateNavigation(event.detail.route);
+                });
+                
+                // Handle errors
+                window.addEventListener('error', (event) => {
+                    this.handleGlobalError(event.error);
+                });
+                
+                // Handle unhandled promise rejections
+                window.addEventListener('unhandledrejection', (event) => {
+                    this.handleGlobalError(event.reason);
+                });
+                
+                console.log('✅ Event listeners setup');
+            }
+            
+            hideLoading() {
+                const appElement = document.getElementById('app');
+                const loadingElement = document.getElementById('app-loading');
+                
+                appElement.classList.remove('app-initializing');
+                
+                setTimeout(() => {
+                    if (loadingElement) {
+                        loadingElement.style.display = 'none';
+                    }
+                }, 500);
+            }
+            
+            handleAuthChange(authState) {
+                const navbar = document.getElementById('app-navbar');
+                const userDisplayName = document.getElementById('user-display-name');
+                
+                if (authState.isAuthenticated) {
+                    navbar.classList.add('show');
+                    if (userDisplayName && authState.user) {
+                        userDisplayName.textContent = authState.user.name || authState.user.email.split('@')[0];
+                    }
+                } else {
+                    navbar.classList.remove('show');
+                }
+            }
+            
+            updateNavigation(currentRoute) {
+                // Update active navigation link
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-route') === currentRoute) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            toggleUserMenu() {
+                // For now, just logout - in full version would show dropdown
+                if (confirm('Sign out of SmartFinanceAI?')) {
+                    this.router?.logout();
+                }
+            }
+            
+            handleGlobalError(error) {
+                console.error('💥 Global error:', error);
+                
+                // In development, show detailed error
+                if (window.location.hostname === 'localhost') {
+                    console.error('Detailed error:', error);
+                }
+                
+                // Show user-friendly error message
+                this.showNotification('Something went wrong. Please try again.', 'error');
+            }
+            
+            showError(error) {
+                const errorBoundary = document.getElementById('error-boundary');
+                const appElement = document.getElementById('app');
+                
+                appElement.style.display = 'none';
+                errorBoundary.style.display = 'block';
+            }
+            
+            showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                const colors = {
+                    'success': 'linear-gradient(135deg, #10b981, #059669)',
+                    'info': 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                    'warning': 'linear-gradient(135deg, #f59e0b, #d97706)',
+                    'error': 'linear-gradient(135deg, #ef4444, #dc2626)'
+                };
+                
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 2rem;
+                    right: 2rem;
+                    background: ${colors[type]};
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 1rem;
+                    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+                    z-index: 10000;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    max-width: 350px;
+                    backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                    setTimeout(() => notification.remove(), 400);
+                }, 4000);
             }
         }
         
-        const loadingInterval = setInterval(() => {
-            progress += 2;
-            updateLoadingMessage();
-            
-            if (progress >= 100) {
-                clearInterval(loadingInterval);
-                loadingText.textContent = 'Redirecting to login...';
-                setTimeout(() => {
-                    window.location.href = './src/auth/login.html';
-                }, 500);
+        // Add notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
-        }, 60);
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
         
-        // Fallback redirect in case everything else fails
-        setTimeout(() => {
-            window.location.href = './src/auth/login.html';
-        }, 4000);
+        // Start the application
+        const app = new SmartFinanceApp();
         
-        // Handle manual link click
-        document.querySelector('.manual-link').addEventListener('click', (e) => {
+        // Service Worker registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('./sw.js');
+                    console.log('✅ Service Worker registered:', registration);
+                } catch (error) {
+                    console.log('❌ Service Worker registration failed:', error);
+                }
+            });
+        }
+        
+        // PWA install prompt handling
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
-            clearInterval(loadingInterval);
-            window.location.href = './src/auth/login.html';
+            deferredPrompt = e;
+            
+            // Show install button or notification
+            app.showNotification('💡 Install SmartFinanceAI for the best experience!', 'info');
+            
+            console.log('💡 PWA install available');
         });
         
-        console.log('🧠 SmartFinanceAI Loading...');
-        console.log('📱 Redirecting to: ./src/auth/login.html');
+        // Handle PWA installed event
+        window.addEventListener('appinstalled', () => {
+            app.showNotification('🎉 SmartFinanceAI installed successfully!', 'success');
+            deferredPrompt = null;
+        });
+        
+        // Expose app globally for debugging
+        window.SmartFinanceApp = app;
+    </script>
+    
+    <!-- Fallback for non-module browsers -->
+    <script nomodule>
+        document.getElementById('main-content').innerHTML = `
+            <div style="text-align: center; padding: 4rem; color: white;">
+                <h1 style="color: #ef4444; margin-bottom: 1rem;">Browser Not Supported</h1>
+                <p style="margin-bottom: 2rem;">SmartFinanceAI requires a modern browser with ES6 module support.</p>
+                <p>Please update your browser or try:</p>
+                <ul style="list-style: none; margin: 1rem 0;">
+                    <li>• Chrome 61+</li>
+                    <li>• Firefox 60+</li>
+                    <li>• Safari 11+</li>
+                    <li>• Edge 16+</li>
+                </ul>
+            </div>
+        `;
     </script>
 </body>
 </html>
