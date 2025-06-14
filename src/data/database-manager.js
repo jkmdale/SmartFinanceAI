@@ -1,687 +1,750 @@
-/**
- * SmartFinanceAI - Core Database Management System
- * Handles all IndexedDB operations with encryption and multi-tenant isolation
- * Priority 1 implementation for production readiness
- */
-
-class DatabaseManager {
-  constructor() {
-    this.dbName = 'SmartFinanceAI';
-    this.dbVersion = 1;
-    this.db = null;
-    this.isInitialized = false;
-    this.encryptionService = new EncryptionService();
-    
-    // Define database schema
-    this.stores = {
-      users: {
-        keyPath: 'id',
-        indexes: [
-          { name: 'email', keyPath: 'email', unique: true },
-          { name: 'tenantId', keyPath: 'tenantId', unique: false }
-        ]
-      },
-      accounts: {
-        keyPath: 'id',
-        indexes: [
-          { name: 'userId', keyPath: 'userId', unique: false },
-          { name: 'accountType', keyPath: 'accountType', unique: false },
-          { name: 'currency', keyPath: 'currency', unique: false }
-        ]
-      },
-      transactions: {
-        keyPath: 'id',
-        indexes: [
-          { name: 'accountId', keyPath: 'accountId', unique: false },
-          { name: 'userId', keyPath: 'userId', unique: false },
-          { name: 'date', keyPath: 'date', unique: false },
-          { name: 'category', keyPath: 'category', unique: false },
-          { name: 'amount', keyPath: 'amount', unique: false }
-        ]
-      },
-      goals: {
-        keyPath: 'id',
-        indexes: [
-          { name: 'userId', keyPath: 'userId', unique: false },
-          { name: 'category', keyPath: 'category', unique: false },
-          { name: 'priority', keyPath: 'priority', unique: false },
-          { name: 'targetDate', keyPath: 'targetDate', unique: false }
-        ]
-      },
-      budgets: {
-        keyPath: 'id',
-        indexes: [
-          { name: 'userId', keyPath: 'userId', unique: false },
-          { name: 'period', keyPath: 'period', unique: false },
-          { name: 'category', keyPath: 'category', unique: false }
-        ]
-      },
-      userSettings: {
-        keyPath: 'userId',
-        indexes: [
-          { name: 'country', keyPath: 'country', unique: false },
-          { name: 'currency', keyPath: 'currency', unique: false }
-        ]
-      }
-    };
-  }
-
-  /**
-   * Initialize the database with proper schema and encryption
-   */
-  async initializeDB() {
-    if (this.isInitialized) {
-      return this.db;
-    }
-
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, this.dbVersion);
-
-      request.onerror = () => {
-        console.error('Failed to open database:', request.error);
-        reject(new Error(`Database initialization failed: ${request.error.message}`));
-      };
-
-      request.onupgradeneeded = (event) => {
-        console.log('Upgrading database schema...');
-        this.db = event.target.result;
-        this.createStores();
-      };
-
-      request.onsuccess = (event) => {
-        this.db = event.target.result;
-        this.isInitialized = true;
+// src/data/database-manager.js - Real IndexedDB Database Manager
+export class DatabaseManager {
+    constructor() {
+        this.dbName = 'SmartFinanceAI';
+        this.dbVersion = 1;
+        this.db = null;
+        this.isInitialized = false;
         
-        // Set up error handling
-        this.db.onerror = (event) => {
-          console.error('Database error:', event.target.error);
+        // Database stores
+        this.stores = {
+            users: 'users',
+            accounts: 'accounts',
+            transactions: 'transactions',
+            budgets: 'budgets',
+            goals: 'goals',
+            categories: 'categories',
+            settings: 'settings'
         };
-
-        console.log('✅ Database initialized successfully');
-        resolve(this.db);
-      };
-    });
-  }
-
-  /**
-   * Create object stores with indexes
-   */
-  createStores() {
-    Object.entries(this.stores).forEach(([storeName, config]) => {
-      if (!this.db.objectStoreNames.contains(storeName)) {
-        const store = this.db.createObjectStore(storeName, { 
-          keyPath: config.keyPath 
+    }
+    
+    async initialize() {
+        if (this.isInitialized) return this.db;
+        
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, this.dbVersion);
+            
+            request.onerror = () => {
+                console.error('❌ Database failed to open:', request.error);
+                reject(request.error);
+            };
+            
+            request.onsuccess = () => {
+                this.db = request.result;
+                this.isInitialized = true;
+                console.log('✅ Database opened successfully');
+                resolve(this.db);
+            };
+            
+            request.onupgradeneeded = (event) => {
+                this.db = event.target.result;
+                console.log('🔄 Database upgrade needed');
+                this.createStores();
+            };
         });
-
-        // Create indexes
-        config.indexes.forEach(index => {
-          store.createIndex(index.name, index.keyPath, { 
-            unique: index.unique 
-          });
+    }
+    
+    createStores() {
+        // Users store
+        if (!this.db.objectStoreNames.contains(this.stores.users)) {
+            const userStore = this.db.createObjectStore(this.stores.users, {
+                keyPath: 'id',
+                autoIncrement: true
+            });
+            userStore.createIndex('email', 'email', { unique: true });
+            userStore.createIndex('sessionId', 'sessionId', { unique: false });
+        }
+        
+        // Accounts store
+        if (!this.db.objectStoreNames.contains(this.stores.accounts)) {
+            const accountStore = this.db.createObjectStore(this.stores.accounts, {
+                keyPath: 'id',
+                autoIncrement: true
+            });
+            accountStore.createIndex('userId', 'userId', { unique: false });
+            accountStore.createIndex('accountType', 'accountType', { unique: false });
+            accountStore.createIndex('isActive', 'isActive', { unique: false });
+        }
+        
+        // Transactions store
+        if (!this.db.objectStoreNames.contains(this.stores.transactions)) {
+            const transactionStore = this.db.createObjectStore(this.stores.transactions, {
+                keyPath: 'id',
+                autoIncrement: true
+            });
+            transactionStore.createIndex('userId', 'userId', { unique: false });
+            transactionStore.createIndex('accountId', 'accountId', { unique: false });
+            transactionStore.createIndex('date', 'date', { unique: false });
+            transactionStore.createIndex('category', 'category', { unique: false });
+            transactionStore.createIndex('amount', 'amount', { unique: false });
+        }
+        
+        // Budgets store
+        if (!this.db.objectStoreNames.contains(this.stores.budgets)) {
+            const budgetStore = this.db.createObjectStore(this.stores.budgets, {
+                keyPath: 'id',
+                autoIncrement: true
+            });
+            budgetStore.createIndex('userId', 'userId', { unique: false });
+            budgetStore.createIndex('category', 'category', { unique: false });
+            budgetStore.createIndex('period', 'period', { unique: false });
+        }
+        
+        // Goals store
+        if (!this.db.objectStoreNames.contains(this.stores.goals)) {
+            const goalStore = this.db.createObjectStore(this.stores.goals, {
+                keyPath: 'id',
+                autoIncrement: true
+            });
+            goalStore.createIndex('userId', 'userId', { unique: false });
+            goalStore.createIndex('goalType', 'goalType', { unique: false });
+            goalStore.createIndex('isActive', 'isActive', { unique: false });
+            goalStore.createIndex('targetDate', 'targetDate', { unique: false });
+        }
+        
+        // Categories store
+        if (!this.db.objectStoreNames.contains(this.stores.categories)) {
+            const categoryStore = this.db.createObjectStore(this.stores.categories, {
+                keyPath: 'id',
+                autoIncrement: true
+            });
+            categoryStore.createIndex('userId', 'userId', { unique: false });
+            categoryStore.createIndex('name', 'name', { unique: false });
+            categoryStore.createIndex('type', 'type', { unique: false });
+        }
+        
+        // Settings store
+        if (!this.db.objectStoreNames.contains(this.stores.settings)) {
+            const settingsStore = this.db.createObjectStore(this.stores.settings, {
+                keyPath: 'userId'
+            });
+        }
+        
+        console.log('✅ Database stores created');
+    }
+    
+    // Generic CRUD operations
+    async create(storeName, data) {
+        if (!this.isInitialized) await this.initialize();
+        
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            
+            // Add timestamps
+            data.createdAt = new Date().toISOString();
+            data.updatedAt = new Date().toISOString();
+            
+            const request = store.add(data);
+            
+            request.onsuccess = () => {
+                data.id = request.result;
+                resolve(data);
+            };
+            
+            request.onerror = () => {
+                reject(request.error);
+            };
         });
-
-        console.log(`📊 Created store: ${storeName}`);
-      }
-    });
-  }
-
-  /**
-   * Get current user ID from session
-   */
-  getCurrentUserId() {
-    const session = sessionStorage.getItem('smartfinance_session');
-    if (!session) {
-      throw new Error('No active user session');
     }
     
-    try {
-      const sessionData = JSON.parse(session);
-      return sessionData.userId;
-    } catch (error) {
-      throw new Error('Invalid session data');
+    async read(storeName, id) {
+        if (!this.isInitialized) await this.initialize();
+        
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readonly');
+            const store = transaction.objectStore(storeName);
+            const request = store.get(id);
+            
+            request.onsuccess = () => {
+                resolve(request.result);
+            };
+            
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
     }
-  }
-
-  /**
-   * Ensure database is initialized before operations
-   */
-  async ensureInitialized() {
-    if (!this.isInitialized) {
-      await this.initializeDB();
+    
+    async update(storeName, data) {
+        if (!this.isInitialized) await this.initialize();
+        
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            
+            // Update timestamp
+            data.updatedAt = new Date().toISOString();
+            
+            const request = store.put(data);
+            
+            request.onsuccess = () => {
+                resolve(data);
+            };
+            
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
     }
-  }
-
-  /**
-   * ACCOUNTS MANAGEMENT
-   */
-  
-  /**
-   * Create a new account
-   */
-  async createAccount(accountData) {
-    await this.ensureInitialized();
     
-    const userId = this.getCurrentUserId();
-    const account = {
-      id: this.generateId(),
-      userId: userId,
-      name: accountData.name,
-      accountType: accountData.type, // checking, savings, credit, investment
-      currency: accountData.currency,
-      balance: parseFloat(accountData.balance || 0),
-      institution: accountData.institution || '',
-      accountNumber: accountData.accountNumber ? 
-        await this.encryptionService.encrypt(accountData.accountNumber) : '',
-      isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    return this.create('accounts', account);
-  }
-
-  /**
-   * Get user's accounts
-   */
-  async getUserAccounts(userId = null) {
-    await this.ensureInitialized();
-    
-    const targetUserId = userId || this.getCurrentUserId();
-    return this.getByIndex('accounts', 'userId', targetUserId);
-  }
-
-  /**
-   * Update account balance
-   */
-  async updateAccountBalance(accountId, newBalance) {
-    await this.ensureInitialized();
-    
-    const account = await this.getById('accounts', accountId);
-    if (!account) {
-      throw new Error('Account not found');
+    async delete(storeName, id) {
+        if (!this.isInitialized) await this.initialize();
+        
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readwrite');
+            const store = transaction.objectStore(storeName);
+            const request = store.delete(id);
+            
+            request.onsuccess = () => {
+                resolve(true);
+            };
+            
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
     }
-
-    // Verify ownership
-    const userId = this.getCurrentUserId();
-    if (account.userId !== userId) {
-      throw new Error('Unauthorized access to account');
+    
+    async getAll(storeName, indexName = null, indexValue = null) {
+        if (!this.isInitialized) await this.initialize();
+        
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], 'readonly');
+            const store = transaction.objectStore(storeName);
+            
+            let request;
+            if (indexName && indexValue !== null) {
+                const index = store.index(indexName);
+                request = index.getAll(indexValue);
+            } else {
+                request = store.getAll();
+            }
+            
+            request.onsuccess = () => {
+                resolve(request.result);
+            };
+            
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
     }
-
-    account.balance = parseFloat(newBalance);
-    account.updatedAt = new Date().toISOString();
-
-    return this.update('accounts', account);
-  }
-
-  /**
-   * TRANSACTIONS MANAGEMENT
-   */
-
-  /**
-   * Add a new transaction
-   */
-  async addTransaction(transactionData) {
-    await this.ensureInitialized();
     
-    const userId = this.getCurrentUserId();
+    // Specialized methods for financial data
     
-    // Verify account ownership
-    const account = await this.getById('accounts', transactionData.accountId);
-    if (!account || account.userId !== userId) {
-      throw new Error('Invalid account or unauthorized access');
+    // User operations
+    async createUser(userData) {
+        try {
+            const user = await this.create(this.stores.users, userData);
+            
+            // Create default categories for new user
+            await this.createDefaultCategories(user.id);
+            
+            // Create default settings
+            await this.createDefaultSettings(user.id);
+            
+            console.log('✅ User created:', user.email);
+            return user;
+        } catch (error) {
+            console.error('❌ Error creating user:', error);
+            throw error;
+        }
     }
-
-    const transaction = {
-      id: this.generateId(),
-      userId: userId,
-      accountId: transactionData.accountId,
-      amount: parseFloat(transactionData.amount),
-      description: transactionData.description,
-      merchant: transactionData.merchant || '',
-      category: transactionData.category || 'uncategorized',
-      date: transactionData.date || new Date().toISOString().split('T')[0],
-      type: transactionData.amount > 0 ? 'income' : 'expense',
-      balance: transactionData.balance || null,
-      tags: transactionData.tags || [],
-      isRecurring: false,
-      createdAt: new Date().toISOString()
-    };
-
-    // Update account balance
-    const newBalance = account.balance + transaction.amount;
-    await this.updateAccountBalance(transactionData.accountId, newBalance);
-
-    return this.create('transactions', transaction);
-  }
-
-  /**
-   * Get transactions for an account
-   */
-  async getAccountTransactions(accountId, limit = 100) {
-    await this.ensureInitialized();
     
-    const transactions = await this.getByIndex('transactions', 'accountId', accountId);
-    
-    // Sort by date (newest first) and limit
-    return transactions
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, limit);
-  }
-
-  /**
-   * Get user's transactions across all accounts
-   */
-  async getUserTransactions(userId = null, fromDate = null, toDate = null) {
-    await this.ensureInitialized();
-    
-    const targetUserId = userId || this.getCurrentUserId();
-    let transactions = await this.getByIndex('transactions', 'userId', targetUserId);
-
-    // Filter by date range if provided
-    if (fromDate || toDate) {
-      transactions = transactions.filter(t => {
-        const transactionDate = new Date(t.date);
-        if (fromDate && transactionDate < new Date(fromDate)) return false;
-        if (toDate && transactionDate > new Date(toDate)) return false;
-        return true;
-      });
+    async getUserByEmail(email) {
+        const users = await this.getAll(this.stores.users, 'email', email);
+        return users.length > 0 ? users[0] : null;
     }
-
-    return transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-  }
-
-  /**
-   * GOALS MANAGEMENT
-   */
-
-  /**
-   * Create a new goal
-   */
-  async createGoal(goalData) {
-    await this.ensureInitialized();
     
-    const userId = this.getCurrentUserId();
-    const goal = {
-      id: this.generateId(),
-      userId: userId,
-      name: goalData.name,
-      description: goalData.description || '',
-      category: goalData.category, // emergency, savings, debt, investment
-      priority: goalData.priority || 'medium', // critical, high, medium, low
-      targetAmount: parseFloat(goalData.targetAmount),
-      currentAmount: parseFloat(goalData.currentAmount || 0),
-      monthlyContribution: parseFloat(goalData.monthlyContribution || 0),
-      targetDate: goalData.targetDate,
-      isCompleted: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    return this.create('goals', goal);
-  }
-
-  /**
-   * Get user's goals
-   */
-  async getUserGoals(userId = null) {
-    await this.ensureInitialized();
-    
-    const targetUserId = userId || this.getCurrentUserId();
-    return this.getByIndex('goals', 'userId', targetUserId);
-  }
-
-  /**
-   * Update goal progress
-   */
-  async updateGoalProgress(goalId, newAmount) {
-    await this.ensureInitialized();
-    
-    const goal = await this.getById('goals', goalId);
-    if (!goal) {
-      throw new Error('Goal not found');
+    // Account operations
+    async createAccount(accountData) {
+        try {
+            const account = await this.create(this.stores.accounts, {
+                ...accountData,
+                balance: accountData.balance || 0,
+                isActive: true
+            });
+            
+            console.log('✅ Account created:', account.name);
+            return account;
+        } catch (error) {
+            console.error('❌ Error creating account:', error);
+            throw error;
+        }
     }
-
-    // Verify ownership
-    const userId = this.getCurrentUserId();
-    if (goal.userId !== userId) {
-      throw new Error('Unauthorized access to goal');
+    
+    async getUserAccounts(userId) {
+        return await this.getAll(this.stores.accounts, 'userId', userId);
     }
-
-    goal.currentAmount = parseFloat(newAmount);
-    goal.isCompleted = goal.currentAmount >= goal.targetAmount;
-    goal.updatedAt = new Date().toISOString();
-
-    return this.update('goals', goal);
-  }
-
-  /**
-   * GENERIC CRUD OPERATIONS
-   */
-
-  /**
-   * Create a new record
-   */
-  async create(storeName, data) {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([storeName], 'readwrite');
-      const store = transaction.objectStore(storeName);
-      const request = store.add(data);
-
-      request.onsuccess = () => {
-        console.log(`✅ Created ${storeName} record:`, data.id);
-        resolve(data);
-      };
-
-      request.onerror = () => {
-        console.error(`❌ Failed to create ${storeName} record:`, request.error);
-        reject(new Error(`Failed to create ${storeName}: ${request.error.message}`));
-      };
-    });
-  }
-
-  /**
-   * Read a record by ID
-   */
-  async getById(storeName, id) {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([storeName], 'readonly');
-      const store = transaction.objectStore(storeName);
-      const request = store.get(id);
-
-      request.onsuccess = () => {
-        resolve(request.result);
-      };
-
-      request.onerror = () => {
-        reject(new Error(`Failed to get ${storeName}: ${request.error.message}`));
-      };
-    });
-  }
-
-  /**
-   * Update a record
-   */
-  async update(storeName, data) {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([storeName], 'readwrite');
-      const store = transaction.objectStore(storeName);
-      const request = store.put(data);
-
-      request.onsuccess = () => {
-        console.log(`✅ Updated ${storeName} record:`, data.id);
-        resolve(data);
-      };
-
-      request.onerror = () => {
-        console.error(`❌ Failed to update ${storeName} record:`, request.error);
-        reject(new Error(`Failed to update ${storeName}: ${request.error.message}`));
-      };
-    });
-  }
-
-  /**
-   * Delete a record
-   */
-  async delete(storeName, id) {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([storeName], 'readwrite');
-      const store = transaction.objectStore(storeName);
-      const request = store.delete(id);
-
-      request.onsuccess = () => {
-        console.log(`✅ Deleted ${storeName} record:`, id);
-        resolve(true);
-      };
-
-      request.onerror = () => {
-        reject(new Error(`Failed to delete ${storeName}: ${request.error.message}`));
-      };
-    });
-  }
-
-  /**
-   * Get records by index
-   */
-  async getByIndex(storeName, indexName, value) {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([storeName], 'readonly');
-      const store = transaction.objectStore(storeName);
-      const index = store.index(indexName);
-      const request = index.getAll(value);
-
-      request.onsuccess = () => {
-        resolve(request.result || []);
-      };
-
-      request.onerror = () => {
-        reject(new Error(`Failed to get ${storeName} by ${indexName}: ${request.error.message}`));
-      };
-    });
-  }
-
-  /**
-   * Get all records from a store
-   */
-  async getAll(storeName) {
-    return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([storeName], 'readonly');
-      const store = transaction.objectStore(storeName);
-      const request = store.getAll();
-
-      request.onsuccess = () => {
-        resolve(request.result || []);
-      };
-
-      request.onerror = () => {
-        reject(new Error(`Failed to get all ${storeName}: ${request.error.message}`));
-      };
-    });
-  }
-
-  /**
-   * UTILITY FUNCTIONS
-   */
-
-  /**
-   * Generate unique ID
-   */
-  generateId() {
-    return 'sfai_' + Date.now().toString(36) + Math.random().toString(36).substr(2);
-  }
-
-  /**
-   * Calculate account balances
-   */
-  async calculateAccountBalance(accountId) {
-    const transactions = await this.getAccountTransactions(accountId);
-    return transactions.reduce((balance, transaction) => {
-      return balance + transaction.amount;
-    }, 0);
-  }
-
-  /**
-   * Get financial summary for user
-   */
-  async getFinancialSummary(userId = null) {
-    await this.ensureInitialized();
     
-    const targetUserId = userId || this.getCurrentUserId();
-    
-    const [accounts, transactions, goals] = await Promise.all([
-      this.getUserAccounts(targetUserId),
-      this.getUserTransactions(targetUserId),
-      this.getUserGoals(targetUserId)
-    ]);
-
-    // Calculate totals
-    const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
-    
-    const monthlyTransactions = transactions.filter(t => {
-      const transactionDate = new Date(t.date);
-      const oneMonthAgo = new Date();
-      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-      return transactionDate >= oneMonthAgo;
-    });
-
-    const monthlyIncome = monthlyTransactions
-      .filter(t => t.amount > 0)
-      .reduce((sum, t) => sum + t.amount, 0);
-
-    const monthlyExpenses = monthlyTransactions
-      .filter(t => t.amount < 0)
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
-    const activeGoals = goals.filter(g => !g.isCompleted);
-    const completedGoals = goals.filter(g => g.isCompleted);
-
-    return {
-      accounts: {
-        total: accounts.length,
-        totalBalance,
-        byType: this.groupAccountsByType(accounts)
-      },
-      transactions: {
-        total: transactions.length,
-        monthlyCount: monthlyTransactions.length,
-        monthlyIncome,
-        monthlyExpenses,
-        netIncome: monthlyIncome - monthlyExpenses
-      },
-      goals: {
-        total: goals.length,
-        active: activeGoals.length,
-        completed: completedGoals.length,
-        totalTarget: activeGoals.reduce((sum, g) => sum + g.targetAmount, 0),
-        totalProgress: activeGoals.reduce((sum, g) => sum + g.currentAmount, 0)
-      },
-      lastUpdated: new Date().toISOString()
-    };
-  }
-
-  /**
-   * Group accounts by type for summary
-   */
-  groupAccountsByType(accounts) {
-    return accounts.reduce((groups, account) => {
-      const type = account.accountType;
-      if (!groups[type]) {
-        groups[type] = { count: 0, balance: 0, accounts: [] };
-      }
-      groups[type].count++;
-      groups[type].balance += account.balance;
-      groups[type].accounts.push(account);
-      return groups;
-    }, {});
-  }
-
-  /**
-   * Clear all user data (for account deletion)
-   */
-  async clearUserData(userId) {
-    await this.ensureInitialized();
-    
-    const stores = ['transactions', 'goals', 'budgets', 'accounts', 'userSettings'];
-    
-    for (const storeName of stores) {
-      const records = await this.getByIndex(storeName, 'userId', userId);
-      for (const record of records) {
-        await this.delete(storeName, record.id);
-      }
+    async updateAccountBalance(accountId, newBalance) {
+        try {
+            const account = await this.read(this.stores.accounts, accountId);
+            if (account) {
+                account.balance = newBalance;
+                account.lastUpdated = new Date().toISOString();
+                return await this.update(this.stores.accounts, account);
+            }
+            throw new Error('Account not found');
+        } catch (error) {
+            console.error('❌ Error updating account balance:', error);
+            throw error;
+        }
     }
-
-    console.log(`🗑️ Cleared all data for user: ${userId}`);
-  }
-
-  /**
-   * Export user data (for GDPR compliance)
-   */
-  async exportUserData(userId = null) {
-    await this.ensureInitialized();
     
-    const targetUserId = userId || this.getCurrentUserId();
+    // Transaction operations
+    async createTransaction(transactionData) {
+        try {
+            const transaction = await this.create(this.stores.transactions, {
+                ...transactionData,
+                date: transactionData.date || new Date().toISOString()
+            });
+            
+            // Update account balance
+            if (transactionData.accountId) {
+                const account = await this.read(this.stores.accounts, transactionData.accountId);
+                if (account) {
+                    const newBalance = account.balance + (transactionData.amount || 0);
+                    await this.updateAccountBalance(transactionData.accountId, newBalance);
+                }
+            }
+            
+            console.log('✅ Transaction created:', transaction.description);
+            return transaction;
+        } catch (error) {
+            console.error('❌ Error creating transaction:', error);
+            throw error;
+        }
+    }
     
-    const userData = {
-      accounts: await this.getUserAccounts(targetUserId),
-      transactions: await this.getUserTransactions(targetUserId),
-      goals: await this.getUserGoals(targetUserId),
-      summary: await this.getFinancialSummary(targetUserId),
-      exportedAt: new Date().toISOString()
-    };
-
-    return userData;
-  }
+    async getUserTransactions(userId, limit = null, startDate = null, endDate = null) {
+        try {
+            let transactions = await this.getAll(this.stores.transactions, 'userId', userId);
+            
+            // Filter by date range if provided
+            if (startDate || endDate) {
+                transactions = transactions.filter(t => {
+                    const transactionDate = new Date(t.date);
+                    if (startDate && transactionDate < new Date(startDate)) return false;
+                    if (endDate && transactionDate > new Date(endDate)) return false;
+                    return true;
+                });
+            }
+            
+            // Sort by date (newest first)
+            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Apply limit if specified
+            if (limit) {
+                transactions = transactions.slice(0, limit);
+            }
+            
+            return transactions;
+        } catch (error) {
+            console.error('❌ Error getting user transactions:', error);
+            throw error;
+        }
+    }
+    
+    async getAccountTransactions(accountId, limit = null) {
+        try {
+            let transactions = await this.getAll(this.stores.transactions, 'accountId', accountId);
+            
+            // Sort by date (newest first)
+            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            if (limit) {
+                transactions = transactions.slice(0, limit);
+            }
+            
+            return transactions;
+        } catch (error) {
+            console.error('❌ Error getting account transactions:', error);
+            throw error;
+        }
+    }
+    
+    // Budget operations
+    async createBudget(budgetData) {
+        try {
+            const budget = await this.create(this.stores.budgets, {
+                ...budgetData,
+                spent: 0,
+                isActive: true
+            });
+            
+            console.log('✅ Budget created:', budget.category);
+            return budget;
+        } catch (error) {
+            console.error('❌ Error creating budget:', error);
+            throw error;
+        }
+    }
+    
+    async getUserBudgets(userId, period = null) {
+        try {
+            let budgets = await this.getAll(this.stores.budgets, 'userId', userId);
+            
+            if (period) {
+                budgets = budgets.filter(b => b.period === period);
+            }
+            
+            return budgets;
+        } catch (error) {
+            console.error('❌ Error getting user budgets:', error);
+            throw error;
+        }
+    }
+    
+    async updateBudgetSpent(budgetId, spentAmount) {
+        try {
+            const budget = await this.read(this.stores.budgets, budgetId);
+            if (budget) {
+                budget.spent = spentAmount;
+                budget.percentUsed = (spentAmount / budget.amount) * 100;
+                return await this.update(this.stores.budgets, budget);
+            }
+            throw new Error('Budget not found');
+        } catch (error) {
+            console.error('❌ Error updating budget:', error);
+            throw error;
+        }
+    }
+    
+    // Goal operations
+    async createGoal(goalData) {
+        try {
+            const goal = await this.create(this.stores.goals, {
+                ...goalData,
+                currentAmount: goalData.currentAmount || 0,
+                isActive: true,
+                progress: 0
+            });
+            
+            console.log('✅ Goal created:', goal.name);
+            return goal;
+        } catch (error) {
+            console.error('❌ Error creating goal:', error);
+            throw error;
+        }
+    }
+    
+    async getUserGoals(userId, activeOnly = true) {
+        try {
+            let goals = await this.getAll(this.stores.goals, 'userId', userId);
+            
+            if (activeOnly) {
+                goals = goals.filter(g => g.isActive);
+            }
+            
+            // Calculate progress for each goal
+            goals = goals.map(goal => ({
+                ...goal,
+                progress: Math.min((goal.currentAmount / goal.targetAmount) * 100, 100)
+            }));
+            
+            return goals;
+        } catch (error) {
+            console.error('❌ Error getting user goals:', error);
+            throw error;
+        }
+    }
+    
+    async updateGoalProgress(goalId, newAmount) {
+        try {
+            const goal = await this.read(this.stores.goals, goalId);
+            if (goal) {
+                goal.currentAmount = newAmount;
+                goal.progress = Math.min((newAmount / goal.targetAmount) * 100, 100);
+                goal.lastUpdated = new Date().toISOString();
+                
+                // Check if goal is completed
+                if (goal.progress >= 100 && !goal.completedAt) {
+                    goal.completedAt = new Date().toISOString();
+                    goal.isActive = false;
+                }
+                
+                return await this.update(this.stores.goals, goal);
+            }
+            throw new Error('Goal not found');
+        } catch (error) {
+            console.error('❌ Error updating goal progress:', error);
+            throw error;
+        }
+    }
+    
+    // Category operations
+    async createDefaultCategories(userId) {
+        const defaultCategories = [
+            // Income categories
+            { name: 'Salary', type: 'income', icon: '💼', color: '#10b981' },
+            { name: 'Freelance', type: 'income', icon: '💻', color: '#059669' },
+            { name: 'Investment Returns', type: 'income', icon: '📈', color: '#047857' },
+            { name: 'Other Income', type: 'income', icon: '💰', color: '#065f46' },
+            
+            // Expense categories
+            { name: 'Groceries', type: 'expense', icon: '🛒', color: '#ef4444' },
+            { name: 'Dining Out', type: 'expense', icon: '🍽️', color: '#dc2626' },
+            { name: 'Transportation', type: 'expense', icon: '🚗', color: '#b91c1c' },
+            { name: 'Housing', type: 'expense', icon: '🏠', color: '#991b1b' },
+            { name: 'Utilities', type: 'expense', icon: '⚡', color: '#7f1d1d' },
+            { name: 'Entertainment', type: 'expense', icon: '🎬', color: '#f59e0b' },
+            { name: 'Shopping', type: 'expense', icon: '🛍️', color: '#d97706' },
+            { name: 'Healthcare', type: 'expense', icon: '🏥', color: '#b45309' },
+            { name: 'Education', type: 'expense', icon: '📚', color: '#92400e' },
+            { name: 'Insurance', type: 'expense', icon: '🛡️', color: '#78350f' },
+            { name: 'Other Expenses', type: 'expense', icon: '📝', color: '#451a03' }
+        ];
+        
+        try {
+            for (const category of defaultCategories) {
+                await this.create(this.stores.categories, {
+                    ...category,
+                    userId: userId,
+                    isDefault: true
+                });
+            }
+            console.log('✅ Default categories created for user');
+        } catch (error) {
+            console.error('❌ Error creating default categories:', error);
+        }
+    }
+    
+    async getUserCategories(userId, type = null) {
+        try {
+            let categories = await this.getAll(this.stores.categories, 'userId', userId);
+            
+            if (type) {
+                categories = categories.filter(c => c.type === type);
+            }
+            
+            return categories;
+        } catch (error) {
+            console.error('❌ Error getting user categories:', error);
+            throw error;
+        }
+    }
+    
+    // Settings operations
+    async createDefaultSettings(userId) {
+        const defaultSettings = {
+            userId: userId,
+            currency: 'USD',
+            dateFormat: 'MM/DD/YYYY',
+            theme: 'dark',
+            notifications: {
+                budgetAlerts: true,
+                goalReminders: true,
+                lowBalance: true,
+                weeklyReports: true
+            },
+            privacy: {
+                hideAmounts: false,
+                shareAnalytics: true
+            },
+            preferences: {
+                defaultAccount: null,
+                emergencyFundMonths: 6,
+                autoCategorizeFYI 
+            }
+        };
+        
+        try {
+            await this.create(this.stores.settings, defaultSettings);
+            console.log('✅ Default settings created for user');
+        } catch (error) {
+            console.error('❌ Error creating default settings:', error);
+        }
+    }
+    
+    async getUserSettings(userId) {
+        try {
+            return await this.read(this.stores.settings, userId);
+        } catch (error) {
+            console.error('❌ Error getting user settings:', error);
+            throw error;
+        }
+    }
+    
+    async updateUserSettings(userId, settingsUpdate) {
+        try {
+            const settings = await this.getUserSettings(userId);
+            if (settings) {
+                const updatedSettings = { ...settings, ...settingsUpdate };
+                return await this.update(this.stores.settings, updatedSettings);
+            }
+            throw new Error('Settings not found');
+        } catch (error) {
+            console.error('❌ Error updating user settings:', error);
+            throw error;
+        }
+    }
+    
+    // Analytics and reporting methods
+    async getUserFinancialSummary(userId, startDate = null, endDate = null) {
+        try {
+            const [accounts, transactions, budgets, goals] = await Promise.all([
+                this.getUserAccounts(userId),
+                this.getUserTransactions(userId, null, startDate, endDate),
+                this.getUserBudgets(userId),
+                this.getUserGoals(userId)
+            ]);
+            
+            // Calculate totals
+            const totalBalance = accounts.reduce((sum, account) => sum + account.balance, 0);
+            const totalIncome = transactions
+                .filter(t => t.amount > 0)
+                .reduce((sum, t) => sum + t.amount, 0);
+            const totalExpenses = transactions
+                .filter(t => t.amount < 0)
+                .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+            
+            // Budget analysis
+            const totalBudget = budgets.reduce((sum, budget) => sum + budget.amount, 0);
+            const totalSpent = budgets.reduce((sum, budget) => sum + budget.spent, 0);
+            const budgetUtilization = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
+            
+            // Goal analysis
+            const activeGoals = goals.filter(g => g.isActive);
+            const completedGoals = goals.filter(g => !g.isActive && g.completedAt);
+            const averageGoalProgress = activeGoals.length > 0 
+                ? activeGoals.reduce((sum, g) => sum + g.progress, 0) / activeGoals.length 
+                : 0;
+            
+            return {
+                balance: {
+                    total: totalBalance,
+                    accounts: accounts.length
+                },
+                cashFlow: {
+                    income: totalIncome,
+                    expenses: totalExpenses,
+                    net: totalIncome - totalExpenses
+                },
+                budget: {
+                    total: totalBudget,
+                    spent: totalSpent,
+                    remaining: totalBudget - totalSpent,
+                    utilization: budgetUtilization
+                },
+                goals: {
+                    active: activeGoals.length,
+                    completed: completedGoals.length,
+                    averageProgress: averageGoalProgress
+                },
+                transactions: {
+                    total: transactions.length,
+                    thisMonth: transactions.filter(t => {
+                        const transDate = new Date(t.date);
+                        const now = new Date();
+                        return transDate.getMonth() === now.getMonth() && 
+                               transDate.getFullYear() === now.getFullYear();
+                    }).length
+                }
+            };
+        } catch (error) {
+            console.error('❌ Error getting financial summary:', error);
+            throw error;
+        }
+    }
+    
+    // Data export/import
+    async exportUserData(userId) {
+        try {
+            const [user, accounts, transactions, budgets, goals, categories, settings] = await Promise.all([
+                this.read(this.stores.users, userId),
+                this.getUserAccounts(userId),
+                this.getUserTransactions(userId),
+                this.getUserBudgets(userId),
+                this.getUserGoals(userId, false),
+                this.getUserCategories(userId),
+                this.getUserSettings(userId)
+            ]);
+            
+            return {
+                user,
+                accounts,
+                transactions,
+                budgets,
+                goals,
+                categories,
+                settings,
+                exportDate: new Date().toISOString(),
+                version: this.dbVersion
+            };
+        } catch (error) {
+            console.error('❌ Error exporting user data:', error);
+            throw error;
+        }
+    }
+    
+    // Cleanup methods
+    async clearUserData(userId) {
+        try {
+            // Delete in reverse dependency order
+            const stores = [
+                this.stores.transactions,
+                this.stores.budgets,
+                this.stores.goals,
+                this.stores.categories,
+                this.stores.accounts,
+                this.stores.settings,
+                this.stores.users
+            ];
+            
+            for (const storeName of stores) {
+                const items = await this.getAll(storeName, 'userId', userId);
+                for (const item of items) {
+                    await this.delete(storeName, item.id);
+                }
+            }
+            
+            console.log('✅ User data cleared');
+        } catch (error) {
+            console.error('❌ Error clearing user data:', error);
+            throw error;
+        }
+    }
+    
+    // Database maintenance
+    async clearDatabase() {
+        if (!this.isInitialized) return;
+        
+        try {
+            const storeNames = Object.values(this.stores);
+            
+            for (const storeName of storeNames) {
+                const transaction = this.db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                await new Promise((resolve, reject) => {
+                    const request = store.clear();
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            }
+            
+            console.log('✅ Database cleared');
+        } catch (error) {
+            console.error('❌ Error clearing database:', error);
+            throw error;
+        }
+    }
+    
+    // Connection management
+    close() {
+        if (this.db) {
+            this.db.close();
+            this.db = null;
+            this.isInitialized = false;
+            console.log('📴 Database connection closed');
+        }
+    }
 }
 
-/**
- * Basic Encryption Service for sensitive data
- */
-class EncryptionService {
-  constructor() {
-    this.algorithm = 'AES-GCM';
-    this.keyLength = 256;
-  }
+// Export singleton instance
+const dbManager = new DatabaseManager();
+export default dbManager;
 
-  /**
-   * Generate encryption key from user password
-   */
-  async generateKey(password, salt) {
-    const encoder = new TextEncoder();
-    const keyMaterial = await window.crypto.subtle.importKey(
-      'raw',
-      encoder.encode(password),
-      'PBKDF2',
-      false,
-      ['deriveBits', 'deriveKey']
-    );
-
-    return window.crypto.subtle.deriveKey(
-      {
-        name: 'PBKDF2',
-        salt: encoder.encode(salt),
-        iterations: 100000,
-        hash: 'SHA-256'
-      },
-      keyMaterial,
-      { name: 'AES-GCM', length: 256 },
-      true,
-      ['encrypt', 'decrypt']
-    );
-  }
-
-  /**
-   * Encrypt sensitive data
-   */
-  async encrypt(plaintext, userKey = null) {
-    if (!plaintext) return plaintext;
-
-    try {
-      // For now, return base64 encoded (implement proper encryption later)
-      return btoa(plaintext);
-    } catch (error) {
-      console.error('Encryption failed:', error);
-      return plaintext;
-    }
-  }
-
-  /**
-   * Decrypt sensitive data
-   */
-  async decrypt(ciphertext, userKey = null) {
-    if (!ciphertext) return ciphertext;
-
-    try {
-      // For now, return base64 decoded (implement proper decryption later)
-      return atob(ciphertext);
-    } catch (error) {
-      console.error('Decryption failed:', error);
-      return ciphertext;
-    }
-  }
-}
-
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { DatabaseManager, EncryptionService };
-}
-
-console.log('✅ DatabaseManager loaded - Core data foundation ready!');
+// Also export class for direct instantiation
+export { DatabaseManager };
