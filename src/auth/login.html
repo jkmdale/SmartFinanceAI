@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Sign In</title>
+    <title>Sign In - SmartFinanceAI</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#8b5cf6">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/styles/main.css">
+    
     <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            background: linear-gradient(135deg, 
+                #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 2rem;
             position: relative;
             overflow: hidden;
         }
-
+        
         /* Animated background */
         body::before {
             content: '';
@@ -31,268 +37,113 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.3) 0%, transparent 50%);
-            animation: backgroundShift 10s ease-in-out infinite;
+            background: radial-gradient(circle at 20% 50%, 
+                rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, 
+                rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, 
+                rgba(16, 185, 129, 0.3) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
             z-index: -1;
         }
-
+        
         @keyframes backgroundShift {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
+            0%, 100% { 
+                transform: translateX(0) translateY(0) scale(1); 
+            }
+            25% { 
+                transform: translateX(-20px) translateY(-10px) scale(1.05); 
+            }
+            50% { 
+                transform: translateX(20px) translateY(10px) scale(0.95); 
+            }
+            75% { 
+                transform: translateX(-10px) translateY(20px) scale(1.02); 
+            }
         }
-
-        /* Login container */
+        
         .login-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 2rem;
             padding: 3rem;
             width: 100%;
             max-width: 450px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
         }
-
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
-            transform: rotate(-45deg);
-            animation: shimmer 3s ease-in-out infinite;
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
-
-        @keyframes shimmer {
-            0% { transform: rotate(-45deg) translateX(-100%); }
-            100% { transform: rotate(-45deg) translateX(100%); }
-        }
-
-        /* Logo section */
-        .logo-section {
+        
+        .login-header {
             text-align: center;
             margin-bottom: 2.5rem;
-            position: relative;
-            z-index: 1;
         }
-
+        
         .logo {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
             border-radius: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 2.5rem;
             margin: 0 auto 1.5rem;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, #1a1d29 0%, #2d3748 100%);
+            box-shadow: 0 12px 24px rgba(139, 92, 246, 0.4);
+            animation: logoGlow 3s ease-in-out infinite;
         }
-
-        .logo img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            filter: drop-shadow(0 4px 12px rgba(64, 224, 208, 0.4));
+        
+        @keyframes logoGlow {
+            0%, 100% { 
+                box-shadow: 0 12px 24px rgba(139, 92, 246, 0.4); 
+            }
+            50% { 
+                box-shadow: 0 16px 32px rgba(139, 92, 246, 0.6); 
+            }
         }
-
-        .logo-text {
-            font-size: 1.75rem;
+        
+        .login-title {
+            font-size: 2rem;
             font-weight: 700;
             color: white;
             margin-bottom: 0.5rem;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        .logo-subtitle {
-            font-size: 0.875rem;
+        
+        .login-subtitle {
             color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-        }
-
-        /* Biometric Scanner */
-        .biometric-scanner {
-            text-align: center;
-            margin: 2rem 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .scanner-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 1.5rem;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .scanner-container:hover {
-            transform: scale(1.05);
-        }
-
-        .scanner-base {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #40e0d0 0%, #20b2aa 50%, #008b8b 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 32px rgba(64, 224, 208, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .scanner-icon {
-            font-size: 2.5rem;
-            color: white;
-            z-index: 2;
-            position: relative;
-        }
-
-        /* Scanning animation rings */
-        .scan-ring {
-            position: absolute;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            opacity: 0;
-        }
-
-        .scan-ring-1 {
-            width: 80%;
-            height: 80%;
-            top: 10%;
-            left: 10%;
-        }
-
-        .scan-ring-2 {
-            width: 90%;
-            height: 90%;
-            top: 5%;
-            left: 5%;
-        }
-
-        .scan-ring-3 {
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
-
-        .scanning .scan-ring-1 {
-            animation: scanPulse 2s ease-in-out infinite;
-        }
-
-        .scanning .scan-ring-2 {
-            animation: scanPulse 2s ease-in-out infinite 0.3s;
-        }
-
-        .scanning .scan-ring-3 {
-            animation: scanPulse 2s ease-in-out infinite 0.6s;
-        }
-
-        @keyframes scanPulse {
-            0% {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.2);
-            }
-        }
-
-        /* Scan progress indicator */
-        .scan-progress {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent, #40e0d0);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .scanning .scan-progress {
-            opacity: 1;
-            animation: scanRotate 2s linear infinite;
-        }
-
-        @keyframes scanRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .scanner-text {
-            color: rgba(255, 255, 255, 0.9);
             font-size: 1rem;
-            font-weight: 600;
-            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
-
-        .scanner-instruction {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            line-height: 1.4;
-        }
-
-        /* Scanner states */
-        .scanner-container.success .scanner-base {
-            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-            animation: successPulse 0.6s ease-out;
-        }
-
-        .scanner-container.error .scanner-base {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
-            animation: errorShake 0.6s ease-out;
-        }
-
-        @keyframes successPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes errorShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        /* Form styles */
-        .login-form {
-            position: relative;
-            z-index: 1;
-        }
-
+        
         .form-group {
             margin-bottom: 1.5rem;
         }
-
+        
         .form-label {
             display: block;
             color: rgba(255, 255, 255, 0.9);
-            font-size: 0.875rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-
+        
         .form-input {
             width: 100%;
             padding: 1rem 1.25rem;
@@ -302,55 +153,137 @@
             color: white;
             font-size: 1rem;
             transition: all 0.3s ease;
+            box-sizing: border-box;
         }
-
+        
         .form-input::placeholder {
             color: rgba(255, 255, 255, 0.5);
         }
-
+        
         .form-input:focus {
             outline: none;
-            border-color: #40e0d0;
+            border-color: #8b5cf6;
             background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.3);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
         }
-
-        /* Sign in button */
-        .signin-button {
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0.25rem;
+            transition: color 0.2s ease;
+        }
+        
+        .password-toggle:hover {
+            color: white;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #8b5cf6;
+        }
+        
+        .forgot-password {
+            color: #8b5cf6;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .forgot-password:hover {
+            color: #a855f7;
+            text-decoration: underline;
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 1.25rem;
             background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
             border: none;
             border-radius: 1rem;
-            padding: 1rem 2rem;
             color: white;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+            position: relative;
+            overflow: hidden;
         }
-
-        .signin-button:hover {
+        
+        .login-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.5);
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.6);
         }
-
-        .signin-button:disabled {
-            opacity: 0.6;
+        
+        .login-button:active {
+            transform: translateY(0);
+        }
+        
+        .login-button:disabled {
+            opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
-
-        /* Divider */
+        
+        .login-button.loading {
+            pointer-events: none;
+        }
+        
+        .login-button.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         .divider {
             display: flex;
             align-items: center;
-            margin: 1.5rem 0;
+            margin: 2rem 0;
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.875rem;
         }
-
+        
         .divider::before,
         .divider::after {
             content: '';
@@ -358,468 +291,599 @@
             height: 1px;
             background: rgba(255, 255, 255, 0.2);
         }
-
+        
         .divider span {
             padding: 0 1rem;
         }
-
-        /* Footer links */
-        .footer-links {
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .footer-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-size: 0.875rem;
-            margin: 0 1rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-link:hover {
-            color: #40e0d0;
-        }
-
-        /* Status messages */
-        .status-message {
+        
+        .biometric-login {
+            width: 100%;
             padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 1rem;
-            margin-bottom: 1rem;
-            text-align: center;
+            color: white;
+            font-size: 1rem;
             font-weight: 500;
-            opacity: 0;
-            transform: translateY(-10px);
+            cursor: pointer;
             transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
         }
-
-        .status-message.show {
-            opacity: 1;
-            transform: translateY(0);
+        
+        .biometric-login:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
         }
-
-        .status-success {
+        
+        .biometric-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fecaca;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #a7f3d0;
+        }
+        
+        .alert-info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #bfdbfe;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .signup-link {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+        
+        .signup-link a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+        
+        .signup-link a:hover {
+            color: #a855f7;
+            text-decoration: underline;
+        }
+        
+        .demo-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 1rem;
+            text-align: center;
+        }
+        
+        .demo-section h4 {
+            color: #10b981;
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+        
+        .demo-section p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            margin: 0 0 1rem 0;
+        }
+        
+        .demo-button {
             background: rgba(16, 185, 129, 0.2);
             border: 1px solid rgba(16, 185, 129, 0.4);
             color: #10b981;
-        }
-
-        .status-error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #ef4444;
-        }
-
-        .status-info {
-            background: rgba(64, 224, 208, 0.2);
-            border: 1px solid rgba(64, 224, 208, 0.4);
-            color: #40e0d0;
-        }
-
-        /* Demo credentials hint */
-        .demo-hint {
-            background: rgba(64, 224, 208, 0.1);
-            border: 1px solid rgba(64, 224, 208, 0.3);
-            border-radius: 1rem;
-            padding: 1rem;
-            margin-top: 1rem;
-            text-align: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
             font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .demo-credentials {
-            font-family: 'Courier New', monospace;
-            color: #40e0d0;
             font-weight: 600;
-            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        /* Responsive design */
-        @media (max-width: 480px) {
+        
+        .demo-button:hover {
+            background: rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
             .login-container {
-                margin: 1rem;
                 padding: 2rem;
                 border-radius: 1.5rem;
             }
-
+            
             .logo {
-                width: 80px;
-                height: 80px;
-            }
-
-            .logo img {
                 width: 60px;
                 height: 60px;
-            }
-
-            .scanner-container {
-                width: 100px;
-                height: 100px;
-            }
-
-            .scanner-icon {
                 font-size: 2rem;
             }
-
-            .logo-text {
-                font-size: 1.5rem;
+            
+            .login-title {
+                font-size: 1.75rem;
+            }
+            
+            .form-input {
+                padding: 1rem;
+            }
+            
+            .login-button {
+                padding: 1rem;
             }
         }
-
-        /* Loading spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-left: 0.5rem;
+        
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .login-container {
+                border-width: 2px;
+                border-color: white;
+            }
+            
+            .form-input {
+                border-width: 2px;
+            }
+            
+            .form-input:focus {
+                border-width: 3px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <!-- Logo Section -->
-        <div class="logo-section">
-            <div class="logo">
-                <!-- Use actual logo from icons folder -->
-                <img src="../../public/icons/icon-192.png" alt="SmartFinanceAI" onerror="this.src='../../../public/icons/apple-touch-icon.png'; this.onerror=null;">
-            </div>
-            <h1 class="logo-text">SmartFinanceAI</h1>
-            <p class="logo-subtitle">Your Intelligent Financial Operating System</p>
+        <!-- Header -->
+        <div class="login-header">
+            <div class="logo">🧠</div>
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Sign in to your SmartFinanceAI account</p>
         </div>
-
-        <!-- Status Messages -->
-        <div id="statusMessage" class="status-message"></div>
-
-        <!-- Biometric Scanner -->
-        <div class="biometric-scanner">
-            <div class="scanner-container" id="scannerContainer" onclick="startBiometricScan()">
-                <div class="scanner-base">
-                    <div class="scan-ring scan-ring-1"></div>
-                    <div class="scan-ring scan-ring-2"></div>
-                    <div class="scan-ring scan-ring-3"></div>
-                    <div class="scan-progress"></div>
-                    <div class="scanner-icon">👆</div>
-                </div>
-            </div>
-            <div class="scanner-text" id="scannerText">Touch ID / Face ID</div>
-            <div class="scanner-instruction" id="scannerInstruction">Place your finger on the sensor or look at the camera</div>
-        </div>
-
-        <div class="divider">
-            <span>or sign in with email</span>
-        </div>
-
+        
+        <!-- Alert Messages -->
+        <div id="alert-container"></div>
+        
         <!-- Login Form -->
-        <form class="login-form" onsubmit="signInWithEmail(event)">
+        <form id="login-form" novalidate>
             <div class="form-group">
-                <label class="form-label" for="email">Email Address</label>
+                <label for="email" class="form-label">Email Address</label>
                 <input 
                     type="email" 
                     id="email" 
+                    name="email" 
                     class="form-input" 
                     placeholder="Enter your email"
-                    value="demo@smartfinanceai.com"
                     required
                     autocomplete="email"
+                    autofocus
                 >
             </div>
-
+            
             <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    class="form-input" 
-                    placeholder="Enter your password"
-                    value="demo123"
-                    required
-                    autocomplete="current-password"
-                >
+                <label for="password" class="form-label">Password</label>
+                <div class="password-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                        minlength="8"
+                    >
+                    <button type="button" class="password-toggle" id="password-toggle" tabindex="-1">
+                        👁️
+                    </button>
+                </div>
             </div>
-
-            <button type="submit" class="signin-button" id="signinButton">
-                <span id="signinText">Sign In</span>
+            
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember-me" name="remember">
+                    <span>Remember me</span>
+                </label>
+                
+                <a href="/auth/forgot-password" class="forgot-password">Forgot password?</a>
+            </div>
+            
+            <button type="submit" class="login-button" id="login-button">
+                <span id="login-text">Sign In</span>
             </button>
         </form>
-
-        <!-- Demo Credentials Hint -->
-        <div class="demo-hint">
-            <div>🎯 <strong>Demo Credentials:</strong></div>
-            <div class="demo-credentials">demo@smartfinanceai.com</div>
-            <div class="demo-credentials">demo123</div>
+        
+        <!-- Biometric Login -->
+        <div class="divider" id="divider-section">
+            <span>or</span>
         </div>
-
-        <!-- Footer Links -->
-        <div class="footer-links">
-            <a href="#" class="footer-link" onclick="forgotPassword()">Forgot Password?</a>
-            <a href="#" class="footer-link" onclick="createAccount()">Create Account</a>
+        
+        <button class="biometric-login" id="biometric-login" style="display: none;">
+            <span>🔐</span>
+            <span>Sign in with Biometrics</span>
+        </button>
+        
+        <!-- Demo Section -->
+        <div class="demo-section">
+            <h4>🎮 Try Demo Mode</h4>
+            <p>Explore SmartFinanceAI with sample data</p>
+            <button class="demo-button" id="demo-login">
+                Start Demo
+            </button>
+        </div>
+        
+        <!-- Sign Up Link -->
+        <div class="signup-link">
+            <p>Don't have an account? <a href="/auth/register">Create one here</a></p>
         </div>
     </div>
-
+    
+    <!-- Include Dependencies -->
+    <script src="/src/auth/auth-manager.js"></script>
+    
     <script>
-        // Biometric scanner state
-        let isScanning = false;
-        let scanAttempts = 0;
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            checkBiometricCapabilities();
-            showWelcomeMessage();
-        });
-
-        // Check device biometric capabilities
-        async function checkBiometricCapabilities() {
-            const hasTouch = 'ontouchstart' in window;
-            const hasCamera = await checkCameraAccess();
-            const hasWebAuthn = 'PublicKeyCredential' in window;
-
-            let capabilities = [];
-            if (hasWebAuthn) capabilities.push('WebAuthn');
-            if (hasTouch) capabilities.push('Touch');
-            if (hasCamera) capabilities.push('Face');
-
-            updateScannerText(capabilities);
-        }
-
-        // Check camera access for Face ID simulation
-        async function checkCameraAccess() {
-            try {
-                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    return true;
+        /**
+         * Login Page Logic
+         */
+        class LoginPage {
+            constructor() {
+                this.form = document.getElementById('login-form');
+                this.emailInput = document.getElementById('email');
+                this.passwordInput = document.getElementById('password');
+                this.rememberCheckbox = document.getElementById('remember-me');
+                this.loginButton = document.getElementById('login-button');
+                this.loginText = document.getElementById('login-text');
+                this.biometricButton = document.getElementById('biometric-login');
+                this.demoButton = document.getElementById('demo-login');
+                this.passwordToggle = document.getElementById('password-toggle');
+                this.alertContainer = document.getElementById('alert-container');
+                
+                this.isLoading = false;
+                this.setupEventListeners();
+                this.checkBiometricSupport();
+                this.checkExistingSession();
+            }
+            
+            setupEventListeners() {
+                // Form submission
+                this.form.addEventListener('submit', this.handleLogin.bind(this));
+                
+                // Password toggle
+                this.passwordToggle.addEventListener('click', this.togglePasswordVisibility.bind(this));
+                
+                // Biometric login
+                this.biometricButton.addEventListener('click', this.handleBiometricLogin.bind(this));
+                
+                // Demo login
+                this.demoButton.addEventListener('click', this.handleDemoLogin.bind(this));
+                
+                // Real-time validation
+                this.emailInput.addEventListener('input', this.validateEmail.bind(this));
+                this.passwordInput.addEventListener('input', this.validatePassword.bind(this));
+                
+                // Enter key handling
+                this.passwordInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !this.isLoading) {
+                        this.handleLogin(e);
+                    }
+                });
+                
+                // Prefill demo credentials shortcut (Ctrl+D)
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'd') {
+                        e.preventDefault();
+                        this.fillDemoCredentials();
+                    }
+                });
+            }
+            
+            async handleLogin(e) {
+                e.preventDefault();
+                
+                if (this.isLoading) return;
+                
+                // Get form data
+                const email = this.emailInput.value.trim();
+                const password = this.passwordInput.value;
+                const rememberMe = this.rememberCheckbox.checked;
+                
+                // Validate inputs
+                if (!this.validateForm(email, password)) {
+                    return;
                 }
-                return false;
-            } catch (error) {
-                return false;
-            }
-        }
-
-        // Update scanner text based on capabilities
-        function updateScannerText(capabilities) {
-            const scannerText = document.getElementById('scannerText');
-            const scannerInstruction = document.getElementById('scannerInstruction');
-
-            if (capabilities.length === 0) {
-                scannerText.textContent = 'Biometric Login';
-                scannerInstruction.textContent = 'Biometric authentication not available on this device';
-                document.getElementById('scannerContainer').style.opacity = '0.6';
-                return;
-            }
-
-            if (capabilities.includes('Touch') && capabilities.includes('Face')) {
-                scannerText.textContent = 'Touch ID / Face ID';
-                scannerInstruction.textContent = 'Place your finger on the sensor or look at the camera';
-            } else if (capabilities.includes('Touch')) {
-                scannerText.textContent = 'Touch ID';
-                scannerInstruction.textContent = 'Place your finger on the sensor';
-            } else if (capabilities.includes('Face')) {
-                scannerText.textContent = 'Face ID';
-                scannerInstruction.textContent = 'Look at the camera to authenticate';
-            } else {
-                scannerText.textContent = 'Biometric Login';
-                scannerInstruction.textContent = 'Touch to authenticate';
-            }
-        }
-
-        // Start biometric scanning
-        async function startBiometricScan() {
-            if (isScanning) return;
-
-            isScanning = true;
-            scanAttempts++;
-
-            const container = document.getElementById('scannerContainer');
-            const scannerText = document.getElementById('scannerText');
-            const scannerInstruction = document.getElementById('scannerInstruction');
-
-            // Add scanning state
-            container.classList.add('scanning');
-            scannerText.textContent = 'Scanning...';
-            scannerInstruction.textContent = 'Please wait while we verify your identity';
-
-            try {
-                // Simulate real biometric scanning process
-                await simulateBiometricScan();
-
-                // Success state
-                container.classList.remove('scanning');
-                container.classList.add('success');
-                document.querySelector('.scanner-icon').textContent = '✓';
-                scannerText.textContent = 'Authentication Successful';
-                scannerInstruction.textContent = 'Welcome back! Redirecting...';
                 
-                showStatus('Biometric authentication successful! 🎉', 'success');
+                // Show loading state
+                this.setLoadingState(true);
                 
-                setTimeout(() => {
-                    redirectToDashboard();
-                }, 2000);
-
-            } catch (error) {
-                // Error state
-                container.classList.remove('scanning');
-                container.classList.add('error');
-                document.querySelector('.scanner-icon').textContent = '✗';
-                scannerText.textContent = 'Authentication Failed';
-                scannerInstruction.textContent = 'Please try again or use email/password below';
-                
-                showStatus(`Biometric scan failed (attempt ${scanAttempts}/3). Try email/password below.`, 'error');
-                
-                // Reset after delay
-                setTimeout(() => {
-                    resetScanner();
-                }, 3000);
-            }
-
-            isScanning = false;
-        }
-
-        // Simulate biometric scanning with realistic delays and potential failures
-        async function simulateBiometricScan() {
-            // Simulate scanning time
-            await new Promise(resolve => setTimeout(resolve, 2500));
-
-            // Simulate success/failure rate (80% success for demo)
-            const successRate = 0.8;
-            const random = Math.random();
-
-            if (random > successRate || scanAttempts > 2) {
-                throw new Error('Biometric authentication failed');
-            }
-
-            return { success: true };
-        }
-
-        // Reset scanner to initial state
-        function resetScanner() {
-            const container = document.getElementById('scannerContainer');
-            const scannerText = document.getElementById('scannerText');
-            const scannerInstruction = document.getElementById('scannerInstruction');
-
-            container.classList.remove('scanning', 'success', 'error');
-            document.querySelector('.scanner-icon').textContent = '👆';
-            scannerText.textContent = 'Touch ID / Face ID';
-            scannerInstruction.textContent = 'Place your finger on the sensor or look at the camera';
-        }
-
-        // Email/password authentication
-        async function signInWithEmail(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const signinButton = document.getElementById('signinButton');
-            const signinText = document.getElementById('signinText');
-
-            if (!email || !password) {
-                showStatus('Please enter both email and password', 'error');
-                return;
-            }
-
-            // Show loading state
-            signinButton.disabled = true;
-            signinText.innerHTML = 'Signing In... <div class="spinner"></div>';
-
-            try {
-                // Simulate authentication
-                await simulateLogin(email, password);
-                
-                showStatus('Welcome back! Redirecting to your dashboard... 🎉', 'success');
-                
-                setTimeout(() => {
-                    redirectToDashboard();
-                }, 2000);
-
-            } catch (error) {
-                showStatus(error.message || 'Sign in failed. Please check your credentials.', 'error');
-            } finally {
-                // Reset button state
-                signinButton.disabled = false;
-                signinText.textContent = 'Sign In';
-            }
-        }
-
-        // Simulate login API call
-        async function simulateLogin(email, password) {
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Demo credentials for testing
-            const validCredentials = [
-                { email: 'demo@smartfinanceai.com', password: 'demo123' },
-                { email: 'user@test.com', password: 'password' },
-                { email: 'admin@smartfinanceai.com', password: 'admin123' }
-            ];
-
-            const isValid = validCredentials.some(cred => 
-                cred.email.toLowerCase() === email.toLowerCase() && cred.password === password
-            );
-
-            if (!isValid) {
-                throw new Error('Invalid email or password. Try the demo credentials shown below.');
-            }
-
-            return { success: true, user: { email } };
-        }
-
-        // Redirect to dashboard
-        function redirectToDashboard() {
-            showStatus('🎉 Login successful! Dashboard loading...', 'success');
-            // In production: window.location.href = '../core/dashboard.html';
-        }
-
-        // Utility functions
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('statusMessage');
-            statusElement.textContent = message;
-            statusElement.className = `status-message status-${type} show`;
-            
-            setTimeout(() => {
-                statusElement.classList.remove('show');
-            }, 5000);
-        }
-
-        function showWelcomeMessage() {
-            showStatus('Welcome to SmartFinanceAI! Try biometric scan or use demo credentials below.', 'info');
-        }
-
-        function forgotPassword() {
-            showStatus('Password reset functionality coming soon! For demo, use the credentials shown below.', 'info');
-        }
-
-        function createAccount() {
-            showStatus('Account creation coming soon! For demo, use the credentials shown below.', 'info');
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(event) {
-            // Enter key submits form
-            if (event.key === 'Enter' && !event.shiftKey) {
-                const form = document.querySelector('.login-form');
-                if (document.activeElement.tagName === 'INPUT') {
-                    event.preventDefault();
-                    form.dispatchEvent(new Event('submit'));
+                try {
+                    // Attempt login
+                    const result = await authManager.login(email, password, rememberMe);
+                    
+                    if (result.success) {
+                        // Success
+                        this.showAlert('Login successful! Redirecting...', 'success');
+                        
+                        // Small delay for user feedback
+                        setTimeout(() => {
+                            // Redirect to dashboard
+                            window.location.href = '/dashboard';
+                        }, 1000);
+                        
+                    } else {
+                        // Login failed
+                        this.showAlert(result.message || 'Login failed. Please try again.', 'error');
+                        this.setLoadingState(false);
+                        
+                        // Focus on password field for retry
+                        this.passwordInput.focus();
+                        this.passwordInput.select();
+                    }
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showAlert('An unexpected error occurred. Please try again.', 'error');
+                    this.setLoadingState(false);
                 }
             }
             
-            // Space or F key triggers biometric scan
-            if ((event.key === ' ' || event.key === 'f' || event.key === 'F') && !isScanning) {
-                event.preventDefault();
-                startBiometricScan();
+            async handleBiometricLogin() {
+                if (this.isLoading) return;
+                
+                this.setLoadingState(true, 'biometric');
+                
+                try {
+                    const result = await authManager.loginWithWebAuthn();
+                    
+                    if (result.success) {
+                        this.showAlert('Biometric login successful! Redirecting...', 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 1000);
+                        
+                    } else {
+                        this.showAlert(result.message || 'Biometric login failed.', 'error');
+                        this.setLoadingState(false);
+                    }
+                    
+                } catch (error) {
+                    console.error('Biometric login error:', error);
+                    this.showAlert('Biometric login failed. Please try again or use password.', 'error');
+                    this.setLoadingState(false);
+                }
             }
-        });
-
-        console.log('🧠 SmartFinanceAI Login System Loaded!');
-        console.log('🔐 Demo Credentials: demo@smartfinanceai.com / demo123');
-        console.log('👆 Biometric scanner: Click the scanner or press Space/F key');
-        console.log('📱 Real logo loaded from: public/icons/');
-    </script>
-</body>
-</html>
+            
+            async handleDemoLogin() {
+                if (this.isLoading) return;
+                
+                this.setLoadingState(true, 'demo');
+                
+                try {
+                    // Create demo user and session
+                    const demoUser = {
+                        id: 'demo_user_' + Date.now(),
+                        email: 'demo@smartfinanceai.com',
+                        firstName: 'Demo',
+                        lastName: 'User',
+                        country: 'US',
+                        currency: 'USD'
+                    };
+                    
+                    // Create demo session
+                    const session = {
+                        userId: demoUser.id,
+                        deviceId: 'demo_device',
+                        sessionId: 'demo_session',
+                        accessToken: 'demo_token',
+                        refreshToken: 'demo_refresh',
+                        issuedAt: Date.now(),
+                        expiresAt: Date.now() + (24 * 60 * 60 * 1000), // 24 hours
+                        refreshExpiresAt: Date.now() + (7 * 24 * 60 * 60 * 1000), // 7 days
+                        country: 'US',
+                        currency: 'USD',
+                        permissions: ['read:accounts', 'write:accounts', 'read:transactions', 'write:transactions'],
+                        isDemo: true
+                    };
+                    
+                    // Store demo session
+                    sessionStorage.setItem('smartfinance_session', JSON.stringify(session));
+                    localStorage.setItem('smartfinance_demo_mode', 'true');
+                    
+                    this.showAlert('Demo mode activated! Loading sample data...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = '/dashboard?demo=true';
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error('Demo login error:', error);
+                    this.showAlert('Failed to start demo mode. Please try again.', 'error');
+                    this.setLoadingState(false);
+                }
+            }
+            
+            validateForm(email, password) {
+                let isValid = true;
+                
+                // Email validation
+                if (!email) {
+                    this.showAlert('Please enter your email address.', 'error');
+                    this.emailInput.focus();
+                    return false;
+                }
+                
+                if (!this.isValidEmail(email)) {
+                    this.showAlert('Please enter a valid email address.', 'error');
+                    this.emailInput.focus();
+                    return false;
+                }
+                
+                // Password validation
+                if (!password) {
+                    this.showAlert('Please enter your password.', 'error');
+                    this.passwordInput.focus();
+                    return false;
+                }
+                
+                if (password.length < 8) {
+                    this.showAlert('Password must be at least 8 characters long.', 'error');
+                    this.passwordInput.focus();
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            validateEmail() {
+                const email = this.emailInput.value.trim();
+                if (email && !this.isValidEmail(email)) {
+                    this.emailInput.style.borderColor = '#ef4444';
+                } else {
+                    this.emailInput.style.borderColor = '';
+                }
+            }
+            
+            validatePassword() {
+                const password = this.passwordInput.value;
+                if (password && password.length < 8) {
+                    this.passwordInput.style.borderColor = '#ef4444';
+                } else {
+                    this.passwordInput.style.borderColor = '';
+                }
+            }
+            
+            isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            togglePasswordVisibility() {
+                const isPassword = this.passwordInput.type === 'password';
+                this.passwordInput.type = isPassword ? 'text' : 'password';
+                this.passwordToggle.textContent = isPassword ? '🙈' : '👁️';
+            }
+            
+            setLoadingState(loading, type = 'normal') {
+                this.isLoading = loading;
+                
+                if (loading) {
+                    if (type === 'biometric') {
+                        this.biometricButton.disabled = true;
+                        this.biometricButton.innerHTML = '<span>🔐</span><span>Authenticating...</span>';
+                    } else if (type === 'demo') {
+                        this.demoButton.disabled = true;
+                        this.demoButton.textContent = 'Loading Demo...';
+                    } else {
+                        this.loginButton.disabled = true;
+                        this.loginButton.classList.add('loading');
+                        this.loginText.textContent = 'Signing In...';
+                        this.emailInput.disabled = true;
+                        this.passwordInput.disabled = true;
+                    }
+                } else {
+                    // Reset all buttons
+                    this.loginButton.disabled = false;
+                    this.loginButton.classList.remove('loading');
+                    this.loginText.textContent = 'Sign In';
+                    this.emailInput.disabled = false;
+                    this.passwordInput.disabled = false;
+                    
+                    this.biometricButton.disabled = false;
+                    this.biometricButton.innerHTML = '<span>🔐</span><span>Sign in with Biometrics</span>';
+                    
+                    this.demoButton.disabled = false;
+                    this.demoButton.textContent = 'Start Demo';
+                }
+            }
+            
+            showAlert(message, type = 'info') {
+                // Remove existing alerts
+                this.alertContainer.innerHTML = '';
+                
+                // Create new alert
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                
+                this.alertContainer.appendChild(alert);
+                
+                // Auto-remove after 5 seconds for non-error messages
+                if (type !== 'error') {
+                    setTimeout(() => {
+                        if (alert.parentElement) {
+                            alert.remove();
+                        }
+                    }, 5000);
+                }
+            }
+            
+            async checkBiometricSupport() {
+                try {
+                    if (authManager.supportsWebAuthn) {
+                        // Check if user has biometric credentials stored
+                        const hasCredentials = localStorage.getItem('webauthn_credentials');
+                        if (hasCredentials) {
+                            this.biometricButton.style.display = 'flex';
+                        }
+                    }
+                } catch (error) {
+                    console.log('Biometric check failed:', error);
+                }
+            }
+            
+            async checkExistingSession() {
+                try {
+                    // Check if user is already logged in
+                    if (authManager.isAuthenticated()) {
+                        this.showAlert('You are already logged in. Redirecting...', 'info');
+                        setTimeout(() => {
+                            window.location.href = '/dashboard';
+                        }, 1000);
+                        return;
+                    }
+                    
+                    // Check for demo mode
+                    if (localStorage.getItem('smartfinance_demo_mode') === 'true') {
