@@ -3,515 +3,595 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Financial Dashboard</title>
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <title>Dashboard - SmartFinanceAI</title>
+    <link rel="manifest" href="../manifest.json">
     <meta name="theme-color" content="#8b5cf6">
     
-    <!-- Icons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="/styles/main.css" as="style">
-    <link rel="preload" href="/src/data/database-manager.js" as="script">
-    
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="/styles/main.css">
-    <link rel="stylesheet" href="/styles/dashboard.css">
-    
-    <!-- Security -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, 
+                #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: white;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-small {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .brain-icon-small {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .brand-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .user-email {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dashboard-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .welcome-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-icon.accounts {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .stat-icon.budget {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        
+        .stat-icon.goals {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .stat-icon.health {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+        
+        .stat-title {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            color: #10b981;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .feature-btn {
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .feature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+        
+        .demo-banner {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .demo-banner h3 {
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-banner p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .navbar-brand {
+                gap: 0.5rem;
+            }
+            
+            .brand-text {
+                font-size: 1rem;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
-<body class="dashboard-page">
+<body>
     <!-- Navigation -->
-    <nav class="navbar glass">
-        <div class="navbar-container">
-            <div class="navbar-brand">
-                <div class="navbar-logo">🧠</div>
-                <span>SmartFinanceAI</span>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <div class="logo-small">
+                <svg class="brain-icon-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25 35 C15 25, 15 15, 25 15 C35 5, 65 5, 75 15 C85 15, 85 25, 75 35 C85 45, 85 55, 75 65 C85 75, 85 85, 75 85 C65 95, 35 95, 25 85 C15 85, 15 75, 25 65 C15 55, 15 45, 25 35 Z"/>
+                    <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" opacity="0.9">$</text>
+                </svg>
             </div>
-            
-            <ul class="navbar-nav desktop-nav">
-                <li><a href="/dashboard" class="nav-link active">📊 Dashboard</a></li>
-                <li><a href="/accounts" class="nav-link">🏦 Accounts</a></li>
-                <li><a href="/transactions" class="nav-link">💳 Transactions</a></li>
-                <li><a href="/budget" class="nav-link">📈 Budget</a></li>
-                <li><a href="/goals" class="nav-link">🎯 Goals</a></li>
-                <li><a href="/reports" class="nav-link">📊 Reports</a></li>
-            </ul>
-            
-            <div class="navbar-actions">
-                <button class="nav-action-btn" id="privacy-toggle" title="Toggle Privacy Mode">
-                    👁️
-                </button>
-                <button class="nav-action-btn" id="notifications-btn" title="Notifications">
-                    🔔
-                    <span class="notification-badge" id="notification-count">0</span>
-                </button>
-                <div class="user-menu">
-                    <button class="user-avatar" id="user-menu-toggle">
-                        👤
-                    </button>
-                    <div class="user-dropdown" id="user-dropdown">
-                        <a href="/profile">👤 Profile</a>
-                        <a href="/settings">⚙️ Settings</a>
-                        <a href="/help">❓ Help</a>
-                        <hr>
-                        <a href="/logout">🚪 Sign Out</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Mobile menu toggle -->
-            <button class="mobile-nav-toggle" id="mobile-nav-toggle">
-                ☰
-            </button>
+            <span class="brand-text">SmartFinanceAI</span>
         </div>
         
-        <!-- Mobile navigation -->
-        <ul class="navbar-nav mobile-nav" id="mobile-nav">
-            <li><a href="/dashboard" class="nav-link active">📊 Dashboard</a></li>
-            <li><a href="/accounts" class="nav-link">🏦 Accounts</a></li>
-            <li><a href="/transactions" class="nav-link">💳 Transactions</a></li>
-            <li><a href="/budget" class="nav-link">📈 Budget</a></li>
-            <li><a href="/goals" class="nav-link">🎯 Goals</a></li>
-            <li><a href="/reports" class="nav-link">📊 Reports</a></li>
-        </ul>
+        <div class="navbar-user">
+            <div class="user-info">
+                <div class="user-name" id="user-name">Demo User</div>
+                <div class="user-email" id="user-email">demo@smartfinanceai.com</div>
+            </div>
+            <button class="logout-btn" id="logout-btn">Sign Out</button>
+        </div>
     </nav>
     
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Dashboard Container -->
-        <div id="dashboard-container" class="dashboard-container">
-            <!-- Initial loading state -->
-            <div class="loading-state">
-                <div class="loading-spinner"></div>
-                <h2>Loading your financial dashboard...</h2>
-                <p>Analyzing your accounts, transactions, and goals</p>
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Demo Banner -->
+        <div class="demo-banner" id="demo-banner" style="display: none;">
+            <h3>🎮 Demo Mode Active</h3>
+            <p>You're exploring SmartFinanceAI with sample data. Create a real account to start managing your finances!</p>
+        </div>
+        
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome to Your Financial Command Center</h1>
+            <p class="welcome-subtitle">Your AI-powered financial journey starts here</p>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon accounts">💰</div>
+                <div class="stat-title">Total Balance</div>
+                <div class="stat-value" id="total-balance">$12,450.00</div>
+                <div class="stat-change">+5.2% this month</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon budget">📊</div>
+                <div class="stat-title">Monthly Budget</div>
+                <div class="stat-value" id="monthly-budget">$3,200.00</div>
+                <div class="stat-change">78% used</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon goals">🎯</div>
+                <div class="stat-title">Active Goals</div>
+                <div class="stat-value" id="active-goals">3</div>
+                <div class="stat-change">2 on track</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon health">🧠</div>
+                <div class="stat-title">Financial Health</div>
+                <div class="stat-value" id="health-score">85/100</div>
+                <div class="stat-change">Excellent</div>
             </div>
         </div>
         
-        <!-- Quick Actions Floating Menu -->
-        <div class="quick-actions" id="quick-actions">
-            <button class="quick-action-toggle" id="quick-action-toggle">
-                ➕
-            </button>
-            <div class="quick-action-menu" id="quick-action-menu">
-                <button class="quick-action" onclick="window.location.href='/transactions/add'">
-                    💳 Add Transaction
-                </button>
-                <button class="quick-action" onclick="window.location.href='/accounts/create'">
-                    🏦 Add Account
-                </button>
-                <button class="quick-action" onclick="window.location.href='/goals/create'">
-                    🎯 Create Goal
-                </button>
-                <button class="quick-action" onclick="window.location.href='/csv-import'">
-                    📄 Import CSV
-                </button>
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🏦</div>
+                <h3 class="feature-title">Connect Accounts</h3>
+                <p class="feature-description">Link your bank accounts and credit cards to get a complete view of your finances in one place.</p>
+                <button class="feature-btn" onclick="showComingSoon()">Add Account</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Smart Budgeting</h3>
+                <p class="feature-description">Create intelligent budgets that adapt to your spending patterns and help you reach your goals faster.</p>
+                <button class="feature-btn" onclick="showComingSoon()">Create Budget</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Set Financial Goals</h3>
+                <p class="feature-description">Define your financial objectives and let our AI help you create actionable plans to achieve them.</p>
+                <button class="feature-btn" onclick="showComingSoon()">Set Goals</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">AI Financial Coach</h3>
+                <p class="feature-description">Get personalized insights and recommendations from your AI financial advisor available 24/7.</p>
+                <button class="feature-btn" onclick="showComingSoon()">Ask AI Coach</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Investment Tracking</h3>
+                <p class="feature-description">Monitor your investment portfolio and get intelligent recommendations for optimization.</p>
+                <button class="feature-btn" onclick="showComingSoon()">View Investments</button>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Mobile App</h3>
+                <p class="feature-description">Install SmartFinanceAI as a PWA on your phone for native app experience with offline access.</p>
+                <button class="feature-btn" onclick="installPWA()">Install App</button>
             </div>
         </div>
-    </main>
-    
-    <!-- Notification Container -->
-    <div id="notification-container" class="notification-container"></div>
-    
-    <!-- Offline Indicator -->
-    <div id="offline-indicator" class="offline-indicator" style="display: none;">
-        <span class="offline-icon">⚠️</span>
-        <span>You're offline. Data will sync when connection is restored.</span>
     </div>
     
-    <!-- Loading Overlay for Sync -->
-    <div id="sync-overlay" class="sync-overlay" style="display: none;">
-        <div class="sync-content">
-            <div class="sync-spinner"></div>
-            <h3>Syncing your data...</h3>
-            <p id="sync-status">Checking for updates</p>
-        </div>
-    </div>
-    
-    <!-- Core JavaScript Dependencies -->
-    <script src="/src/data/database-manager.js"></script>
-    <script src="/src/core/account-manager.js"></script>
-    <script src="/src/core/dashboard-controller.js"></script>
-    <script src="/src/global/localization.js"></script>
-    <script src="/src/utils/currency-utils.js"></script>
-    <script src="/src/utils/date-utils.js"></script>
-    <script src="/src/platform/user-manager.js"></script>
-    
-    <!-- Dashboard Specific Scripts -->
     <script>
-        /**
-         * Dashboard Application Initialization
-         */
-        class DashboardApp {
-            constructor() {
-                this.isOnline = navigator.onLine;
-                this.privacyMode = false;
-                this.isInitialized = false;
-            }
-            
-            async initialize() {
-                try {
-                    console.log('🚀 Initializing SmartFinanceAI Dashboard...');
-                    
-                    // Check authentication
-                    if (!this.checkAuthentication()) {
-                        window.location.href = '/auth/login';
-                        return;
-                    }
-                    
-                    // Initialize service worker
-                    await this.initializeServiceWorker();
-                    
-                    // Set up event listeners
-                    this.setupEventListeners();
-                    
-                    // Initialize dashboard controller
-                    await dashboardController.initialize();
-                    
-                    // Set up periodic sync
-                    this.setupPeriodicSync();
-                    
-                    this.isInitialized = true;
-                    console.log('✅ Dashboard application initialized');
-                    
-                } catch (error) {
-                    console.error('❌ Dashboard initialization failed:', error);
-                    this.showError('Failed to initialize dashboard. Please refresh the page.');
-                }
-            }
-            
-            checkAuthentication() {
-                const session = sessionStorage.getItem('smartfinance_session');
-                if (!session) {
-                    return false;
-                }
-                
-                try {
-                    const sessionData = JSON.parse(session);
-                    return sessionData.userId && sessionData.expiresAt > Date.now();
-                } catch {
-                    return false;
-                }
-            }
-            
-            async initializeServiceWorker() {
-                if ('serviceWorker' in navigator) {
-                    try {
-                        const registration = await navigator.serviceWorker.register('/sw.js');
-                        console.log('✅ Service Worker registered:', registration);
-                        
-                        // Listen for updates
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    this.showUpdateAvailable();
-                                }
-                            });
-                        });
-                        
-                    } catch (error) {
-                        console.error('Service Worker registration failed:', error);
-                    }
-                }
-            }
-            
-            setupEventListeners() {
-                // Online/offline detection
-                window.addEventListener('online', () => {
-                    this.isOnline = true;
-                    this.hideOfflineIndicator();
-                    this.syncData();
-                });
-                
-                window.addEventListener('offline', () => {
-                    this.isOnline = false;
-                    this.showOfflineIndicator();
-                });
-                
-                // Privacy mode toggle
-                document.getElementById('privacy-toggle')?.addEventListener('click', () => {
-                    this.togglePrivacyMode();
-                });
-                
-                // Mobile navigation
-                document.getElementById('mobile-nav-toggle')?.addEventListener('click', () => {
-                    this.toggleMobileNav();
-                });
-                
-                // User menu
-                document.getElementById('user-menu-toggle')?.addEventListener('click', () => {
-                    this.toggleUserMenu();
-                });
-                
-                // Quick actions
-                document.getElementById('quick-action-toggle')?.addEventListener('click', () => {
-                    this.toggleQuickActions();
-                });
-                
-                // Close dropdowns when clicking outside
-                document.addEventListener('click', (e) => {
-                    if (!e.target.closest('.user-menu')) {
-                        document.getElementById('user-dropdown').style.display = 'none';
-                    }
-                    if (!e.target.closest('.quick-actions')) {
-                        document.getElementById('quick-action-menu').style.display = 'none';
-                    }
-                });
-                
-                // Keyboard shortcuts
-                document.addEventListener('keydown', (e) => {
-                    this.handleKeyboardShortcuts(e);
-                });
-                
-                // Page visibility for sync
-                document.addEventListener('visibilitychange', () => {
-                    if (!document.hidden && this.isInitialized) {
-                        this.syncData();
-                    }
-                });
-            }
-            
-            togglePrivacyMode() {
-                this.privacyMode = !this.privacyMode;
-                const toggle = document.getElementById('privacy-toggle');
-                
-                if (this.privacyMode) {
-                    document.body.classList.add('privacy-mode');
-                    toggle.innerHTML = '🙈';
-                    toggle.title = 'Show financial amounts';
-                } else {
-                    document.body.classList.remove('privacy-mode');
-                    toggle.innerHTML = '👁️';
-                    toggle.title = 'Hide financial amounts';
-                }
-                
-                localStorage.setItem('privacy_mode', this.privacyMode);
-            }
-            
-            toggleMobileNav() {
-                const mobileNav = document.getElementById('mobile-nav');
-                const toggle = document.getElementById('mobile-nav-toggle');
-                
-                if (mobileNav.classList.contains('active')) {
-                    mobileNav.classList.remove('active');
-                    toggle.innerHTML = '☰';
-                } else {
-                    mobileNav.classList.add('active');
-                    toggle.innerHTML = '✕';
-                }
-            }
-            
-            toggleUserMenu() {
-                const dropdown = document.getElementById('user-dropdown');
-                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-            }
-            
-            toggleQuickActions() {
-                const menu = document.getElementById('quick-action-menu');
-                const toggle = document.getElementById('quick-action-toggle');
-                
-                if (menu.style.display === 'block') {
-                    menu.style.display = 'none';
-                    toggle.innerHTML = '➕';
-                } else {
-                    menu.style.display = 'block';
-                    toggle.innerHTML = '✕';
-                }
-            }
-            
-            handleKeyboardShortcuts(e) {
-                // Ctrl/Cmd + combinations
-                if (e.ctrlKey || e.metaKey) {
-                    switch (e.key) {
-                        case 'r':
-                            e.preventDefault();
-                            dashboardController.refreshData();
-                            break;
-                        case 'h':
-                            e.preventDefault();
-                            this.togglePrivacyMode();
-                            break;
-                        case 'n':
-                            e.preventDefault();
-                            window.location.href = '/transactions/add';
-                            break;
-                    }
-                }
-                
-                // Escape key
-                if (e.key === 'Escape') {
-                    document.getElementById('user-dropdown').style.display = 'none';
-                    document.getElementById('quick-action-menu').style.display = 'none';
-                    document.getElementById('mobile-nav').classList.remove('active');
-                }
-            }
-            
-            async syncData() {
-                if (!this.isOnline || !this.isInitialized) return;
-                
-                try {
-                    this.showSyncIndicator();
-                    await dashboardController.refreshData(false);
-                    this.hideSyncIndicator();
-                } catch (error) {
-                    console.error('Sync failed:', error);
-                    this.hideSyncIndicator();
-                }
-            }
-            
-            setupPeriodicSync() {
-                // Sync every 5 minutes when page is visible
-                setInterval(() => {
-                    if (!document.hidden && this.isOnline) {
-                        this.syncData();
-                    }
-                }, 300000); // 5 minutes
-            }
-            
-            showOfflineIndicator() {
-                document.getElementById('offline-indicator').style.display = 'flex';
-            }
-            
-            hideOfflineIndicator() {
-                document.getElementById('offline-indicator').style.display = 'none';
-            }
-            
-            showSyncIndicator() {
-                document.getElementById('sync-overlay').style.display = 'flex';
-            }
-            
-            hideSyncIndicator() {
-                document.getElementById('sync-overlay').style.display = 'none';
-            }
-            
-            showUpdateAvailable() {
-                const notification = this.createNotification(
-                    'App Update Available',
-                    'A new version is ready. Refresh to update.',
-                    'info',
-                    [
-                        {
-                            text: 'Refresh',
-                            action: () => window.location.reload()
-                        },
-                        {
-                            text: 'Later',
-                            action: () => {}
-                        }
-                    ]
-                );
-                
-                document.getElementById('notification-container').appendChild(notification);
-            }
-            
-            showError(message) {
-                const notification = this.createNotification(
-                    'Error',
-                    message,
-                    'error'
-                );
-                
-                document.getElementById('notification-container').appendChild(notification);
-            }
-            
-            createNotification(title, message, type = 'info', actions = null) {
-                const notification = document.createElement('div');
-                notification.className = `notification notification-${type}`;
-                
-                const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
-                
-                notification.innerHTML = `
-                    <div class="notification-content">
-                        <div class="notification-header">
-                            <span class="notification-icon">${icon}</span>
-                            <span class="notification-title">${title}</span>
-                            <button class="notification-close" onclick="this.closest('.notification').remove()">×</button>
-                        </div>
-                        <div class="notification-message">${message}</div>
-                        ${actions ? `
-                            <div class="notification-actions">
-                                ${actions.map(action => `
-                                    <button class="notification-action" onclick="(${action.action})(); this.closest('.notification').remove();">
-                                        ${action.text}
-                                    </button>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-                
-                // Auto-remove after 8 seconds if no actions
-                if (!actions) {
-                    setTimeout(() => {
-                        if (notification.parentElement) {
-                            notification.remove();
-                        }
-                    }, 8000);
-                }
-                
-                return notification;
-            }
-        }
+        // Get URL parameters to check login method
+        const urlParams = new URLSearchParams(window.location.search);
+        const loginMethod = urlParams.get('login');
         
-        // Initialize application
-        const dashboardApp = new DashboardApp();
-        
-        // Start when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                dashboardApp.initialize();
-            });
-        } else {
-            dashboardApp.initialize();
-        }
-        
-        // Load privacy mode preference
-        if (localStorage.getItem('privacy_mode') === 'true') {
-            document.addEventListener('DOMContentLoaded', () => {
-                dashboardApp.togglePrivacyMode();
-            });
-        }
-        
-        // Analytics tracking (placeholder)
-        function trackEvent(category, action, label) {
-            console.log('📊 Analytics:', { category, action, label });
-            // In production, send to analytics service
-        }
-        
-        // Performance monitoring
-        window.addEventListener('load', () => {
-            // Track page load performance
-            const perfData = performance.getEntriesByType('navigation')[0];
-            console.log('⚡ Page Load Performance:', {
-                loadTime: perfData.loadEventEnd - perfData.loadEventStart,
-                domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
-                firstPaint: performance.getEntriesByType('paint')[0]?.startTime
-            });
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎛️ SmartFinanceAI Dashboard Loaded!');
+            console.log('💡 Login method:', loginMethod);
+            
+            // Load user session
+            loadUserSession();
+            
+            // Check if demo mode
+            if (loginMethod === 'demo' || isDemo()) {
+                showDemoMode();
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Show welcome message based on login method
+            showWelcomeMessage(loginMethod);
         });
         
-        console.log('✅ Dashboard application script loaded!');
-    </script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(registrationError => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
+        function loadUserSession() {
+            const session = localStorage.getItem('smartfinance_session');
+            if (session) {
+                try {
+                    const userData = JSON.parse(session);
+                    document.getElementById('user-email').textContent = userData.email;
+                    
+                    // Set user name based on email
+                    const name = userData.email.split('@')[0];
+                    document.getElementById('user-name').textContent = 
+                        name.charAt(0).toUpperCase() + name.slice(1);
+                        
+                    console.log('✅ User session loaded:', userData.email);
+                } catch (error) {
+                    console.error('❌ Error loading user session:', error);
+                }
+            }
+        }
+        
+        function isDemo() {
+            const session = localStorage.getItem('smartfinance_session');
+            if (session) {
+                try {
+                    const userData = JSON.parse(session);
+                    return userData.isDemo || userData.email.includes('demo');
+                } catch (error) {
+                    return false;
+                }
+            }
+            return false;
+        }
+        
+        function showDemoMode() {
+            const demoBanner = document.getElementById('demo-banner');
+            demoBanner.style.display = 'block';
+            
+            // Update stats with demo data
+            document.getElementById('total-balance').textContent = '$12,450.00';
+            document.getElementById('monthly-budget').textContent = '$3,200.00';
+            document.getElementById('active-goals').textContent = '3';
+            document.getElementById('health-score').textContent = '85/100';
+            
+            console.log('🎮 Demo mode activated');
+        }
+        
+        function setupEventListeners() {
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                logout();
             });
         }
+        
+        function showWelcomeMessage(method) {
+            let message = '';
+            
+            switch(method) {
+                case 'biometric':
+                    message = '🔐 Welcome back! You logged in using biometric authentication.';
+                    break;
+                case 'demo':
+                    message = '🎮 Welcome to demo mode! Explore with sample data.';
+                    break;
+                case 'password':
+                    message = '🔑 Welcome back! You logged in successfully.';
+                    break;
+                default:
+                    message = '🎉 Welcome to SmartFinanceAI!';
+            }
+            
+            // Show temporary notification
+            showNotification(message, 'success');
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                'success': 'linear-gradient(135deg, #10b981, #059669)',
+                'info': 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                'warning': 'linear-gradient(135deg, #f59e0b, #d97706)',
+                'error': 'linear-gradient(135deg, #ef4444, #dc2626)'
+            };
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 2rem;
+                right: 2rem;
+                background: ${colors[type]};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 1rem;
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                font-weight: 600;
+                font-size: 1rem;
+                max-width: 350px;
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                setTimeout(() => notification.remove(), 400);
+            }, 4000);
+        }
+        
+        function showComingSoon() {
+            showNotification('🚀 This feature is coming soon! Stay tuned for updates.', 'info');
+        }
+        
+        function installPWA() {
+            if ('serviceWorker' in navigator) {
+                showNotification('📱 To install: Use your browser menu > "Add to Home Screen" or "Install App"', 'info');
+            } else {
+                showNotification('PWA installation not supported on this browser', 'warning');
+            }
+        }
+        
+        function logout() {
+            // Clear session data
+            localStorage.removeItem('smartfinance_session');
+            localStorage.removeItem('smartfinance_session_expiry');
+            
+            showNotification('👋 Signed out successfully! Redirecting...', 'success');
+            
+            // Redirect to login page
+            setTimeout(() => {
+                window.location.href = '../auth/login.html';
+            }, 1500);
+        }
+        
+        // Add slide animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Log dashboard ready state
+        console.log('✅ SmartFinanceAI Dashboard Ready!');
+        console.log('🎯 Features available: Account overview, stats, navigation');
+        console.log('💡 Next steps: Build individual feature pages');
     </script>
 </body>
 </html>
