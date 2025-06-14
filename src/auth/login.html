@@ -887,3 +887,59 @@
                     
                     // Check for demo mode
                     if (localStorage.getItem('smartfinance_demo_mode') === 'true') {
+                        this.showAlert('Demo mode available. Click "Start Demo" to continue.', 'info');
+                    }
+                    
+                    // Pre-fill email if available
+                    const savedEmail = localStorage.getItem('smartfinance_last_email');
+                    if (savedEmail) {
+                        this.emailInput.value = savedEmail;
+                        this.passwordInput.focus();
+                    }
+                    
+                } catch (error) {
+                    console.log('Session check failed:', error);
+                }
+            }
+            
+            fillDemoCredentials() {
+                this.emailInput.value = 'demo@smartfinanceai.com';
+                this.passwordInput.value = 'demo123456';
+                this.showAlert('Demo credentials filled. Click Sign In or use Ctrl+Enter.', 'info');
+            }
+        }
+        
+        // Initialize login page when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoginPage();
+        });
+        
+        // Handle URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Show message if redirected from registration
+        if (urlParams.get('registered') === 'true') {
+            setTimeout(() => {
+                const loginPage = new LoginPage();
+                loginPage.showAlert('Account created successfully! Please sign in.', 'success');
+            }, 500);
+        }
+        
+        // Show message if redirected due to session expiry
+        if (urlParams.get('expired') === 'true') {
+            setTimeout(() => {
+                const loginPage = new LoginPage();
+                loginPage.showAlert('Your session has expired. Please sign in again.', 'info');
+            }, 500);
+        }
+        
+        // Show message if redirected due to unauthorized access
+        if (urlParams.get('unauthorized') === 'true') {
+            setTimeout(() => {
+                const loginPage = new LoginPage();
+                loginPage.showAlert('Please sign in to access this page.', 'info');
+            }, 500);
+        }
+    </script>
+</body>
+</html>
