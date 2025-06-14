@@ -818,4 +818,395 @@
                     this.saveSession(email);
                     
                     // Save email if remember me is checked
-                    if (this.rememberCheckbox.checked)
+                    if (this.rememberCheckbox.checked) {
+                        localStorage.setItem('smartfinance_remember_email', email);
+                    }
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        this.redirectToDashboard('password');
+                    }, 1500);
+                } else {
+                    this.showAlert('Invalid email or password. Please try again.', 'error');
+                }
+                
+                this.setLoading(false);
+            }
+            
+            handleDemoLogin() {
+                this.showAlert('Starting demo mode...', 'info');
+                
+                setTimeout(() => {
+                    this.showAlert('Demo mode activated! Exploring with sample data 📊', 'success');
+                    
+                    // Save demo session
+                    this.saveSession('demo@smartfinanceai.com', true);
+                    
+                    setTimeout(() => {
+                        this.redirectToDashboard('demo');
+                    }, 1500);
+                }, 1000);
+            }
+            
+            handleForgotPassword(e) {
+                e.preventDefault();
+                
+                const email = this.emailInput.value.trim();
+                
+                if (email) {
+                    this.showAlert(`Password reset instructions will be sent to ${email}`, 'info');
+                    // In real app: window.location.href = '../auth/forgot-password.html';
+                } else {
+                    // Show password reset modal or redirect
+                    this.showAlert('Please enter your email address first, then click "Forgot password?"', 'info');
+                    this.emailInput.focus();
+                }
+            }
+            
+            handleRegister(e) {
+                e.preventDefault();
+                this.showAlert('Redirecting to registration...', 'info');
+                
+                setTimeout(() => {
+                    // In real app: window.location.href = '../auth/register.html';
+                    this.showAlert('Registration page would open here. For demo, use the demo login button instead.', 'info');
+                }, 1000);
+            }
+            
+            togglePassword() {
+                const isPassword = this.passwordInput.type === 'password';
+                this.passwordInput.type = isPassword ? 'text' : 'password';
+                this.passwordToggle.textContent = isPassword ? '🙈' : '👁️';
+            }
+            
+            validateEmail() {
+                const email = this.emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValid = emailRegex.test(email);
+                
+                if (email && !isValid) {
+                    this.emailInput.style.borderColor = '#ef4444';
+                    return false;
+                } else {
+                    this.emailInput.style.borderColor = '';
+                    return email.length > 0;
+                }
+            }
+            
+            validatePassword() {
+                const password = this.passwordInput.value;
+                const isValid = password.length >= 8;
+                
+                if (password && !isValid) {
+                    this.passwordInput.style.borderColor = '#ef4444';
+                    return false;
+                } else {
+                    this.passwordInput.style.borderColor = '';
+                    return password.length > 0;
+                }
+            }
+            
+            saveEmailIfRemember() {
+                if (this.rememberCheckbox.checked && this.validateEmail()) {
+                    localStorage.setItem('smartfinance_remember_email', this.emailInput.value.trim());
+                }
+            }
+            
+            loadRememberedEmail() {
+                const rememberedEmail = localStorage.getItem('smartfinance_remember_email');
+                if (rememberedEmail) {
+                    this.emailInput.value = rememberedEmail;
+                    this.rememberCheckbox.checked = true;
+                    this.passwordInput.focus();
+                }
+            }
+            
+            saveSession(email, isDemo = false) {
+                const session = {
+                    email: email,
+                    loginTime: new Date().toISOString(),
+                    isDemo: isDemo,
+                    sessionId: this.generateSessionId()
+                };
+                
+                localStorage.setItem('smartfinance_session', JSON.stringify(session));
+                
+                // Set session expiry (24 hours)
+                const expiryTime = new Date();
+                expiryTime.setHours(expiryTime.getHours() + 24);
+                localStorage.setItem('smartfinance_session_expiry', expiryTime.toISOString());
+            }
+            
+            generateSessionId() {
+                return 'sess_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+            }
+            
+            setLoading(loading) {
+                this.isLoading = loading;
+                this.loginButton.disabled = loading;
+                
+                if (loading) {
+                    this.loginButton.classList.add('loading');
+                    this.loginText.textContent = '';
+                } else {
+                    this.loginButton.classList.remove('loading');
+                    this.loginText.textContent = 'Sign In';
+                }
+            }
+            
+            showAlert(message, type = 'info') {
+                // Remove existing alerts
+                this.alertContainer.innerHTML = '';
+                
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                
+                this.alertContainer.appendChild(alert);
+                
+                // Auto-remove alerts after 5 seconds (except errors which stay longer)
+                const timeout = type === 'error' ? 8000 : 5000;
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, timeout);
+            }
+            
+            redirectToDashboard(loginMethod) {
+                // Create dashboard URL with login method parameter
+                const dashboardUrl = `../core/dashboard.html?login=${loginMethod}&t=${Date.now()}`;
+                
+                // For demo purposes, show what would happen
+                this.showAlert(`Redirecting to dashboard... (${loginMethod} login)`, 'success');
+                
+                // In a real app, you would redirect:
+                // window.location.href = dashboardUrl;
+                
+                // For demo, simulate the redirect with a message
+                setTimeout(() => {
+                    this.showAlert('🎉 Login successful! In a real app, you would now be on the dashboard.', 'success');
+                    
+                    // Show demo next steps
+                    setTimeout(() => {
+                        this.showAlert('💡 Next: Create the dashboard.html file to complete the user flow.', 'info');
+                    }, 3000);
+                }, 2000);
+            }
+        }
+        
+        // Enhanced form interactions
+        class FormEnhancements {
+            constructor() {
+                this.addFloatingLabels();
+                this.addInputAnimations();
+                this.addKeyboardShortcuts();
+            }
+            
+            addFloatingLabels() {
+                const inputs = document.querySelectorAll('.form-input');
+                inputs.forEach(input => {
+                    input.addEventListener('focus', () => {
+                        input.parentElement.classList.add('focused');
+                    });
+                    
+                    input.addEventListener('blur', () => {
+                        if (!input.value) {
+                            input.parentElement.classList.remove('focused');
+                        }
+                    });
+                    
+                    // Check if input has value on load
+                    if (input.value) {
+                        input.parentElement.classList.add('focused');
+                    }
+                });
+            }
+            
+            addInputAnimations() {
+                const inputs = document.querySelectorAll('.form-input');
+                inputs.forEach(input => {
+                    input.addEventListener('keydown', (e) => {
+                        // Add subtle animation on key press
+                        input.style.transform = 'scale(1.01)';
+                        setTimeout(() => {
+                            input.style.transform = '';
+                        }, 100);
+                    });
+                });
+            }
+            
+            addKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    // Alt + D for demo login
+                    if (e.altKey && e.key === 'd') {
+                        e.preventDefault();
+                        document.getElementById('demo-login').click();
+                    }
+                    
+                    // Ctrl/Cmd + Enter for quick login
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        e.preventDefault();
+                        document.getElementById('login-form').dispatchEvent(new Event('submit'));
+                    }
+                });
+            }
+        }
+        
+        // Enhanced biometric authentication with better error handling
+        class BiometricAuth {
+            constructor() {
+                this.credentialId = null;
+                this.setupBiometric();
+            }
+            
+            async setupBiometric() {
+                try {
+                    // Check for existing credentials
+                    const storedCredential = localStorage.getItem('smartfinance_biometric_id');
+                    if (storedCredential) {
+                        this.credentialId = storedCredential;
+                        console.log('✅ Found existing biometric credential');
+                    }
+                } catch (error) {
+                    console.log('Biometric setup error:', error);
+                }
+            }
+            
+            async createCredential(email) {
+                try {
+                    const credential = await navigator.credentials.create({
+                        publicKey: {
+                            challenge: new Uint8Array(32),
+                            rp: {
+                                name: "SmartFinanceAI",
+                                id: "smartfinanceai.com",
+                            },
+                            user: {
+                                id: new TextEncoder().encode(email),
+                                name: email,
+                                displayName: "SmartFinanceAI User",
+                            },
+                            pubKeyCredParams: [{alg: -7, type: "public-key"}],
+                            authenticatorSelection: {
+                                authenticatorAttachment: "platform",
+                                userVerification: "required"
+                            },
+                            timeout: 60000,
+                            attestation: "direct"
+                        }
+                    });
+                    
+                    if (credential) {
+                        // Store credential ID
+                        this.credentialId = credential.id;
+                        localStorage.setItem('smartfinance_biometric_id', credential.id);
+                        return true;
+                    }
+                } catch (error) {
+                    console.log('Credential creation error:', error);
+                    return false;
+                }
+            }
+        }
+        
+        // Performance monitoring
+        class PerformanceMonitor {
+            constructor() {
+                this.startTime = performance.now();
+                this.monitorPageLoad();
+            }
+            
+            monitorPageLoad() {
+                window.addEventListener('load', () => {
+                    const loadTime = performance.now() - this.startTime;
+                    console.log(`📊 Page loaded in ${loadTime.toFixed(2)}ms`);
+                    
+                    // Track page load performance
+                    if (loadTime > 2000) {
+                        console.warn('⚠️ Slow page load detected');
+                    }
+                });
+            }
+        }
+        
+        // Initialize everything when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 SmartFinanceAI Login Page Initializing...');
+            
+            // Initialize main login functionality
+            const loginPage = new LoginPage();
+            
+            // Initialize enhancements
+            const formEnhancements = new FormEnhancements();
+            const biometricAuth = new BiometricAuth();
+            const performanceMonitor = new PerformanceMonitor();
+            
+            // Set up service worker for PWA functionality
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('../sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
+            }
+            
+            // Check for PWA install prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                console.log('💡 PWA install available');
+            });
+            
+            console.log('✅ SmartFinanceAI Login Page Ready!');
+            console.log('💡 Demo credentials:');
+            console.log('   📧 Email: demo@smartfinanceai.com');
+            console.log('   🔑 Password: demo123456');
+            console.log('   🎮 Or use the "Start Demo" button');
+        });
+        
+        // Add error boundary for better error handling
+        window.addEventListener('error', function(e) {
+            console.error('💥 JavaScript Error:', e.error);
+            
+            // Show user-friendly error message
+            const alertContainer = document.getElementById('alert-container');
+            if (alertContainer) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-error">
+                        Something went wrong. Please refresh the page and try again.
+                    </div>
+                `;
+            }
+        });
+        
+        // Handle offline/online status
+        window.addEventListener('online', () => {
+            console.log('🌐 Connection restored');
+            const alertContainer = document.getElementById('alert-container');
+            if (alertContainer) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-success">
+                        Connection restored! You're back online.
+                    </div>
+                `;
+            }
+        });
+        
+        window.addEventListener('offline', () => {
+            console.log('📴 Connection lost');
+            const alertContainer = document.getElementById('alert-container');
+            if (alertContainer) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-info">
+                        You're offline. Some features may be limited.
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
