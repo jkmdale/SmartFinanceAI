@@ -6,15 +6,12 @@
     <title>Sign In - SmartFinanceAI</title>
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="../manifest.json">
     <meta name="theme-color" content="#8b5cf6">
     
     <!-- Icons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-    
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="../public/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../public/icons/favicon-16x16.png">
     
     <style>
         * {
@@ -33,7 +30,7 @@
             background: linear-gradient(135deg, 
                 #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
             min-height: 100vh;
-            min-height: 100dvh; /* Dynamic viewport height for mobile */
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -108,7 +105,7 @@
         .logo-container {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
             border-radius: 1.5rem;
             display: flex;
             align-items: center;
@@ -120,19 +117,12 @@
             overflow: hidden;
         }
         
-        .logo-container img {
+        /* AI Brain Icon using SVG */
+        .brain-icon {
             width: 50px;
             height: 50px;
-            object-fit: contain;
-            filter: brightness(0) invert(1);
-        }
-        
-        /* Fallback if no logo image */
-        .logo-container:empty::before {
-            content: 'SF';
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
+            fill: white;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
         
         @keyframes logoGlow {
@@ -149,7 +139,7 @@
             font-weight: 700;
             color: white;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -248,6 +238,7 @@
             color: #8b5cf6;
             text-decoration: none;
             transition: color 0.2s ease;
+            cursor: pointer;
         }
         
         .forgot-password:hover {
@@ -258,7 +249,7 @@
         .login-button {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            background: linear-gradient(135deg, #40e0d0 0%, #3b82f6 50%, #8b5cf6 100%);
             border: none;
             border-radius: 1rem;
             color: white;
@@ -310,15 +301,11 @@
         }
         
         .divider {
-            display: none; /* Hidden by default until biometric is available */
+            display: flex;
             align-items: center;
             margin: 1.5rem 0;
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.8rem;
-        }
-        
-        .divider.show {
-            display: flex;
         }
         
         .divider::before,
@@ -345,14 +332,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 1rem;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.75rem;
-        }
-        
-        .biometric-login.show {
-            display: flex;
         }
         
         .biometric-login:hover {
@@ -452,6 +435,7 @@
             text-decoration: none;
             font-weight: 600;
             transition: color 0.2s ease;
+            cursor: pointer;
         }
         
         .signup-link a:hover {
@@ -477,7 +461,7 @@
                 height: 60px;
             }
             
-            .logo-container img {
+            .brain-icon {
                 width: 40px;
                 height: 40px;
             }
@@ -501,58 +485,6 @@
                 gap: 0.75rem;
             }
         }
-        
-        /* Landscape mobile orientation */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .login-container {
-                margin: 0.5rem auto;
-                max-height: 90vh;
-                overflow-y: auto;
-                padding: 1rem;
-            }
-            
-            .login-header {
-                margin-bottom: 1rem;
-            }
-            
-            .logo-container {
-                width: 50px;
-                height: 50px;
-                margin-bottom: 0.75rem;
-            }
-            
-            .demo-section {
-                margin-top: 1rem;
-                padding: 1rem;
-            }
-        }
-        
-        /* Accessibility */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-        
-        /* High contrast mode */
-        @media (prefers-contrast: high) {
-            .login-container {
-                border-width: 2px;
-                border-color: white;
-            }
-            
-            .form-input {
-                border-width: 2px;
-            }
-            
-            .form-input:focus {
-                border-width: 3px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -560,7 +492,32 @@
         <!-- Header -->
         <div class="login-header">
             <div class="logo-container">
-                <img src="/icons/logo.svg" alt="SmartFinanceAI" onerror="this.src='/icons/logo.png'; if(this.src.includes('logo.png')){this.style.display='none'; this.parentElement.innerHTML='SF';}">
+                <!-- Custom AI Brain SVG Icon -->
+                <svg class="brain-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Outer brain shape -->
+                    <path d="M25 35 C15 25, 15 15, 25 15 C35 5, 65 5, 75 15 C85 15, 85 25, 75 35 C85 45, 85 55, 75 65 C85 75, 85 85, 75 85 C65 95, 35 95, 25 85 C15 85, 15 75, 25 65 C15 55, 15 45, 25 35 Z"/>
+                    
+                    <!-- Inner brain divisions -->
+                    <path d="M50 20 Q60 30, 50 40 Q60 50, 50 60 Q60 70, 50 80" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+                    <path d="M50 20 Q40 30, 50 40 Q40 50, 50 60 Q40 70, 50 80" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+                    
+                    <!-- Dollar sign in center -->
+                    <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" opacity="0.9">$</text>
+                    
+                    <!-- Neural connections -->
+                    <circle cx="35" cy="30" r="2" opacity="0.6"/>
+                    <circle cx="65" cy="30" r="2" opacity="0.6"/>
+                    <circle cx="30" cy="50" r="2" opacity="0.6"/>
+                    <circle cx="70" cy="50" r="2" opacity="0.6"/>
+                    <circle cx="35" cy="70" r="2" opacity="0.6"/>
+                    <circle cx="65" cy="70" r="2" opacity="0.6"/>
+                    
+                    <!-- Connection lines -->
+                    <line x1="35" y1="30" x2="45" y2="40" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="65" y1="30" x2="55" y2="40" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="30" y1="50" x2="40" y2="50" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                    <line x1="70" y1="50" x2="60" y2="50" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+                </svg>
             </div>
             <h1 class="login-title">Welcome Back</h1>
             <p class="login-subtitle">Sign in to your SmartFinanceAI account</p>
@@ -610,7 +567,7 @@
                     <span>Remember me</span>
                 </label>
                 
-                <a href="/auth/forgot-password" class="forgot-password">Forgot password?</a>
+                <a href="#" class="forgot-password" id="forgot-password-link">Forgot password?</a>
             </div>
             
             <button type="submit" class="login-button" id="login-button">
@@ -625,7 +582,7 @@
         
         <button class="biometric-login" id="biometric-login">
             <span>🔐</span>
-            <span>Sign in with Face ID / Fingerprint</span>
+            <span id="biometric-text">Sign in with Face ID / Fingerprint</span>
         </button>
         
         <!-- Demo Section -->
@@ -639,13 +596,13 @@
         
         <!-- Sign Up Link -->
         <div class="signup-link">
-            <p>Don't have an account? <a href="/auth/register">Create one here</a></p>
+            <p>Don't have an account? <a href="#" id="register-link">Create one here</a></p>
         </div>
     </div>
     
     <script>
         /**
-         * Login Page Logic - Simplified and Working
+         * Login Page Logic - Fully Functional
          */
         class LoginPage {
             constructor() {
@@ -656,236 +613,209 @@
                 this.loginButton = document.getElementById('login-button');
                 this.loginText = document.getElementById('login-text');
                 this.biometricButton = document.getElementById('biometric-login');
+                this.biometricText = document.getElementById('biometric-text');
                 this.demoButton = document.getElementById('demo-login');
                 this.passwordToggle = document.getElementById('password-toggle');
                 this.alertContainer = document.getElementById('alert-container');
                 this.dividerSection = document.getElementById('divider-section');
+                this.forgotPasswordLink = document.getElementById('forgot-password-link');
+                this.registerLink = document.getElementById('register-link');
                 
                 this.isLoading = false;
+                this.biometricSupported = false;
+                
                 this.setupEventListeners();
                 this.checkBiometricSupport();
-                this.checkExistingSession();
+                this.loadRememberedEmail();
+                this.initializeApp();
+            }
+            
+            initializeApp() {
+                // Show welcome message
+                this.showAlert('Welcome to SmartFinanceAI! 🚀 Use demo mode to explore with sample data.', 'info');
+                
+                // Simulate checking for existing session
+                setTimeout(() => {
+                    const savedSession = localStorage.getItem('smartfinance_session');
+                    if (savedSession) {
+                        this.showAlert('Found existing session. You can continue where you left off!', 'success');
+                    }
+                }, 1000);
             }
             
             setupEventListeners() {
                 // Form submission
-                this.form.addEventListener('submit', this.handleLogin.bind(this));
+                this.form.addEventListener('submit', (e) => this.handleLogin(e));
                 
                 // Password toggle
-                this.passwordToggle.addEventListener('click', this.togglePasswordVisibility.bind(this));
+                this.passwordToggle.addEventListener('click', () => this.togglePassword());
                 
                 // Biometric login
-                this.biometricButton.addEventListener('click', this.handleBiometricLogin.bind(this));
+                this.biometricButton.addEventListener('click', () => this.handleBiometricLogin());
                 
                 // Demo login
-                this.demoButton.addEventListener('click', this.handleDemoLogin.bind(this));
+                this.demoButton.addEventListener('click', () => this.handleDemoLogin());
+                
+                // Forgot password
+                this.forgotPasswordLink.addEventListener('click', (e) => this.handleForgotPassword(e));
+                
+                // Register link
+                this.registerLink.addEventListener('click', (e) => this.handleRegister(e));
+                
+                // Input validation
+                this.emailInput.addEventListener('input', () => this.validateEmail());
+                this.passwordInput.addEventListener('input', () => this.validatePassword());
+                
+                // Auto-save email for remember me
+                this.emailInput.addEventListener('blur', () => this.saveEmailIfRemember());
                 
                 // Enter key handling
                 this.passwordInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && !this.isLoading) {
+                    if (e.key === 'Enter') {
                         this.handleLogin(e);
-                    }
-                });
-                
-                // Demo shortcut (Ctrl+D)
-                document.addEventListener('keydown', (e) => {
-                    if (e.ctrlKey && e.key === 'd') {
-                        e.preventDefault();
-                        this.fillDemoCredentials();
                     }
                 });
             }
             
-            async handleLogin(e) {
+            async checkBiometricSupport() {
+                try {
+                    // Check if WebAuthn is supported
+                    if (window.PublicKeyCredential && 
+                        PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+                        
+                        const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+                        
+                        if (available) {
+                            this.biometricSupported = true;
+                            this.biometricButton.style.display = 'flex';
+                            this.dividerSection.style.display = 'flex';
+                            
+                            // Update button text based on platform
+                            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                            const isMac = navigator.platform.toLowerCase().includes('mac');
+                            const isAndroid = /Android/.test(navigator.userAgent);
+                            
+                            let biometricType = 'Biometric';
+                            if (isIOS || isMac) {
+                                biometricType = 'Face ID / Touch ID';
+                            } else if (isAndroid) {
+                                biometricType = 'Fingerprint / Face Unlock';
+                            } else {
+                                biometricType = 'Windows Hello';
+                            }
+                            
+                            this.biometricText.textContent = `Sign in with ${biometricType}`;
+                            
+                            console.log('✅ Biometric authentication available:', biometricType);
+                        } else {
+                            this.hideBiometricLogin();
+                        }
+                    } else {
+                        this.hideBiometricLogin();
+                    }
+                } catch (error) {
+                    console.log('❌ Biometric check failed:', error);
+                    this.hideBiometricLogin();
+                }
+            }
+            
+            hideBiometricLogin() {
+                this.biometricButton.style.display = 'none';
+                this.dividerSection.style.display = 'none';
+                console.log('ℹ️ Biometric authentication not available on this device');
+            }
+            
+            async handleBiometricLogin() {
+                if (!this.biometricSupported) {
+                    this.showAlert('Biometric authentication is not available on this device.', 'error');
+                    return;
+                }
+                
+                try {
+                    this.biometricButton.disabled = true;
+                    this.biometricText.textContent = 'Authenticating...';
+                    
+                    // Create credential request options
+                    const credentialRequestOptions = {
+                        publicKey: {
+                            challenge: new Uint8Array(32), // In real app, get from server
+                            allowCredentials: [{
+                                id: new Uint8Array(32), // Stored credential ID
+                                type: 'public-key',
+                                transports: ['internal']
+                            }],
+                            timeout: 60000,
+                            userVerification: 'required'
+                        }
+                    };
+                    
+                    // Request biometric authentication
+                    const credential = await navigator.credentials.get(credentialRequestOptions);
+                    
+                    if (credential) {
+                        this.showAlert('Biometric authentication successful! 🎉', 'success');
+                        
+                        // Simulate successful login
+                        setTimeout(() => {
+                            this.redirectToDashboard('biometric');
+                        }, 1500);
+                    }
+                } catch (error) {
+                    console.log('Biometric authentication error:', error);
+                    
+                    if (error.name === 'NotAllowedError') {
+                        this.showAlert('Biometric authentication was cancelled or failed.', 'error');
+                    } else if (error.name === 'InvalidStateError') {
+                        this.showAlert('Please set up biometric authentication in your device settings first.', 'info');
+                    } else {
+                        this.showAlert('Biometric authentication failed. Please try again.', 'error');
+                    }
+                } finally {
+                    this.biometricButton.disabled = false;
+                    this.biometricText.textContent = 'Sign in with Face ID / Fingerprint';
+                }
+            }
+            
+            handleLogin(e) {
                 e.preventDefault();
                 
                 if (this.isLoading) return;
                 
                 const email = this.emailInput.value.trim();
                 const password = this.passwordInput.value;
-                const rememberMe = this.rememberCheckbox.checked;
                 
-                if (!this.validateForm(email, password)) {
+                // Validation
+                if (!this.validateEmail() || !this.validatePassword()) {
+                    this.showAlert('Please check your email and password.', 'error');
                     return;
                 }
                 
-                this.setLoadingState(true);
+                this.setLoading(true);
                 
-                try {
-                    // Simulate login process
-                    await this.simulateLogin(email, password, rememberMe);
-                    
-                    this.showAlert('Login successful! Redirecting...', 'success');
-                    
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1500);
-                    
-                } catch (error) {
-                    console.error('Login error:', error);
-                    this.showAlert(error.message || 'Login failed. Please try again.', 'error');
-                    this.setLoadingState(false);
-                    this.passwordInput.focus();
-                }
+                // Simulate login API call
+                setTimeout(() => {
+                    this.processLogin(email, password);
+                }, 1500);
             }
             
-            async simulateLogin(email, password, rememberMe) {
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 1000));
+            processLogin(email, password) {
+                // Demo credentials for testing
+                const validCredentials = [
+                    { email: 'demo@smartfinanceai.com', password: 'demo123456' },
+                    { email: 'test@example.com', password: 'password123' },
+                    { email: 'user@test.com', password: 'smartfinance' }
+                ];
                 
-                // Demo credentials
-                if (email === 'demo@smartfinanceai.com' && password === 'demo123') {
-                    return this.createDemoSession();
-                }
+                const isValidLogin = validCredentials.some(cred => 
+                    cred.email.toLowerCase() === email.toLowerCase() && 
+                    cred.password === password
+                );
                 
-                // Simple validation for demo
-                if (email.includes('@') && password.length >= 6) {
-                    return this.createUserSession(email, rememberMe);
-                }
-                
-                throw new Error('Invalid email or password');
-            }
-            
-            createUserSession(email, rememberMe) {
-                const session = {
-                    userId: 'user_' + Date.now(),
-                    email: email,
-                    accessToken: 'token_' + Math.random().toString(36),
-                    expiresAt: Date.now() + (rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000),
-                    isDemo: false
-                };
-                
-                sessionStorage.setItem('smartfinance_session', JSON.stringify(session));
-                localStorage.setItem('smartfinance_user_email', email);
-                
-                return session;
-            }
-            
-            createDemoSession() {
-                const session = {
-                    userId: 'demo_user',
-                    email: 'demo@smartfinanceai.com',
-                    accessToken: 'demo_token',
-                    expiresAt: Date.now() + (24 * 60 * 60 * 1000),
-                    isDemo: true
-                };
-                
-                sessionStorage.setItem('smartfinance_session', JSON.stringify(session));
-                localStorage.setItem('smartfinance_demo_mode', 'true');
-                
-                return session;
-            }
-            
-            async handleBiometricLogin() {
-                if (this.isLoading) return;
-                
-                this.setLoadingState(true, 'biometric');
-                
-                try {
-                    // Check if WebAuthn is supported
-                    if (!window.PublicKeyCredential) {
-                        throw new Error('Biometric authentication is not supported on this device');
-                    }
+                if (isValidLogin) {
+                    this.showAlert('Login successful! Welcome back! 🎉', 'success');
                     
-                    // Check if biometric auth is available
-                    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-                    if (!available) {
-                        throw new Error('No biometric authenticator available');
-                    }
+                    // Save session
+                    this.saveSession(email);
                     
-                    // Simulate biometric authentication
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    
-                    // Create session for biometric user
-                    this.createUserSession('biometric@smartfinanceai.com', true);
-                    
-                    this.showAlert('Biometric login successful! Redirecting...', 'success');
-                    
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1500);
-                    
-                } catch (error) {
-                    console.error('Biometric login error:', error);
-                    this.showAlert(error.message || 'Biometric login failed. Please try password login.', 'error');
-                    this.setLoadingState(false);
-                }
-            }
-            
-            async handleDemoLogin() {
-                if (this.isLoading) return;
-                
-                this.setLoadingState(true, 'demo');
-                
-                try {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    this.createDemoSession();
-                    
-                    this.showAlert('Demo mode activated! Loading sample data...', 'success');
-                    
-                    setTimeout(() => {
-                        window.location.href = '/dashboard?demo=true';
-                    }, 1500);
-                    
-                } catch (error) {
-                    console.error('Demo login error:', error);
-                    this.showAlert('Failed to start demo mode. Please try again.', 'error');
-                    this.setLoadingState(false);
-                }
-            }
-            
-            validateForm(email, password) {
-                if (!email) {
-                    this.showAlert('Please enter your email address.', 'error');
-                    this.emailInput.focus();
-                    return false;
-                }
-                
-                if (!email.includes('@')) {
-                    this.showAlert('Please enter a valid email address.', 'error');
-                    this.emailInput.focus();
-                    return false;
-                }
-                
-                if (!password) {
-                    this.showAlert('Please enter your password.', 'error');
-                    this.passwordInput.focus();
-                    return false;
-                }
-                
-                if (password.length < 6) {
-                    this.showAlert('Password must be at least 6 characters long.', 'error');
-                    this.passwordInput.focus();
-                    return false;
-                }
-                
-                return true;
-            }
-            
-            togglePasswordVisibility() {
-                const isPassword = this.passwordInput.type === 'password';
-                this.passwordInput.type = isPassword ? 'text' : 'password';
-                this.passwordToggle.innerHTML = isPassword ? '🙈' : '👁️';
-            }
-            
-            setLoadingState(loading, type = 'normal') {
-                this.isLoading = loading;
-                
-                if (loading) {
-                    if (type === 'biometric') {
-                        this.biometricButton.disabled = true;
-                        this.biometricButton.innerHTML = '<span>🔐</span><span>Authenticating...</span>';
-                    } else if (type === 'demo') {
-                        this.demoButton.disabled = true;
-                        this.demoButton.textContent = 'Loading Demo...';
-                    } else {
-                        this.loginButton.disabled = true;
-                        this.loginButton.classList.add('loading');
-                        this.loginText.textContent = 'Signing In...';
-                        this.emailInput.disabled = true;
-                        this.passwordInput.disabled = true;
-                    }
-                } else {
-                    this.loginButton.disabled = false;
-                    this.loginButton.classList.remove('loading');
+                    // Save email if remember me is checked
+                    if (this.rememberCheckbox.checked)
