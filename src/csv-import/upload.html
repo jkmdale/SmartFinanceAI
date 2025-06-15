@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Bank Statements - SmartFinanceAI</title>
+    
+    <!-- Meta Tags for PWA -->
+    <meta name="description" content="Import your bank statements securely to SmartFinanceAI">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/styles/main.css" as="style">
+    <link rel="preload" href="/global/localization.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/components.css">
+    
+    <!-- Custom Styles for Upload Interface -->
+    <style>
+        :root {
+            --upload-border-color: rgba(255, 255, 255, 0.2);
+            --upload-hover-color: rgba(255, 255, 255, 0.3);
+            --upload-active-color: rgba(139, 92, 246, 0.4);
+            --upload-error-color: rgba(239, 68, 68, 0.4);
+            --upload-success-color: rgba(16, 185, 129, 0.4);
+        }
+
+        /* Upload Container */
+        .upload-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Section */
+        .upload-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .upload-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .upload-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Security Badge */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass-success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 2rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        /* Main Upload Area */
+        .upload-main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .step.completed {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .step.pending {
+            background: var(--glass-light);
+            color: var(--text-tertiary);
+            border: 1px solid var(--glass-border-light);
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            background: var(--glass-light);
+            border: 3px dashed var(--upload-border-color);
+            border-radius: 1.5rem;
+            padding: 4rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
+            transform: rotate(-45deg);
+            transition: transform 0.6s ease;
+            pointer-events: none;
+        }
+
+        .upload-zone:hover::before {
+            transform: rotate(-45deg) translateX(100%);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--upload-hover-color);
+            background: var(--glass-medium);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--brand-primary);
+            background: var(--upload-active-color);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .upload-zone.error {
+            border-color: var(--brand-danger);
+            background: var(--upload-error-color);
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .upload-zone.success {
+            border-color: var(--brand-accent);
+            background: var(--upload-success-color);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Upload Icon */
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover .upload-icon {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        /* Upload Content */
+        .upload-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .upload-content p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Upload Button */
+        .upload-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            margin: 0 0.5rem;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .upload-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* File Input Hidden */
+        .file-input {
+            display: none;
+        }
+
+        /* Bank Selection */
+        .bank-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .bank-option {
+            background: var(--glass-subtle);
+            border: 2px solid var(--glass-border-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bank-option:hover {
+            border-color: var(--brand-primary);
+            background: var(--glass-light);
+            transform: translateY(-2px);
+        }
+
+        .bank-option.selected {
+            border-color: var(--brand-primary);
+            background: var(--glass-premium);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .bank-logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: var(--glass-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .bank-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .bank-country {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Upload Progress */
+        .upload-progress {
+            display: none;
+            background: var(--glass-light);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .upload-progress.visible {
+            display: block;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-percentage {
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--glass-border-light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* File Information */
+        .file-info {
+            display: none;
+            background: var(--glass-subtle);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .file-info.visible {
+            display: block;
+        }
+
+        .file-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .file-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--glass-border-subtle);
+        }
+
+        .file-detail:last-child {
+            border-bottom: none;
+        }
+
+        .file-detail-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .file-detail-value {
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+        }
+
+        /* Help Section */
+        .upload-help {
+            background: var(--glass-subtle);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .help-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .help-item {
+            background: var(--glass-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .help-item h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-item p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .help-item ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .help-item li {
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+            padding: 0.25rem 0;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .help-item li:before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--brand-primary);
+        }
+
+        /* Supported Formats */
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .format-item {
+            background: var(--glass-light);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .format-item:hover {
+            background: var(--glass-medium);
+            transform: translateY(-2px);
+        }
+
+        .format-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .format-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--glass-light);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 350px;
+        }
+
+        .notification.visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            background: var(--gradient-success);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .notification.error {
+            background: var(--gradient-danger);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .notification.warning {
+            background: var(--gradient-warning);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .upload-container {
+                padding: 1rem;
+            }
+
+            .upload-title {
+                font-size: 2rem;
+            }
+
+            .upload-subtitle {
+                font-size: 1rem;
+            }
+
+            .upload-zone {
+                padding: 2rem 1rem;
+            }
+
+            .step-indicator {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .bank-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .help-content {
+                grid-template-columns: 1fr;
+            }
+
+            .notification {
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: loading-shimmer 1.5s infinite;
+        }
+
+        @keyframes loading-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus States */
+        .upload-zone:focus-within {
+            outline: 2px solid var(--brand-primary);
+            outline-offset: 2px;
+        }
+
+        .bank-option:focus {
+            outline: 2px solid var(--brand-primary);
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            .upload-zone {
+                border-width: 4px;
+            }
+            
+            .bank-option {
+                border-width: 3px;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main Upload Container -->
+    <div class="upload-container">
+        <!-- Header Section -->
+        <header class="upload-header">
+            <h1 class="upload-title">💰 Import Bank Statements</h1>
+            <p class="upload-subtitle">
+                Securely upload your bank statements to automatically categorize transactions and gain financial insights
+            </p>
+            <div class="security-badge">
+                <span>🔒</span>
+                <span>Bank-level security • Data encrypted • Privacy protected</span>
+            </div>
+        </header>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" data-step="1">
+                <span>1</span>
+                <span>Select Bank</span>
+            </div>
+            <div class="step pending" data-step="2">
+                <span>2</span>
+                <span>Upload File</span>
+            </div>
+            <div class="step pending" data-step="3">
+                <span>3</span>
+                <span>Preview & Import</span>
+            </div>
+        </div>
+
+        <!-- Main Upload Section -->
+        <main class="upload-main">
+            <!-- Bank Selection -->
+            <section class="bank-selection-section">
+                <h2 style="color: var(--text-primary); margin-bottom: 1.5rem; text-align: center;">
+                    🏦 Select Your Bank
+                </h2>
+                <div class="bank-selection" id="bankSelection">
+                    <!-- Banks will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Upload Zone -->
+            <section class="upload-zone-section">
+                <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="Upload bank statement file">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-content">
+                        <h3>Drop your bank statement here</h3>
+                        <p>
+                            Support for CSV, QIF, OFX files from major banks worldwide.<br>
+                            Maximum file size: 50MB
+                        </p>
+                        <button type="button" class="upload-btn" id="uploadBtn">
+                            📁 Choose File
+                        </button>
+                        <button type="button" class="upload-btn" id="sampleBtn" style="background: var(--gradient-secondary);">
+                            📋 Try Sample Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hidden File Input -->
+                <input type="file" 
+                       i
