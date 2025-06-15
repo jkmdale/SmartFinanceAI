@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFinanceAI - Integration Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .test-result {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+        .error {
+            background: #fed7d7;
+            border: 1px solid #feb2b2;
+            color: #742a2a;
+        }
+        .info {
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            color: #2a69ac;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+        h2 {
+            color: #2d3748;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 SmartFinanceAI Integration Test</h1>
+        <p>This page will test your Supabase integration step by step.</p>
+        
+        <div id="results"></div>
+        
+        <h2>Tests</h2>
+        <button onclick="testConnection()">1. Test Supabase Connection</button>
+        <button onclick="testAuthentication()">2. Test Authentication</button>
+        <button onclick="testDatabase()">3. Test Database Access</button>
+        <button onclick="testUserProfile()">4. Test User Profile</button>
+        <button onclick="testCategories()">5. Test Categories</button>
+        <button onclick="runAllTests()">🚀 Run All Tests</button>
+        
+        <button onclick="clearResults()" style="background: #718096;">Clear Results</button>
+    </div>
+
+    <script src="src/core/config.js"></script>
+    <script>
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results')
+            const resultDiv = document.createElement('div')
+            resultDiv.className = `test-result ${type}`
+            resultDiv.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`
+            resultsDiv.appendChild(resultDiv)
+            resultsDiv.scrollTop = resultsDiv.scrollHeight
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = ''
+        }
+
+        async function testConnection() {
+            addResult('Testing Supabase connection...', 'info')
+            
+            try {
+                if (!window.supabase) {
+                    throw new Error('Supabase client not found. Check your config.js file.')
+                }
+                
+                if (!supabase.supabaseUrl || !supabase.supabaseKey) {
+                    throw new Error('Supabase URL or Key not configured properly.')
+                }
+                
+                // Test a simple query
+                const { data, error } = await supabase.from('user_profiles').select('count').limit(1)
+                
+                if (error && !error.message.includes('permission denied')) {
+                    throw error
+                }
+                
+                addResult('✅ Supabase connection successful!', 'success')
+                addResult(`Connected to: ${supabase.supabaseUrl}`, 'info')
+                
+            } catch (error) {
+                addResult(`❌ Connection failed: ${error.message}`, 'error')
+            }
+        }
+
+        async function testAuthentication() {
+            addResult('Testing authentication system...', 'info')
+            
+            try {
+                // Check if user is already logged in
+                const { data: { session } } = await supabase.auth.getSession()
+                
+                if (session) {
+                    addResult('✅ User is
