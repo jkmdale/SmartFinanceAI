@@ -9,8 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- Internal Stylesheets -->
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/auth.css">
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/auth.css">
     
     <style>
         * {
@@ -316,8 +316,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../js/config.js"></script>
-    <script src="../js/biometric.js"></script>
+    <script src="../core/config.js"></script>
+    <script src="../auth/biometric.js"></script>
     <script>
         // Initialize app
         window.onload = function() {
@@ -404,7 +404,7 @@
         function redirectToDashboard() {
             showStatus('Redirecting to your dashboard...', 'success')
             setTimeout(() => {
-                window.location.href = '../dashboard/index.html'
+                window.location.href = '../platform/dashboard.html'
             }, 1500)
         }
     </script>
