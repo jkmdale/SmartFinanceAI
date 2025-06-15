@@ -1,563 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/@github/webauthn-json@2.1.1/dist/esm/webauthn-json.browser.ponyfill.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Working Login</title>
+    <title>SmartFinanceAI - Secure Login</title>
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#00bfa6" />
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <!-- External Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Internal Stylesheets -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/auth.css">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
         }
         
-        .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 2rem;
-            padding: 2rem;
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #00bfa6 0%, #3b82f6 50%, #8b5cf6 100%);
-            border-radius: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 12px 24px rgba(0, 191, 166, 0.4);
-        }
-        
-        .brain-icon {
-            width: 50px;
-            height: 50px;
-            fill: white;
-            border-radius: 8px;
-        }
-        
-        .brain-icon[src] {
-            /* Styles for actual image */
-            object-fit: contain;
-        }
-        
-        .login-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-            text-align: center;
-            background: linear-gradient(135deg, #00bfa6 0%, #3b82f6 50%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .login-subtitle {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        
-        .form-label {
-            display: block;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 1rem;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-input::placeholder { color: rgba(255, 255, 255, 0.5); }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: #00bfa6;
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.3);
-        }
-        
-        .form-input.error {
-            border-color: #ef4444;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
-        }
-        
-        .login-button {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #00bfa6 0%, #3b82f6 50%, #8b5cf6 100%);
-            border: none;
-            border-radius: 1rem;
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 1.5rem 0;
+            max-width: 400px;
             position: relative;
         }
         
-        .login-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0, 191, 166, 0.6);
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
         }
         
-        .login-button:disabled { opacity: 0.7; cursor: not-allowed; }
+        .logo h1 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
         
-        .login-button.loading::after {
+        .logo p {
+            color: #718096;
+            font-size: 16px;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 15px;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            border-bottom-color: #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: #f8fafc;
+        }
+        
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-biometric {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: 2px solid transparent;
+        }
+        
+        .btn-biometric:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+        }
+        
+        .btn-biometric:disabled {
+            background: #e2e8f0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+            color: #a0aec0;
+            font-size: 14px;
+        }
+        
+        .divider::before {
             content: '';
             position: absolute;
             top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+            z-index: 1;
         }
         
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .alert {
-            padding: 1rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            z-index: 2;
         }
         
-        .alert-error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #fecaca;
-        }
-        
-        .alert-success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #a7f3d0;
-        }
-        
-        .alert-info {
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            color: #bfdbfe;
-        }
-        
-        .demo-accounts {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 1rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .demo-accounts h4 {
-            color: #00bfa6;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .demo-account {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.8rem;
-        }
-        
-        .demo-account:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .demo-account strong {
-            color: #00bfa6;
-            display: block;
-        }
-        
-        .demo-account span {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .signup-link {
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
             text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.8rem;
-            margin-top: 1rem;
         }
         
-        .signup-link a {
-            color: #00bfa6;
+        .status-success {
+            background: #f0fff4;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #feb2b2;
+        }
+        
+        .status-info {
+            background: #ebf8ff;
+            color: #2a69ac;
+            border: 1px solid #90cdf4;
+        }
+        
+        .device-info {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: #718096;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+        
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .auth-links a {
+            color: #667eea;
             text-decoration: none;
             font-weight: 600;
+            display: block;
+            margin: 10px 0;
+        }
+        
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .biometric-icon {
+            font-size: 20px;
         }
         
         @media (max-width: 480px) {
-            .login-container { padding: 1.5rem; }
-            .form-input { font-size: 16px; }
+            .auth-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo-container">
-            <img src="icons/icon-192.png" alt="SmartFinanceAI Logo" class="brain-icon" 
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <!-- Fallback SVG if icon doesn't load -->
-            <svg class="brain-icon" viewBox="0 0 100 100" style="display: none;">
-                <path d="M25 35 C15 25, 15 15, 25 15 C35 5, 65 5, 75 15 C85 15, 85 25, 75 35 C85 45, 85 55, 75 65 C85 75, 85 85, 75 85 C65 95, 35 95, 25 85 C15 85, 15 75, 25 65 C15 55, 15 45, 25 35 Z"/>
-                <text x="50" y="58" text-anchor="middle" font-family="Arial" font-size="28" font-weight="bold" fill="white">$</text>
-            </svg>
+    <div class="auth-container">
+        <!-- Logo & Branding -->
+        <div class="logo">
+            <h1>💰 SmartFinanceAI</h1>
+            <p>Your Intelligent Finance Manager</p>
         </div>
         
-        <h1 class="login-title">Welcome Back</h1>
-        <p class="login-subtitle">Sign in to your SmartFinanceAI account</p>
-        
-        <div id="alert-container"></div>
-        
-        <!-- Demo Accounts for Testing -->
-        <div class="demo-accounts">
-            <h4>🔹 Test Accounts (Click to use):</h4>
-            <div class="demo-account" onclick="fillLogin('admin@smartfinanceai.com', 'admin123')">
-                <strong>Admin Account</strong>
-                <span>admin@smartfinanceai.com / admin123</span>
-            </div>
-            <div class="demo-account" onclick="fillLogin('user@smartfinanceai.com', 'user123')">
-                <strong>User Account</strong>
-                <span>user@smartfinanceai.com / user123</span>
-            </div>
+        <!-- Navigation -->
+        <div class="nav-links">
+            <a href="login.html" class="active">Sign In</a>
+            <a href="signup.html">Sign Up</a>
         </div>
         
-        <form id="login-form">
+        <!-- Status Messages -->
+        <div id="statusMessage"></div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
-                <label for="email" class="form-label">Email Address</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    class="form-input" 
-                    placeholder="Enter your email"
-                    required
-                >
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required placeholder="your@email.com">
             </div>
             
             <div class="form-group">
-                <label for="password" class="form-label">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    class="form-input" 
-                    placeholder="Enter your password"
-                    required
-                    minlength="6"
-                >
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter your password">
             </div>
             
-            <button type="submit" class="login-button" id="login-button">
-                <span id="login-text">Sign In</span>
+            <button type="submit" class="btn btn-primary" id="loginButton">
+                🔑 Sign In
             </button>
         </form>
         
-        <div class="signup-link">
-            <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Create one here</a></p>
+        <!-- Biometric Authentication Section -->
+        <div id="biometricSection">
+            <div class="divider">
+                <span>or use biometric login</span>
+            </div>
+            
+            <button class="btn btn-biometric" id="setupBiometric" onclick="setupBiometric()" style="display: none;">
+                <span class="biometric-icon">👆</span>
+                Set Up Biometric Login
+            </button>
+            
+            <button class="btn btn-biometric" id="biometricLogin" onclick="biometricLogin()" style="display: none;">
+                <span class="biometric-icon">🔒</span>
+                Login with Face ID / Touch ID
+            </button>
+            
+            <div class="device-info" id="deviceInfo">
+                Checking biometric support...
+            </div>
+        </div>
+        
+        <!-- Additional Auth Links -->
+        <div class="auth-links">
+            <a href="reset-password.html">Forgot your password?</a>
+            <a href="signup.html">Don't have an account? Sign up</a>
+            <a href="../index.html">← Back to homepage</a>
         </div>
     </div>
-    
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/biometric.js"></script>
     <script>
-        /**
-         * ACTUALLY WORKING LOGIN SYSTEM
-         * Uses localStorage to simulate a real backend
-         */
+        // Initialize app
+        window.onload = function() {
+            initializeBiometrics()
+            checkExistingSession()
+        }
         
-        // Simulated user database
-        const USERS = {
-            'admin@smartfinanceai.com': {
-                password: 'admin123',
-                name: 'Admin User',
-                role: 'admin',
-                id: '1'
-            },
-            'user@smartfinanceai.com': {
-                password: 'user123',
-                name: 'John Doe',
-                role: 'user',
-                id: '2'
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('statusMessage')
+            statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.innerHTML = ''
+                }, 5000)
             }
-        };
+        }
         
-        class WorkingLogin {
-            constructor() {
-                this.form = document.getElementById('login-form');
-                this.emailInput = document.getElementById('email');
-                this.passwordInput = document.getElementById('password');
-                this.loginButton = document.getElementById('login-button');
-                this.loginText = document.getElementById('login-text');
-                this.alertContainer = document.getElementById('alert-container');
-                
-                this.initializeEventListeners();
-                this.checkExistingSession();
+        function setLoading(loading) {
+            const container = document.querySelector('.auth-container')
+            if (loading) {
+                container.classList.add('loading')
+            } else {
+                container.classList.remove('loading')
+            }
+        }
+        
+        async function handleLogin(event) {
+            event.preventDefault()
+            
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            
+            if (!email || !password) {
+                showStatus('Please enter both email and password', 'error')
+                return
             }
             
-            initializeEventListeners() {
-                this.form.addEventListener('submit', (e) => this.handleLogin(e));
-                
-                // Clear errors on input
-                this.emailInput.addEventListener('input', () => this.clearErrors());
-                this.passwordInput.addEventListener('input', () => this.clearErrors());
-            }
+            setLoading(true)
+            showStatus('Signing you in...', 'info')
             
-            checkExistingSession() {
-                const user = localStorage.getItem('currentUser');
-                if (user) {
-                    this.showAlert('You are already signed in! Redirecting...', 'success');
-                    setTimeout(() => {
-                        this.redirectToDashboard();
-                    }, 1500);
-                }
-            }
-            
-            async handleLogin(e) {
-                e.preventDefault();
-                
-                const email = this.emailInput.value.trim();
-                const password = this.passwordInput.value;
-                
-                // Validation
-                if (!this.validateForm(email, password)) {
-                    return;
-                }
-                
-                this.setLoading(true);
-                
-                // Simulate API delay
-                await this.delay(1500);
-                
-                // Check credentials
-                const user = USERS[email];
-                
-                if (user && user.password === password) {
-                    // Success!
-                    this.handleSuccessfulLogin(user, email);
-                } else {
-                    // Failed
-                    this.handleLoginError('Invalid email or password');
-                }
-                
-                this.setLoading(false);
-            }
-            
-            handleSuccessfulLogin(user, email) {
-                // Store user session
-                const sessionData = {
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
-                    name: user.name,
-                    role: user.role,
-                    id: user.id,
-                    loginTime: new Date().toISOString()
-                };
+                    password: password
+                })
                 
-                localStorage.setItem('currentUser', JSON.stringify(sessionData));
-                localStorage.setItem('authToken', 'fake-jwt-token-' + user.id);
-                
-                this.showAlert(`Welcome back, ${user.name}! Redirecting to dashboard...`, 'success');
-                
-                // Clear form
-                this.form.reset();
-                
-                // Redirect after delay
-                setTimeout(() => {
-                    this.redirectToDashboard();
-                }, 2000);
-            }
-            
-            handleLoginError(message) {
-                this.showAlert(message, 'error');
-                this.emailInput.classList.add('error');
-                this.passwordInput.classList.add('error');
-                this.emailInput.focus();
-            }
-            
-            validateForm(email, password) {
-                if (!email) {
-                    this.showAlert('Email is required', 'error');
-                    this.emailInput.focus();
-                    return false;
-                }
-                
-                if (!this.isValidEmail(email)) {
-                    this.showAlert('Please enter a valid email address', 'error');
-                    this.emailInput.focus();
-                    return false;
-                }
-                
-                if (!password) {
-                    this.showAlert('Password is required', 'error');
-                    this.passwordInput.focus();
-                    return false;
-                }
-                
-                if (password.length < 6) {
-                    this.showAlert('Password must be at least 6 characters', 'error');
-                    this.passwordInput.focus();
-                    return false;
-                }
-                
-                return true;
-            }
-            
-            isValidEmail(email) {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            }
-            
-            setLoading(loading) {
-                if (loading) {
-                    this.loginButton.classList.add('loading');
-                    this.loginButton.disabled = true;
-                    this.loginText.textContent = '';
+                if (error) {
+                    showStatus(error.message, 'error')
                 } else {
-                    this.loginButton.classList.remove('loading');
-                    this.loginButton.disabled = false;
-                    this.loginText.textContent = 'Sign In';
-                }
-            }
-            
-            showAlert(message, type = 'info') {
-                this.alertContainer.innerHTML = '';
-                
-                const alert = document.createElement('div');
-                alert.className = `alert alert-${type}`;
-                alert.textContent = message;
-                
-                this.alertContainer.appendChild(alert);
-                
-                if (type !== 'error') {
+                    showStatus(`🎉 Welcome back, ${data.user.email}!`, 'success')
+                    
+                    // Show biometric setup option for first-time login
                     setTimeout(() => {
-                        if (alert.parentNode) {
-                            alert.remove();
+                        if (!localStorage.getItem('biometric_setup')) {
+                            showBiometricSetupOption()
+                        } else {
+                            redirectToDashboard()
                         }
-                    }, 5000);
+                    }, 2000)
                 }
+            } catch (error) {
+                showStatus('An unexpected error occurred. Please try again.', 'error')
+                console.error('Login error:', error)
             }
             
-            clearErrors() {
-                this.emailInput.classList.remove('error');
-                this.passwordInput.classList.remove('error');
-            }
-            
-            redirectToDashboard() {
-                // Check if dashboard.html exists, otherwise show success page
-                window.location.href = 'dashboard.html';
-                
-                // Fallback: create a simple success page
-                setTimeout(() => {
-                    if (window.location.href === window.location.href) {
-                        this.showSuccessPage();
-                    }
-                }, 100);
-            }
-            
-            showSuccessPage() {
-                document.body.innerHTML = `
-                    <div style="
-                        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-                        min-height: 100vh;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                        color: white;
-                        text-align: center;
-                        padding: 2rem;
-                    ">
-                        <div style="
-                            background: rgba(255, 255, 255, 0.1);
-                            backdrop-filter: blur(20px);
-                            border-radius: 2rem;
-                            padding: 3rem;
-                            max-width: 500px;
-                        ">
-                            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
-                            <h1 style="color: #00bfa6; margin-bottom: 1rem;">Login Successful!</h1>
-                            <p style="margin-bottom: 2rem; opacity: 0.8;">You have successfully signed in to SmartFinanceAI</p>
-                            <button onclick="window.location.reload()" style="
-                                background: linear-gradient(135deg, #00bfa6 0%, #3b82f6 50%, #8b5cf6 100%);
-                                border: none;
-                                padding: 1rem 2rem;
-                                border-radius: 1rem;
-                                color: white;
-                                font-weight: 600;
-                                cursor: pointer;
-                            ">Back to Login</button>
-                            <div style="margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 1rem;">
-                                <h3 style="color: #00bfa6; margin-bottom: 0.5rem;">Next Steps:</h3>
-                                <p style="font-size: 0.9rem; opacity: 0.8;">
-                                    Create a dashboard.html page or integrate with your backend API
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            delay(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
+            setLoading(false)
+        }
+        
+        async function checkExistingSession() {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session) {
+                showStatus(`You're already signed in as ${session.user.email}`, 'success')
+                setTimeout(redirectToDashboard, 2000)
             }
         }
         
-        // Helper function for demo accounts
-        function fillLogin(email, password) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = password;
+        function showBiometricSetupOption() {
+            document.getElementById('setupBiometric').style.display = 'block'
+            showStatus('💡 Set up biometric login for faster access next time!', 'info')
         }
         
-        function showRegisterForm() {
-            alert('Registration form would be implemented in register.html');
-        }
-        
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new WorkingLogin();
-        });
-        
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .catch(err => console.log('Service Worker registration failed'));
+        function redirectToDashboard() {
+            showStatus('Redirecting to your dashboard...', 'success')
+            setTimeout(() => {
+                window.location.href = '../dashboard/index.html'
+            }, 1500)
         }
     </script>
 </body>
