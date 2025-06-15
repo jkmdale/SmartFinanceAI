@@ -4,560 +4,955 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Setup - SmartFinanceAI</title>
-    <link rel="stylesheet" href="../styles/main.css">
-    <link rel="stylesheet" href="../styles/components.css">
+    
+    <!-- Meta Tags for PWA -->
+    <meta name="description" content="Set up your financial profile for personalized recommendations">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/styles/main.css" as="style">
+    <link rel="preload" href="/global/localization.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/components.css">
+    
+    <!-- Custom Styles for Profile Setup -->
+    <style>
+        :root {
+            --profile-progress-height: 8px;
+            --profile-card-min-height: 500px;
+            --profile-animation-duration: 0.4s;
+        }
+
+        /* Main Container */
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Section */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .profile-title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .profile-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-text {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        .progress-percentage {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: var(--profile-progress-height);
+            background: var(--glass-border-light);
+            border-radius: calc(var(--profile-progress-height) / 2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 0%;
+            border-radius: calc(var(--profile-progress-height) / 2);
+            transition: width var(--profile-animation-duration) cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: progress-shimmer 2s infinite;
+        }
+
+        @keyframes progress-shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-item.completed {
+            background: var(--gradient-success);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .step-item.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+            animation: pulse-glow 2s infinite;
+        }
+
+        .step-item.pending {
+            background: var(--glass-light);
+            color: var(--text-tertiary);
+            border: 1px solid var(--glass-border-light);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4); }
+            50% { box-shadow: 0 8px 24px rgba(139, 92, 246, 0.6); }
+        }
+
+        /* Main Card */
+        .profile-card {
+            background: var(--glass-light);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 2rem;
+            padding: 3rem;
+            min-height: var(--profile-card-min-height);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
+            transform: rotate(-45deg);
+            transition: transform 0.6s ease;
+            pointer-events: none;
+        }
+
+        .profile-card:hover::before {
+            transform: rotate(-45deg) translateX(100%);
+        }
+
+        /* Step Content */
+        .step-content {
+            display: none;
+            flex: 1;
+            animation: fadeInUp var(--profile-animation-duration) ease-out;
+        }
+
+        .step-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .step-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .step-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Form Sections */
+        .form-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .form-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label .required {
+            color: var(--brand-danger);
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--glass-subtle);
+            border: 2px solid var(--glass-border-light);
+            border-radius: 1rem;
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            background: var(--glass-light);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-quaternary);
+        }
+
+        .form-input.error {
+            border-color: var(--brand-danger);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        /* Currency Input */
+        .currency-input-wrapper {
+            position: relative;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .currency-input {
+            padding-left: 3rem;
+            font-family: var(--font-mono);
+            font-variant-numeric: tabular-nums;
+            text-align: left;
+        }
+
+        /* Select Styling */
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+            padding-right: 3rem;
+        }
+
+        /* Range Slider */
+        .range-input {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: var(--glass-border-light);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .range-input::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Grid Layouts */
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* Choice Cards */
+        .choice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .choice-card {
+            background: var(--glass-subtle);
+            border: 2px solid var(--glass-border-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-card:hover {
+            border-color: var(--brand-primary);
+            background: var(--glass-light);
+            transform: translateY(-2px);
+        }
+
+        .choice-card.selected {
+            border-color: var(--brand-primary);
+            background: var(--glass-premium);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .choice-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .choice-card-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .choice-card-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Goal Priorities */
+        .goal-priorities {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .goal-item {
+            background: var(--glass-subtle);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .goal-item:hover {
+            background: var(--glass-light);
+            transform: translateY(-1px);
+        }
+
+        .goal-item.dragging {
+            cursor: grabbing;
+            opacity: 0.7;
+            transform: rotate(2deg);
+        }
+
+        .goal-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .goal-icon {
+            font-size: 1.5rem;
+        }
+
+        .goal-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .goal-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .goal-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .goal-priority {
+            background: var(--glass-light);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border-subtle);
+        }
+
+        .btn-back {
+            background: var(--glass-light);
+            color: var(--text-primary);
+            border: 2px solid var(--glass-border-light);
+            border-radius: 1rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back:hover {
+            border-color: var(--brand-primary);
+            background: var(--glass-medium);
+            transform: translateY(-2px);
+        }
+
+        .btn-back:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-next {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            transform: none;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        /* Help Section */
+        .help-section {
+            background: var(--glass-subtle);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid var(--glass-border-subtle);
+        }
+
+        .help-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        /* Success Animation */
+        .success-animation {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .success-icon {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            animation: successBounce 0.6s ease;
+        }
+
+        @keyframes successBounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0,0,0);
+            }
+            40%, 43% {
+                transform: translate3d(0, -30px, 0);
+            }
+            70% {
+                transform: translate3d(0, -15px, 0);
+            }
+            90% {
+                transform: translate3d(0, -4px, 0);
+            }
+        }
+
+        .success-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .success-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* Loading States */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-content {
+            background: var(--glass-light);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border-medium);
+            border-radius: 2rem;
+            padding: 3rem;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 1rem;
+            }
+
+            .profile-title {
+                font-size: 2.5rem;
+            }
+
+            .profile-subtitle {
+                font-size: 1rem;
+            }
+
+            .profile-card {
+                padding: 2rem;
+                min-height: auto;
+            }
+
+            .step-title {
+                font-size: 1.75rem;
+            }
+
+            .form-grid-2,
+            .form-grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .choice-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .step-indicator {
+                gap: 0.5rem;
+            }
+
+            .step-item {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            .form-input,
+            .choice-card {
+                border-width: 3px;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus States */
+        .form-input:focus,
+        .choice-card:focus,
+        .btn-back:focus,
+        .btn-next:focus {
+            outline: 2px solid var(--brand-primary);
+            outline-offset: 2px;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
 </head>
-<body class="onboarding-page">
-    <div class="onboarding-container">
+
+<body>
+    <!-- Main Container -->
+    <div class="profile-container">
         <!-- Header Section -->
-        <header class="onboarding-header">
-            <div class="navbar-brand">
-                <div class="navbar-logo">💳</div>
-                <span>SmartFinanceAI</span>
-            </div>
-            <div class="progress-indicator">
-                <span class="step completed">1</span>
-                <span class="step completed">2</span>
-                <span class="step active">3</span>
-                <span class="step">4</span>
-                <span class="step">5</span>
-            </div>
+        <header class="profile-header">
+            <h1 class="profile-title">👤 Create Your Profile</h1>
+            <p class="profile-subtitle">
+                Help us personalize your financial journey with smart recommendations 
+                tailored to your unique situation and goals.
+            </p>
         </header>
 
-        <!-- Main Content -->
-        <main class="onboarding-main">
-            <div class="card glass-premium profile-setup-card">
-                <div class="card-header text-center">
-                    <div class="profile-icon">
-                        <div class="user-avatar" id="user-avatar">
-                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <span class="progress-text">Setup Progress</span>
+                <span class="progress-percentage" id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </section>
+
+        <!-- Step Indicator -->
+        <section class="step-indicator" id="stepIndicator">
+            <div class="step-item active" data-step="1">
+                <span>1</span>
+                <span>Basic Info</span>
+            </div>
+            <div class="step-item pending" data-step="2">
+                <span>2</span>
+                <span>Financial Situation</span>
+            </div>
+            <div class="step-item pending" data-step="3">
+                <span>3</span>
+                <span>Goals & Preferences</span>
+            </div>
+            <div class="step-item pending" data-step="4">
+                <span>4</span>
+                <span>Complete</span>
+            </div>
+        </section>
+
+        <!-- Main Profile Card -->
+        <main class="profile-card">
+            <!-- Step 1: Basic Information -->
+            <div class="step-content active" id="step1">
+                <div class="step-header">
+                    <span class="step-icon">👋</span>
+                    <h2 class="step-title">Tell Us About Yourself</h2>
+                    <p class="step-description">
+                        We'll use this information to provide personalized financial advice 
+                        and recommendations tailored to your life situation.
+                    </p>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">
+                                First Name <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="firstName" 
+                                   class="form-input" 
+                                   placeholder="Enter your first name"
+                                   required>
+                            <div class="error-message" id="firstNameError"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">
+                                Last Name <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="lastName" 
+                                   class="form-input" 
+                                   placeholder="Enter your last name"
+                                   required>
+                            <div class="error-message" id="lastNameError"></div>
                         </div>
                     </div>
-                    <h1 class="card-title text-gradient-primary">Tell Us About Yourself</h1>
-                    <p class="card-subtitle">Help us personalise your financial experience with AI-powered recommendations</p>
-                </div>
 
-                <div class="card-body">
-                    <form id="profile-form" class="profile-form">
-                        <!-- Personal Information Section -->
-                        <div class="form-section">
-                            <h3 class="section-title">
-                                <span class="section-icon">👤</span>
-                                Personal Information
-                            </h3>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="first-name" class="form-label">First Name</label>
-                                    <input 
-                                        type="text" 
-                                        id="first-name" 
-                                        name="firstName" 
-                                        class="input" 
-                                        placeholder="Enter your first name"
-                                        required
-                                        autocomplete="given-name"
-                                    >
-                                    <div class="form-error" id="first-name-error"></div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="last-name" class="form-label">Last Name</label>
-                                    <input 
-                                        type="text" 
-                                        id="last-name" 
-                                        name="lastName" 
-                                        class="input" 
-                                        placeholder="Enter your last name"
-                                        required
-                                        autocomplete="family-name"
-                                    >
-                                    <div class="form-error" id="last-name-error"></div>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="age-range" class="form-label">Age Range</label>
-                                    <select id="age-range" name="ageRange" class="input select" required>
-                                        <option value="">Select your age range</option>
-                                        <option value="18-24">18-24 years</option>
-                                        <option value="25-34">25-34 years</option>
-                                        <option value="35-44">35-44 years</option>
-                                        <option value="45-54">45-54 years</option>
-                                        <option value="55-64">55-64 years</option>
-                                        <option value="65+">65+ years</option>
-                                    </select>
-                                    <div class="form-error" id="age-range-error"></div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="employment-status" class="form-label">Employment Status</label>
-                                    <select id="employment-status" name="employmentStatus" class="input select" required>
-                                        <option value="">Select employment status</option>
-                                        <option value="employed-full-time">Employed (Full-time)</option>
-                                        <option value="employed-part-time">Employed (Part-time)</option>
-                                        <option value="self-employed">Self-employed</option>
-                                        <option value="student">Student</option>
-                                        <option value="retired">Retired</option>
-                                        <option value="unemployed">Looking for work</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                    <div class="form-error" id="employment-status-error"></div>
-                                </div>
-                            </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="age">
+                                Age <span class="required">*</span>
+                            </label>
+                            <input type="number" 
+                                   id="age" 
+                                   class="form-input" 
+                                   placeholder="Your age"
+                                   min="18" 
+                                   max="100"
+                                   required>
+                            <div class="error-message" id="ageError"></div>
                         </div>
 
-                        <!-- Financial Information Section -->
-                        <div class="form-section">
-                            <h3 class="section-title">
-                                <span class="section-icon">💰</span>
-                                Financial Information
-                                <span class="privacy-note">(This helps us provide better recommendations)</span>
-                            </h3>
-
-                            <div class="form-group">
-                                <label for="income-range" class="form-label">
-                                    Annual Income Range
-                                    <span class="currency-symbol" id="currency-symbol">$</span>
-                                </label>
-                                <select id="income-range" name="incomeRange" class="input select" required>
-                                    <option value="">Select your annual income range</option>
-                                    <!-- Options will be populated based on country -->
-                                </select>
-                                <div class="form-help">
-                                    <span class="help-icon">ℹ️</span>
-                                    <span class="help-text">This information is encrypted and only used to provide personalised recommendations</span>
-                                </div>
-                                <div class="form-error" id="income-range-error"></div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="financial-experience" class="form-label">Financial Experience Level</label>
-                                <div class="experience-options">
-                                    <label class="experience-option">
-                                        <input type="radio" name="financialExperience" value="beginner" required>
-                                        <div class="option-content">
-                                            <div class="option-icon">🌱</div>
-                                            <div class="option-details">
-                                                <h4>Beginner</h4>
-                                                <p>New to managing finances, need guidance with basics</p>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="experience-option">
-                                        <input type="radio" name="financialExperience" value="intermediate" required>
-                                        <div class="option-content">
-                                            <div class="option-icon">📈</div>
-                                            <div class="option-details">
-                                                <h4>Intermediate</h4>
-                                                <p>Have some experience, want to optimise and learn more</p>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="experience-option">
-                                        <input type="radio" name="financialExperience" value="advanced" required>
-                                        <div class="option-content">
-                                            <div class="option-icon">🎯</div>
-                                            <div class="option-details">
-                                                <h4>Advanced</h4>
-                                                <p>Experienced with investing and financial planning</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="form-error" id="financial-experience-error"></div>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label" for="country">
+                                Country <span class="required">*</span>
+                            </label>
+                            <select id="country" class="form-input form-select" required>
+                                <option value="">Select your country</option>
+                                <option value="NZ">🇳🇿 New Zealand</option>
+                                <option value="AU">🇦🇺 Australia</option>
+                                <option value="UK">🇬🇧 United Kingdom</option>
+                                <option value="US">🇺🇸 United States</option>
+                                <option value="CA">🇨🇦 Canada</option>
+                            </select>
+                            <div class="error-message" id="countryError"></div>
                         </div>
+                    </div>
 
-                        <!-- Goals and Priorities Section -->
-                        <div class="form-section">
-                            <h3 class="section-title">
-                                <span class="section-icon">🎯</span>
-                                Financial Goals & Priorities
-                            </h3>
+                    <div class="form-group">
+                        <label class="form-label" for="employment">
+                            Employment Status <span class="required">*</span>
+                        </label>
+                        <select id="employment" class="form-input form-select" required>
+                            <option value="">Select employment status</option>
+                            <option value="employed_full">Full-time Employee</option>
+                            <option value="employed_part">Part-time Employee</option>
+                            <option value="self_employed">Self-employed</option>
+                            <option value="contractor">Contractor/Freelancer</option>
+                            <option value="student">Student</option>
+                            <option value="retired">Retired</option>
+                            <option value="unemployed">Currently Unemployed</option>
+                        </select>
+                        <div class="error-message" id="employmentError"></div>
+                    </div>
 
-                            <div class="form-group">
-                                <label class="form-label">What are your main financial goals? (Select all that apply)</label>
-                                <div class="goals-grid">
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="emergency-fund">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">🚨</div>
-                                            <div class="goal-text">Emergency Fund</div>
-                                        </div>
-                                    </label>
+                    <div class="form-group">
+                        <label class="form-label" for="dependents">
+                            Number of Dependents
+                        </label>
+                        <input type="number" 
+                               id="dependents" 
+                               class="form-input" 
+                               placeholder="0"
+                               min="0" 
+                               max="20"
+                               value="0">
+                    </div>
 
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="debt-payoff">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">💳</div>
-                                            <div class="goal-text">Pay Off Debt</div>
-                                        </div>
-                                    </label>
-
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="house-deposit">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">🏠</div>
-                                            <div class="goal-text">House Deposit</div>
-                                        </div>
-                                    </label>
-
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="retirement">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">🏖️</div>
-                                            <div class="goal-text">Retirement Savings</div>
-                                        </div>
-                                    </label>
-
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="investment">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">📊</div>
-                                            <div class="goal-text">Investment Portfolio</div>
-                                        </div>
-                                    </label>
-
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="travel">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">✈️</div>
-                                            <div class="goal-text">Travel Fund</div>
-                                        </div>
-                                    </label>
-
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="education">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">🎓</div>
-                                            <div class="goal-text">Education Savings</div>
-                                        </div>
-                                    </label>
-
-                                    <label class="goal-option">
-                                        <input type="checkbox" name="financialGoals" value="business">
-                                        <div class="goal-content">
-                                            <div class="goal-icon">💼</div>
-                                            <div class="goal-text">Start a Business</div>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="risk-tolerance" class="form-label">Investment Risk Tolerance</label>
-                                <div class="risk-slider-container">
-                                    <input 
-                                        type="range" 
-                                        id="risk-tolerance" 
-                                        name="riskTolerance" 
-                                        min="1" 
-                                        max="5" 
-                                        value="3" 
-                                        class="risk-slider"
-                                    >
-                                    <div class="risk-labels">
-                                        <span class="risk-label conservative">Conservative</span>
-                                        <span class="risk-label moderate">Moderate</span>
-                                        <span class="risk-label aggressive">Aggressive</span>
-                                    </div>
-                                    <div class="risk-description" id="risk-description">
-                                        Balanced approach with moderate risk and return expectations
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Household Information Section -->
-                        <div class="form-section">
-                            <h3 class="section-title">
-                                <span class="section-icon">👨‍👩‍👧‍👦</span>
-                                Household Information
-                            </h3>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="household-type" class="form-label">Household Type</label>
-                                    <select id="household-type" name="householdType" class="input select" required>
-                                        <option value="">Select household type</option>
-                                        <option value="single">Single person</option>
-                                        <option value="couple-no-kids">Couple without children</option>
-                                        <option value="couple-with-kids">Couple with children</option>
-                                        <option value="single-parent">Single parent</option>
-                                        <option value="shared-house">Shared housing</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                    <div class="form-error" id="household-type-error"></div>
-                                </div>
-
-                                <div class="form-group" id="dependents-group" style="display: none;">
-                                    <label for="dependents" class="form-label">Number of Dependents</label>
-                                    <select id="dependents" name="dependents" class="input select">
-                                        <option value="0">0</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4+">4 or more</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">
-                                    Would you like to set up joint financial management?
-                                    <span class="feature-badge">Premium Feature</span>
-                                </label>
-                                <div class="joint-management-info">
-                                    <div class="info-content">
-                                        <p>Share budgets, goals, and accounts with your partner while maintaining individual privacy controls.</p>
-                                        <div class="joint-options">
-                                            <label class="joint-option">
-                                                <input type="radio" name="jointManagement" value="none" checked>
-                                                <div class="option-text">
-                                                    <h4>Individual Only</h4>
-                                                    <p>Manage your finances independently</p>
-                                                </div>
-                                            </label>
-
-                                            <label class="joint-option">
-                                                <input type="radio" name="jointManagement" value="setup-later">
-                                                <div class="option-text">
-                                                    <h4>Set Up Later</h4>
-                                                    <p>Add joint management after initial setup</p>
-                                                </div>
-                                            </label>
-
-                                            <label class="joint-option">
-                                                <input type="radio" name="jointManagement" value="setup-now">
-                                                <div class="option-text">
-                                                    <h4>Set Up Now</h4>
-                                                    <p>Configure joint management during onboarding</p>
-                                                </div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Preferences Section -->
-                        <div class="form-section">
-                            <h3 class="section-title">
-                                <span class="section-icon">⚙️</span>
-                                Preferences
-                            </h3>
-
-                            <div class="form-group">
-                                <label class="form-label">Notification Preferences</label>
-                                <div class="preference-options">
-                                    <label class="preference-option">
-                                        <input type="checkbox" name="notifications" value="budget-alerts" checked>
-                                        <div class="preference-content">
-                                            <div class="preference-icon">📊</div>
-                                            <div class="preference-text">
-                                                <h4>Budget Alerts</h4>
-                                                <p>Get notified when approaching budget limits</p>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="preference-option">
-                                        <input type="checkbox" name="notifications" value="goal-updates" checked>
-                                        <div class="preference-content">
-                                            <div class="preference-icon">🎯</div>
-                                            <div class="preference-text">
-                                                <h4>Goal Updates</h4>
-                                                <p>Track progress on your financial goals</p>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="preference-option">
-                                        <input type="checkbox" name="notifications" value="ai-insights" checked>
-                                        <div class="preference-content">
-                                            <div class="preference-icon">🤖</div>
-                                            <div class="preference-text">
-                                                <h4>AI Insights</h4>
-                                                <p>Receive personalised financial recommendations</p>
-                                            </div>
-                                        </div>
-                                    </label>
-
-                                    <label class="preference-option">
-                                        <input type="checkbox" name="notifications" value="weekly-summary">
-                                        <div class="preference-content">
-                                            <div class="preference-icon">📈</div>
-                                            <div class="preference-text">
-                                                <h4>Weekly Summary</h4>
-                                                <p>Get weekly financial health reports</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="currency-display" class="form-label">Currency Display Preference</label>
-                                <select id="currency-display" name="currencyDisplay" class="input select">
-                                    <!-- Options populated based on country -->
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Privacy Section -->
-                        <div class="form-section">
-                            <h3 class="section-title">
-                                <span class="section-icon">🔒</span>
-                                Privacy & Data
-                            </h3>
-
-                            <div class="privacy-info">
-                                <div class="privacy-item">
-                                    <div class="privacy-icon">🔐</div>
-                                    <div class="privacy-text">
-                                        <h4>Bank-Level Encryption</h4>
-                                        <p>Your financial data is encrypted with AES-256 encryption</p>
-                                    </div>
-                                </div>
-
-                                <div class="privacy-item">
-                                    <div class="privacy-icon">🛡️</div>
-                                    <div class="privacy-text">
-                                        <h4>Zero-Knowledge Architecture</h4>
-                                        <p>We cannot access your raw financial data</p>
-                                    </div>
-                                </div>
-
-                                <div class="privacy-item">
-                                    <div class="privacy-icon">🔍</div>
-                                    <div class="privacy-text">
-                                        <h4>Transparent AI</h4>
-                                        <p>AI recommendations are based on anonymised patterns only</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="consent-options">
-                                <label class="consent-option">
-                                    <input type="checkbox" name="dataConsent" value="anonymised-analytics" checked>
-                                    <div class="consent-text">
-                                        <h4>Anonymised Analytics</h4>
-                                        <p>Help improve SmartFinanceAI by sharing anonymised usage patterns</p>
-                                    </div>
-                                </label>
-
-                                <label class="consent-option">
-                                    <input type="checkbox" name="dataConsent" value="marketing-emails">
-                                    <div class="consent-text">
-                                        <h4>Product Updates</h4>
-                                        <p>Receive emails about new features and financial tips</p>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="card-footer">
-                    <div class="button-group">
-                        <a href="country-selection.html" class="btn btn-ghost">
-                            <span class="btn-icon">←</span>
-                            <span class="btn-text">Back</span>
-                        </a>
-                        <button type="submit" form="profile-form" id="continue-btn" class="btn btn-primary">
-                            <span class="btn-text">Continue to Account Setup</span>
-                            <span class="btn-icon">→</span>
-                        </button>
+                    <div class="help-section">
+                        <h4 class="help-title">
+                            <span>🔒</span>
+                            <span>Privacy & Security</span>
+                        </h4>
+                        <p class="help-text">
+                            Your personal information is encrypted and never shared with third parties. 
+                            We use this data solely to personalize your financial recommendations.
+                        </p>
                     </div>
                 </div>
             </div>
-        </main>
 
-        <!-- Footer -->
-        <footer class="onboarding-footer">
-            <div class="security-badges">
-                <div class="badge">
-                    <span class="badge-icon">🔒</span>
-                    <span class="badge-text">256-bit Encryption</span>
-                </div>
-                <div class="badge">
-                    <span class="badge-icon">🛡️</span>
-                    <span class="badge-text">GDPR Compliant</span>
-                </div>
-                <div class="badge">
-                    <span class="badge-icon">🏦</span>
-                    <span class="badge-text">Bank-Level Security</span>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script src="../global/localization.js"></script>
-    <script src="../global/currency-manager.js"></script>
-    <script>
-        class ProfileSetup {
-            constructor() {
-                this.countryConfig = null;
-                this.formData = {};
-                
-                this.init();
-            }
-
-            async init() {
-                await this.loadCountryConfig();
-                this.populateCountrySpecificFields();
-                this.bindEvents();
-                this.setupFormValidation();
-                this.loadSavedData();
-            }
-
-            async loadCountryConfig() {
-                const countryData = localStorage.getItem('smartfinance_country_config');
-                if (countryData) {
-                    this.countryConfig = JSON.parse(countryData);
-                } else {
-                    // Fallback to default
-                    this.countryConfig = {
-                        code: 'US',
-                        currency: 'USD',
-                        name: 'United States'
-                    };
-                }
-            }
-
-            populateCountrySpecificFields() {
-                this.populateCurrencySymbol();
-                this.populateIncomeRanges();
-                this.populateCurrencyDisplay();
-            }
-
-            populateCurrencySymbol() {
-                const currencySymbol = document.getElementById('currency-symbol');
-                const symbols = {
-                    'USD': '$',
-                    'NZD': '$',
-                    'AUD': '$',
-                    'GBP': '£',
-                    'CAD': '$',
-                    'EUR': '€',
-                    'JPY': '¥'
-                };
-                
-                currencySymbol.textContent = symbols[this.countryConfig.currency] || '$';
-            }
-
-            populateIncomeRanges() {
-                const incomeSelect = document.getElementById('income-range');
-                const currency = this.countryConfig.currency;
-                
-                const ranges = {
-                    'USD': [
-                        { value: 'under-25k', label: 'Under $25,000' },
-                        { value: '25k-50k', label: '$25,000 - $
+            <!-- Step 2: Financial Situation -->
+            <div class="step-content" id="step2">
+                <div class="step-header">
+                    <span class="step-icon">💰</span>
+                    <h2 class="step-title">Your Financial Situation</h2>
+                    <p class="step-description">
+                        Help us understand your current financial position to provide 
+                        accurate budgeting recommendations and goal calculations
