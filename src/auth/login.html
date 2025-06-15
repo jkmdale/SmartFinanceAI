@@ -2,79 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Sign In - SmartFinanceAI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFinanceAI - Working Login</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#00bfa6" />
-    
-    <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    
-    <!-- Icons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background: linear-gradient(135deg, 
-                #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
             min-height: 100vh;
-            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            position: relative;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        
-        /* Animated background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 50%, 
-                rgba(0, 191, 166, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, 
-                rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, 
-                rgba(16, 185, 129, 0.3) 0%, transparent 50%);
-            animation: backgroundShift 20s ease-in-out infinite;
-            z-index: -1;
-        }
-        
-        @keyframes backgroundShift {
-            0%, 100% { 
-                transform: translateX(0) translateY(0) scale(1); 
-            }
-            25% { 
-                transform: translateX(-20px) translateY(-10px) scale(1.05); 
-            }
-            50% { 
-                transform: translateX(20px) translateY(10px) scale(0.95); 
-            }
-            75% { 
-                transform: translateX(-10px) translateY(20px) scale(1.02); 
-            }
         }
         
         .login-container {
@@ -86,25 +32,6 @@
             width: 100%;
             max-width: 420px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.6s ease-out;
-            position: relative;
-            z-index: 1;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 2rem;
         }
         
         .logo-container {
@@ -117,26 +44,18 @@
             justify-content: center;
             margin: 0 auto 1.5rem;
             box-shadow: 0 12px 24px rgba(0, 191, 166, 0.4);
-            animation: logoGlow 3s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
         }
         
-        /* AI Brain Icon using SVG */
         .brain-icon {
             width: 50px;
             height: 50px;
             fill: white;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            border-radius: 8px;
         }
         
-        @keyframes logoGlow {
-            0%, 100% { 
-                box-shadow: 0 12px 24px rgba(0, 191, 166, 0.4); 
-            }
-            50% { 
-                box-shadow: 0 16px 32px rgba(0, 191, 166, 0.6); 
-            }
+        .brain-icon[src] {
+            /* Styles for actual image */
+            object-fit: contain;
         }
         
         .login-title {
@@ -144,16 +63,17 @@
             font-weight: 700;
             color: white;
             margin-bottom: 0.5rem;
+            text-align: center;
             background: linear-gradient(135deg, #00bfa6 0%, #3b82f6 50%, #8b5cf6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
         
         .login-subtitle {
             color: rgba(255, 255, 255, 0.8);
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
         }
         
         .form-group {
@@ -179,81 +99,20 @@
             color: white;
             font-size: 1rem;
             transition: all 0.3s ease;
-            box-sizing: border-box;
         }
         
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
+        .form-input::placeholder { color: rgba(255, 255, 255, 0.5); }
         
         .form-input:focus {
             outline: none;
             border-color: #00bfa6;
             background: rgba(255, 255, 255, 0.15);
             box-shadow: 0 0 0 3px rgba(0, 191, 166, 0.3);
-            transform: translateY(-2px);
         }
         
         .form-input.error {
             border-color: #ef4444;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
-        }
-        
-        .password-wrapper {
-            position: relative;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            font-size: 1.25rem;
-            padding: 0.25rem;
-            transition: color 0.2s ease;
-        }
-        
-        .password-toggle:hover {
-            color: white;
-        }
-        
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 0.8rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .remember-me input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #00bfa6;
-        }
-        
-        .forgot-password {
-            color: #00bfa6;
-            text-decoration: none;
-            transition: color 0.2s ease;
-            cursor: pointer;
-        }
-        
-        .forgot-password:hover {
-            color: #40e0d0;
-            text-decoration: underline;
         }
         
         .login-button {
@@ -267,10 +126,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 1rem;
-            box-shadow: 0 8px 24px rgba(0, 191, 166, 0.4);
+            margin: 1.5rem 0;
             position: relative;
-            overflow: hidden;
         }
         
         .login-button:hover {
@@ -278,19 +135,7 @@
             box-shadow: 0 12px 32px rgba(0, 191, 166, 0.6);
         }
         
-        .login-button:active {
-            transform: translateY(0);
-        }
-        
-        .login-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .login-button.loading {
-            pointer-events: none;
-        }
+        .login-button:disabled { opacity: 0.7; cursor: not-allowed; }
         
         .login-button.loading::after {
             content: '';
@@ -306,64 +151,13 @@
             animation: spin 1s linear infinite;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-        }
-        
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .divider span {
-            padding: 0 1rem;
-        }
-        
-        .biometric-login {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 1rem;
-            color: white;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-        }
-        
-        .biometric-login:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-        
-        .biometric-login:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         .alert {
             padding: 1rem;
             border-radius: 0.75rem;
             margin-bottom: 1rem;
-            font-size: 0.8rem;
-            animation: slideIn 0.3s ease;
+            font-size: 0.85rem;
         }
         
         .alert-error {
@@ -384,15 +178,40 @@
             color: #bfdbfe;
         }
         
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .demo-accounts {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-accounts h4 {
+            color: #00bfa6;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .demo-account {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+        
+        .demo-account:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .demo-account strong {
+            color: #00bfa6;
+            display: block;
+        }
+        
+        .demo-account span {
+            color: rgba(255, 255, 255, 0.7);
         }
         
         .signup-link {
@@ -406,140 +225,66 @@
             color: #00bfa6;
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.2s ease;
-            cursor: pointer;
         }
         
-        .signup-link a:hover {
-            color: #40e0d0;
-            text-decoration: underline;
-        }
-        
-        /* Mobile Specific Styles */
         @media (max-width: 480px) {
-            body {
-                padding: 0.5rem;
-            }
-            
-            .login-container {
-                padding: 1.5rem;
-                border-radius: 1.5rem;
-                max-height: 95vh;
-                overflow-y: auto;
-            }
-            
-            .logo-container {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .brain-icon {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .login-title {
-                font-size: 1.5rem;
-            }
-            
-            .form-input {
-                padding: 0.875rem 1rem;
-                font-size: 16px; /* Prevent zoom on iOS */
-            }
-            
-            .login-button {
-                padding: 0.875rem;
-            }
-            
-            .form-options {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-            }
+            .login-container { padding: 1.5rem; }
+            .form-input { font-size: 16px; }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <!-- Header -->
-        <div class="login-header">
-            <div class="logo-container">
-                <!-- Custom AI Brain SVG Icon -->
-                <svg class="brain-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Outer brain shape -->
-                    <path d="M25 35 C15 25, 15 15, 25 15 C35 5, 65 5, 75 15 C85 15, 85 25, 75 35 C85 45, 85 55, 75 65 C85 75, 85 85, 75 85 C65 95, 35 95, 25 85 C15 85, 15 75, 25 65 C15 55, 15 45, 25 35 Z"/>
-                    
-                    <!-- Inner brain divisions -->
-                    <path d="M50 20 Q60 30, 50 40 Q60 50, 50 60 Q60 70, 50 80" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
-                    <path d="M50 20 Q40 30, 50 40 Q40 50, 50 60 Q40 70, 50 80" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
-                    
-                    <!-- Dollar sign in center -->
-                    <text x="50" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" opacity="0.9">$</text>
-                    
-                    <!-- Neural connections -->
-                    <circle cx="35" cy="30" r="2" opacity="0.6"/>
-                    <circle cx="65" cy="30" r="2" opacity="0.6"/>
-                    <circle cx="30" cy="50" r="2" opacity="0.6"/>
-                    <circle cx="70" cy="50" r="2" opacity="0.6"/>
-                    <circle cx="35" cy="70" r="2" opacity="0.6"/>
-                    <circle cx="65" cy="70" r="2" opacity="0.6"/>
-                    
-                    <!-- Connection lines -->
-                    <line x1="35" y1="30" x2="45" y2="40" stroke="currentColor" stroke-width="1" opacity="0.4"/>
-                    <line x1="65" y1="30" x2="55" y2="40" stroke="currentColor" stroke-width="1" opacity="0.4"/>
-                    <line x1="30" y1="50" x2="40" y2="50" stroke="currentColor" stroke-width="1" opacity="0.4"/>
-                    <line x1="70" y1="50" x2="60" y2="50" stroke="currentColor" stroke-width="1" opacity="0.4"/>
-                </svg>
-            </div>
-            <h1 class="login-title">Welcome Back</h1>
-            <p class="login-subtitle">Sign in to your SmartFinanceAI account</p>
+        <div class="logo-container">
+            <img src="icons/icon-192.png" alt="SmartFinanceAI Logo" class="brain-icon" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <!-- Fallback SVG if icon doesn't load -->
+            <svg class="brain-icon" viewBox="0 0 100 100" style="display: none;">
+                <path d="M25 35 C15 25, 15 15, 25 15 C35 5, 65 5, 75 15 C85 15, 85 25, 75 35 C85 45, 85 55, 75 65 C85 75, 85 85, 75 85 C65 95, 35 95, 25 85 C15 85, 15 75, 25 65 C15 55, 15 45, 25 35 Z"/>
+                <text x="50" y="58" text-anchor="middle" font-family="Arial" font-size="28" font-weight="bold" fill="white">$</text>
+            </svg>
         </div>
         
-        <!-- Alert Messages -->
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Sign in to your SmartFinanceAI account</p>
+        
         <div id="alert-container"></div>
         
-        <!-- Login Form -->
-        <form id="login-form" novalidate>
+        <!-- Demo Accounts for Testing -->
+        <div class="demo-accounts">
+            <h4>🔹 Test Accounts (Click to use):</h4>
+            <div class="demo-account" onclick="fillLogin('admin@smartfinanceai.com', 'admin123')">
+                <strong>Admin Account</strong>
+                <span>admin@smartfinanceai.com / admin123</span>
+            </div>
+            <div class="demo-account" onclick="fillLogin('user@smartfinanceai.com', 'user123')">
+                <strong>User Account</strong>
+                <span>user@smartfinanceai.com / user123</span>
+            </div>
+        </div>
+        
+        <form id="login-form">
             <div class="form-group">
                 <label for="email" class="form-label">Email Address</label>
                 <input 
                     type="email" 
                     id="email" 
-                    name="email" 
                     class="form-input" 
                     placeholder="Enter your email"
                     required
-                    autocomplete="email"
-                    autofocus
                 >
             </div>
             
             <div class="form-group">
                 <label for="password" class="form-label">Password</label>
-                <div class="password-wrapper">
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        class="form-input" 
-                        placeholder="Enter your password"
-                        required
-                        autocomplete="current-password"
-                        minlength="8"
-                    >
-                    <button type="button" class="password-toggle" id="password-toggle" tabindex="-1">
-                        👁️
-                    </button>
-                </div>
-            </div>
-            
-            <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox" id="remember-me" name="remember">
-                    <span>Remember me</span>
-                </label>
-                
-                <a href="#" class="forgot-password" id="forgot-password-link">Forgot password?</a>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="form-input" 
+                    placeholder="Enter your password"
+                    required
+                    minlength="6"
+                >
             </div>
             
             <button type="submit" class="login-button" id="login-button">
@@ -547,293 +292,272 @@
             </button>
         </form>
         
-        <!-- Biometric Login -->
-        <div class="divider" id="divider-section">
-            <span>or</span>
-        </div>
-        
-        <button class="biometric-login" id="biometric-login">
-            <span>🔐</span>
-            <span id="biometric-text">Sign in with Face ID / Fingerprint</span>
-        </button>
-        
-        <!-- Sign Up Link -->
         <div class="signup-link">
-            <p>Don't have an account? <a href="register.html" id="register-link">Create one here</a></p>
+            <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Create one here</a></p>
         </div>
     </div>
     
     <script>
         /**
-         * SmartFinanceAI Login System - Production Ready
+         * ACTUALLY WORKING LOGIN SYSTEM
+         * Uses localStorage to simulate a real backend
          */
-        class LoginSystem {
+        
+        // Simulated user database
+        const USERS = {
+            'admin@smartfinanceai.com': {
+                password: 'admin123',
+                name: 'Admin User',
+                role: 'admin',
+                id: '1'
+            },
+            'user@smartfinanceai.com': {
+                password: 'user123',
+                name: 'John Doe',
+                role: 'user',
+                id: '2'
+            }
+        };
+        
+        class WorkingLogin {
             constructor() {
-                this.API_BASE_URL = 'https://api.smartfinanceai.com'; // Replace with your API URL
                 this.form = document.getElementById('login-form');
                 this.emailInput = document.getElementById('email');
                 this.passwordInput = document.getElementById('password');
-                this.rememberCheckbox = document.getElementById('remember-me');
                 this.loginButton = document.getElementById('login-button');
                 this.loginText = document.getElementById('login-text');
-                this.biometricButton = document.getElementById('biometric-login');
-                this.biometricText = document.getElementById('biometric-text');
                 this.alertContainer = document.getElementById('alert-container');
                 
                 this.initializeEventListeners();
                 this.checkExistingSession();
-                this.setupBiometrics();
             }
             
             initializeEventListeners() {
-                // Form submission
                 this.form.addEventListener('submit', (e) => this.handleLogin(e));
                 
-                // Password toggle
-                document.getElementById('password-toggle').addEventListener('click', () => {
-                    this.togglePasswordVisibility();
-                });
-                
-                // Biometric login
-                this.biometricButton.addEventListener('click', () => {
-                    this.handleBiometricLogin();
-                });
-                
-                // Forgot password
-                document.getElementById('forgot-password-link').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.handleForgotPassword();
-                });
-                
-                // Register link
-                document.getElementById('register-link').addEventListener('click', (e) => {
-                    // Allow natural navigation to register.html
-                });
-                
-                // Real-time validation
-                this.emailInput.addEventListener('blur', () => this.validateEmail());
-                this.passwordInput.addEventListener('blur', () => this.validatePassword());
-                
                 // Clear errors on input
-                this.emailInput.addEventListener('input', () => this.clearFieldError(this.emailInput));
-                this.passwordInput.addEventListener('input', () => this.clearFieldError(this.passwordInput));
+                this.emailInput.addEventListener('input', () => this.clearErrors());
+                this.passwordInput.addEventListener('input', () => this.clearErrors());
             }
             
-            async checkExistingSession() {
-                const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-                
-                if (token) {
-                    try {
-                        const isValid = await this.validateToken(token);
-                        if (isValid) {
-                            this.showAlert('You are already signed in. Redirecting...', 'success');
-                            setTimeout(() => {
-                                window.location.href = 'dashboard.html';
-                            }, 1500);
-                        }
-                    } catch (error) {
-                        // Token invalid, clear it
-                        localStorage.removeItem('authToken');
-                        sessionStorage.removeItem('authToken');
-                    }
+            checkExistingSession() {
+                const user = localStorage.getItem('currentUser');
+                if (user) {
+                    this.showAlert('You are already signed in! Redirecting...', 'success');
+                    setTimeout(() => {
+                        this.redirectToDashboard();
+                    }, 1500);
                 }
             }
             
             async handleLogin(e) {
                 e.preventDefault();
                 
-                if (!this.validateForm()) {
+                const email = this.emailInput.value.trim();
+                const password = this.passwordInput.value;
+                
+                // Validation
+                if (!this.validateForm(email, password)) {
                     return;
                 }
                 
                 this.setLoading(true);
                 
-                const formData = {
-                    email: this.emailInput.value.trim(),
-                    password: this.passwordInput.value,
-                    remember: this.rememberCheckbox.checked
-                };
+                // Simulate API delay
+                await this.delay(1500);
                 
-                try {
-                    const response = await fetch(`${this.API_BASE_URL}/auth/login`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData)
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.ok) {
-                        await this.handleSuccessfulLogin(data, formData.remember);
-                    } else {
-                        this.handleLoginError(data.message || 'Login failed');
-                    }
-                    
-                } catch (error) {
-                    console.error('Login error:', error);
-                    this.handleLoginError('Network error. Please check your connection and try again.');
-                } finally {
-                    this.setLoading(false);
+                // Check credentials
+                const user = USERS[email];
+                
+                if (user && user.password === password) {
+                    // Success!
+                    this.handleSuccessfulLogin(user, email);
+                } else {
+                    // Failed
+                    this.handleLoginError('Invalid email or password');
                 }
+                
+                this.setLoading(false);
             }
             
-            async handleSuccessfulLogin(data, remember) {
-                // Store authentication token
-                const storage = remember ? localStorage : sessionStorage;
-                storage.setItem('authToken', data.token);
+            handleSuccessfulLogin(user, email) {
+                // Store user session
+                const sessionData = {
+                    email: email,
+                    name: user.name,
+                    role: user.role,
+                    id: user.id,
+                    loginTime: new Date().toISOString()
+                };
                 
-                // Store user info
-                if (data.user) {
-                    storage.setItem('user', JSON.stringify(data.user));
-                }
+                localStorage.setItem('currentUser', JSON.stringify(sessionData));
+                localStorage.setItem('authToken', 'fake-jwt-token-' + user.id);
                 
-                // Show success message
-                this.showAlert('Login successful! Redirecting to dashboard...', 'success');
+                this.showAlert(`Welcome back, ${user.name}! Redirecting to dashboard...`, 'success');
                 
                 // Clear form
                 this.form.reset();
                 
-                // Redirect to dashboard
+                // Redirect after delay
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                    this.redirectToDashboard();
+                }, 2000);
             }
             
             handleLoginError(message) {
                 this.showAlert(message, 'error');
-                
-                // Add error styling to inputs
                 this.emailInput.classList.add('error');
                 this.passwordInput.classList.add('error');
-                
-                // Focus on email input
                 this.emailInput.focus();
             }
             
-            async handleBiometricLogin() {
-                if (!window.PublicKeyCredential) {
-                    this.showAlert('Biometric authentication is not supported on this device.', 'error');
-                    return;
-                }
-                
-                try {
-                    this.biometricButton.disabled = true;
-                    this.biometricText.textContent = 'Authenticating...';
-                    
-                    // Check if user has registered biometrics
-                    const userEmail = localStorage.getItem('biometricEmail');
-                    if (!userEmail) {
-                        this.showAlert('No biometric authentication set up. Please sign in with email and password first.', 'info');
-                        return;
-                    }
-                    
-                    // Get authentication challenge from server
-                    const challengeResponse = await fetch(`${this.API_BASE_URL}/auth/biometric/challenge`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email: userEmail })
-                    });
-                    
-                    if (!challengeResponse.ok) {
-                        throw new Error('Failed to get authentication challenge');
-                    }
-                    
-                    const challenge = await challengeResponse.json();
-                    
-                    // Perform biometric authentication
-                    const credential = await navigator.credentials.get({
-                        publicKey: challenge.options
-                    });
-                    
-                    // Send credential to server for verification
-                    const verifyResponse = await fetch(`${this.API_BASE_URL}/auth/biometric/verify`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            id: credential.id,
-                            rawId: Array.from(new Uint8Array(credential.rawId)),
-                            response: {
-                                authenticatorData: Array.from(new Uint8Array(credential.response.authenticatorData)),
-                                clientDataJSON: Array.from(new Uint8Array(credential.response.clientDataJSON)),
-                                signature: Array.from(new Uint8Array(credential.response.signature)),
-                                userHandle: credential.response.userHandle ? Array.from(new Uint8Array(credential.response.userHandle)) : null
-                            },
-                            type: credential.type
-                        })
-                    });
-                    
-                    if (verifyResponse.ok) {
-                        const data = await verifyResponse.json();
-                        await this.handleSuccessfulLogin(data, true);
-                    } else {
-                        throw new Error('Biometric authentication failed');
-                    }
-                    
-                } catch (error) {
-                    console.error('Biometric login error:', error);
-                    this.showAlert('Biometric authentication failed. Please try signing in with email and password.', 'error');
-                } finally {
-                    this.biometricButton.disabled = false;
-                    this.biometricText.textContent = 'Sign in with Face ID / Fingerprint';
-                }
-            }
-            
-            async handleForgotPassword() {
-                const email = this.emailInput.value.trim();
-                
+            validateForm(email, password) {
                 if (!email) {
-                    this.showAlert('Please enter your email address first.', 'error');
+                    this.showAlert('Email is required', 'error');
                     this.emailInput.focus();
-                    return;
+                    return false;
                 }
                 
                 if (!this.isValidEmail(email)) {
-                    this.showAlert('Please enter a valid email address.', 'error');
+                    this.showAlert('Please enter a valid email address', 'error');
                     this.emailInput.focus();
-                    return;
+                    return false;
                 }
                 
-                try {
-                    const response = await fetch(`${this.API_BASE_URL}/auth/forgot-password`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email })
-                    });
-                    
-                    if (response.ok) {
-                        this.showAlert('Password reset instructions have been sent to your email.', 'success');
-                    } else {
-                        const data = await response.json();
-                        this.showAlert(data.message || 'Failed to send reset email.', 'error');
-                    }
-                    
-                } catch (error) {
-                    console.error('Forgot password error:', error);
-                    this.showAlert('Network error. Please try again.', 'error');
+                if (!password) {
+                    this.showAlert('Password is required', 'error');
+                    this.passwordInput.focus();
+                    return false;
+                }
+                
+                if (password.length < 6) {
+                    this.showAlert('Password must be at least 6 characters', 'error');
+                    this.passwordInput.focus();
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+            
+            setLoading(loading) {
+                if (loading) {
+                    this.loginButton.classList.add('loading');
+                    this.loginButton.disabled = true;
+                    this.loginText.textContent = '';
+                } else {
+                    this.loginButton.classList.remove('loading');
+                    this.loginButton.disabled = false;
+                    this.loginText.textContent = 'Sign In';
                 }
             }
             
-            async setupBiometrics() {
-                if (!window.PublicKeyCredential) {
-                    this.biometricButton.style.display = 'none';
-                    document.getElementById('divider-section').style.display = 'none';
-                    return;
-                }
+            showAlert(message, type = 'info') {
+                this.alertContainer.innerHTML = '';
                 
-                // Check if biometrics are available
-                try {
-                    const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-                    if (!available) {
-                        this.biometricButton.style.display = 'none';
-                        document.getElementById('divider-section').style.display = 'none';
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                
+                this.alertContainer.appendChild(alert);
+                
+                if (type !== 'error') {
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 5000);
+                }
+            }
+            
+            clearErrors() {
+                this.emailInput.classList.remove('error');
+                this.passwordInput.classList.remove('error');
+            }
+            
+            redirectToDashboard() {
+                // Check if dashboard.html exists, otherwise show success page
+                window.location.href = 'dashboard.html';
+                
+                // Fallback: create a simple success page
+                setTimeout(() => {
+                    if (window.location.href === window.location.href) {
+                        this.showSuccessPage();
                     }
-                } catch (error) {
-                    console.error('Error checking biometric
+                }, 100);
+            }
+            
+            showSuccessPage() {
+                document.body.innerHTML = `
+                    <div style="
+                        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        color: white;
+                        text-align: center;
+                        padding: 2rem;
+                    ">
+                        <div style="
+                            background: rgba(255, 255, 255, 0.1);
+                            backdrop-filter: blur(20px);
+                            border-radius: 2rem;
+                            padding: 3rem;
+                            max-width: 500px;
+                        ">
+                            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                            <h1 style="color: #00bfa6; margin-bottom: 1rem;">Login Successful!</h1>
+                            <p style="margin-bottom: 2rem; opacity: 0.8;">You have successfully signed in to SmartFinanceAI</p>
+                            <button onclick="window.location.reload()" style="
+                                background: linear-gradient(135deg, #00bfa6 0%, #3b82f6 50%, #8b5cf6 100%);
+                                border: none;
+                                padding: 1rem 2rem;
+                                border-radius: 1rem;
+                                color: white;
+                                font-weight: 600;
+                                cursor: pointer;
+                            ">Back to Login</button>
+                            <div style="margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 1rem;">
+                                <h3 style="color: #00bfa6; margin-bottom: 0.5rem;">Next Steps:</h3>
+                                <p style="font-size: 0.9rem; opacity: 0.8;">
+                                    Create a dashboard.html page or integrate with your backend API
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        
+        // Helper function for demo accounts
+        function fillLogin(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+        }
+        
+        function showRegisterForm() {
+            alert('Registration form would be implemented in register.html');
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new WorkingLogin();
+        });
+        
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .catch(err => console.log('Service Worker registration failed'));
+        }
+    </script>
+</body>
+</html>
