@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Manifest and PWA support -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00bfa6" />
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Setup - SmartFinanceAI</title>
@@ -17,20 +11,62 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="/styles/main.css" as="style">
-    <link rel="preload" href="/global/localization.js" as="script">
-    
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="/styles/main.css">
-    <link rel="stylesheet" href="/styles/components.css">
-    
     <!-- Custom Styles for Profile Setup -->
     <style>
         :root {
+            /* Core color variables */
+            --brand-primary: #8b5cf6;
+            --brand-secondary: #3b82f6;
+            --brand-accent: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #ef4444;
+            --brand-info: #06b6d4;
+            
+            /* Glass effects */
+            --glass-subtle: rgba(255, 255, 255, 0.05);
+            --glass-light: rgba(255, 255, 255, 0.08);
+            --glass-medium: rgba(255, 255, 255, 0.12);
+            --glass-strong: rgba(255, 255, 255, 0.15);
+            --glass-border-subtle: rgba(255, 255, 255, 0.1);
+            --glass-border-light: rgba(255, 255, 255, 0.15);
+            --glass-border-medium: rgba(255, 255, 255, 0.2);
+            --glass-premium: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.15) 50%, rgba(147, 51, 234, 0.15) 100%);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #9333ea 100%);
+            --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+            
+            /* Text colors */
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-tertiary: rgba(255, 255, 255, 0.65);
+            --text-quaternary: rgba(255, 255, 255, 0.5);
+            
+            /* Font families */
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            
+            /* Profile setup specific */
             --profile-progress-height: 8px;
             --profile-card-min-height: 500px;
             --profile-animation-duration: 0.4s;
+        }
+
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
         }
 
         /* Main Container */
@@ -177,6 +213,7 @@
         /* Main Card */
         .profile-card {
             background: var(--glass-light);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border-light);
             border-radius: 2rem;
             padding: 3rem;
@@ -344,59 +381,6 @@
             padding-right: 3rem;
         }
 
-        /* Range Slider */
-        .range-input {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 8px;
-            background: var(--glass-border-light);
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .range-input::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-        }
-
-        .range-input::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-        }
-
-        .range-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-tertiary);
-        }
-
-        /* Grid Layouts */
-        .form-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .form-grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
         /* Choice Cards */
         .choice-grid {
             display: grid;
@@ -443,74 +427,6 @@
         .choice-card-description {
             font-size: 0.875rem;
             color: var(--text-secondary);
-        }
-
-        /* Goal Priorities */
-        .goal-priorities {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .goal-item {
-            background: var(--glass-subtle);
-            border: 1px solid var(--glass-border-light);
-            border-radius: 1rem;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: grab;
-            transition: all 0.3s ease;
-        }
-
-        .goal-item:hover {
-            background: var(--glass-light);
-            transform: translateY(-1px);
-        }
-
-        .goal-item.dragging {
-            cursor: grabbing;
-            opacity: 0.7;
-            transform: rotate(2deg);
-        }
-
-        .goal-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .goal-icon {
-            font-size: 1.5rem;
-        }
-
-        .goal-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .goal-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .goal-description {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .goal-priority {
-            background: var(--glass-light);
-            border: 1px solid var(--glass-border-light);
-            border-radius: 2rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         /* Navigation Buttons */
@@ -579,46 +495,11 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
         }
 
-        /* Help Section */
-        .help-section {
-            background: var(--glass-subtle);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            border: 1px solid var(--glass-border-subtle);
-        }
-
-        .help-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .help-text {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        /* Error Messages */
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 0.75rem;
-            padding: 1rem;
-            color: var(--text-primary);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
-
-        .error-message.visible {
-            display: block;
-            animation: fadeInUp 0.3s ease;
+        /* Grid Layouts */
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
 
         /* Success Animation */
@@ -733,8 +614,7 @@
                 font-size: 1.75rem;
             }
 
-            .form-grid-2,
-            .form-grid-3 {
+            .form-grid-2 {
                 grid-template-columns: 1fr;
             }
 
@@ -773,15 +653,6 @@
             }
         }
 
-        /* Focus States */
-        .form-input:focus,
-        .choice-card:focus,
-        .btn-back:focus,
-        .btn-next:focus {
-            outline: 2px solid var(--brand-primary);
-            outline-offset: 2px;
-        }
-
         /* Accessibility */
         .sr-only {
             position: absolute;
@@ -802,163 +673,998 @@
     <div class="profile-container">
         <!-- Header Section -->
         <header class="profile-header">
-            <h1 class="profile-title">👤 Create Your Profile</h1>
+            <h1 class="profile-title">🧠 Financial Profile Setup</h1>
             <p class="profile-subtitle">
-                Help us personalize your financial journey with smart recommendations 
-                tailored to your unique situation and goals.
+                Help us understand your financial situation to provide personalized AI recommendations
             </p>
         </header>
 
         <!-- Progress Section -->
-        <section class="progress-section">
+        <div class="progress-section">
             <div class="progress-header">
-                <span class="progress-text">Setup Progress</span>
+                <span class="progress-text">Profile Setup Progress</span>
                 <span class="progress-percentage" id="progressPercentage">0%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-        </section>
+        </div>
 
         <!-- Step Indicator -->
-        <section class="step-indicator" id="stepIndicator">
+        <div class="step-indicator" id="stepIndicator">
             <div class="step-item active" data-step="1">
-                <span>1</span>
+                <span>👤</span>
                 <span>Basic Info</span>
             </div>
             <div class="step-item pending" data-step="2">
-                <span>2</span>
-                <span>Financial Situation</span>
+                <span>💰</span>
+                <span>Income</span>
             </div>
             <div class="step-item pending" data-step="3">
-                <span>3</span>
-                <span>Goals & Preferences</span>
+                <span>🎯</span>
+                <span>Goals</span>
             </div>
             <div class="step-item pending" data-step="4">
-                <span>4</span>
+                <span>📊</span>
+                <span>Preferences</span>
+            </div>
+            <div class="step-item pending" data-step="5">
+                <span>✅</span>
                 <span>Complete</span>
             </div>
-        </section>
+        </div>
 
         <!-- Main Profile Card -->
         <main class="profile-card">
             <!-- Step 1: Basic Information -->
             <div class="step-content active" id="step1">
                 <div class="step-header">
-                    <span class="step-icon">👋</span>
-                    <h2 class="step-title">Tell Us About Yourself</h2>
+                    <span class="step-icon">👤</span>
+                    <h2 class="step-title">Let's start with the basics</h2>
                     <p class="step-description">
-                        We'll use this information to provide personalized financial advice 
-                        and recommendations tailored to your life situation.
+                        Tell us about yourself so we can tailor the experience to your needs
                     </p>
                 </div>
 
-                <div class="form-section">
+                <form class="form-section">
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="form-label" for="firstName">
+                            <label for="firstName" class="form-label">
                                 First Name <span class="required">*</span>
                             </label>
-                            <input type="text" 
-                                   id="firstName" 
-                                   class="form-input" 
-                                   placeholder="Enter your first name"
-                                   required>
-                            <div class="error-message" id="firstNameError"></div>
+                            <input type="text" id="firstName" class="form-input" placeholder="Enter your first name" required>
                         </div>
-
                         <div class="form-group">
-                            <label class="form-label" for="lastName">
+                            <label for="lastName" class="form-label">
                                 Last Name <span class="required">*</span>
                             </label>
-                            <input type="text" 
-                                   id="lastName" 
-                                   class="form-input" 
-                                   placeholder="Enter your last name"
-                                   required>
-                            <div class="error-message" id="lastNameError"></div>
+                            <input type="text" id="lastName" class="form-input" placeholder="Enter your last name" required>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            Email Address <span class="required">*</span>
+                        </label>
+                        <input type="email" id="email" class="form-input" placeholder="your.email@example.com" required>
                     </div>
 
                     <div class="form-grid-2">
                         <div class="form-group">
-                            <label class="form-label" for="age">
+                            <label for="age" class="form-label">
                                 Age <span class="required">*</span>
                             </label>
-                            <input type="number" 
-                                   id="age" 
-                                   class="form-input" 
-                                   placeholder="Your age"
-                                   min="18" 
-                                   max="100"
-                                   required>
-                            <div class="error-message" id="ageError"></div>
+                            <input type="number" id="age" class="form-input" placeholder="25" min="18" max="100" required>
                         </div>
-
                         <div class="form-group">
-                            <label class="form-label" for="country">
+                            <label for="country" class="form-label">
                                 Country <span class="required">*</span>
                             </label>
                             <select id="country" class="form-input form-select" required>
                                 <option value="">Select your country</option>
                                 <option value="NZ">🇳🇿 New Zealand</option>
                                 <option value="AU">🇦🇺 Australia</option>
-                                <option value="UK">🇬🇧 United Kingdom</option>
+                                <option value="GB">🇬🇧 United Kingdom</option>
                                 <option value="US">🇺🇸 United States</option>
                                 <option value="CA">🇨🇦 Canada</option>
                             </select>
-                            <div class="error-message" id="countryError"></div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="employment">
-                            Employment Status <span class="required">*</span>
+                        <label class="form-label">
+                            Relationship Status
                         </label>
-                        <select id="employment" class="form-input form-select" required>
-                            <option value="">Select employment status</option>
-                            <option value="employed_full">Full-time Employee</option>
-                            <option value="employed_part">Part-time Employee</option>
-                            <option value="self_employed">Self-employed</option>
-                            <option value="contractor">Contractor/Freelancer</option>
-                            <option value="student">Student</option>
-                            <option value="retired">Retired</option>
-                            <option value="unemployed">Currently Unemployed</option>
-                        </select>
-                        <div class="error-message" id="employmentError"></div>
+                        <div class="choice-grid">
+                            <div class="choice-card" data-value="single">
+                                <span class="choice-card-icon">👤</span>
+                                <div class="choice-card-title">Single</div>
+                                <div class="choice-card-description">Managing finances independently</div>
+                            </div>
+                            <div class="choice-card" data-value="couple">
+                                <span class="choice-card-icon">💑</span>
+                                <div class="choice-card-title">Couple</div>
+                                <div class="choice-card-description">Shared financial planning</div>
+                            </div>
+                            <div class="choice-card" data-value="family">
+                                <span class="choice-card-icon">👨‍👩‍👧‍👦</span>
+                                <div class="choice-card-title">Family</div>
+                                <div class="choice-card-description">Managing family finances</div>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="dependents">
-                            Number of Dependents
-                        </label>
-                        <input type="number" 
-                               id="dependents" 
-                               class="form-input" 
-                               placeholder="0"
-                               min="0" 
-                               max="20"
-                               value="0">
-                    </div>
-
-                    <div class="help-section">
-                        <h4 class="help-title">
-                            <span>🔒</span>
-                            <span>Privacy & Security</span>
-                        </h4>
-                        <p class="help-text">
-                            Your personal information is encrypted and never shared with third parties. 
-                            We use this data solely to personalize your financial recommendations.
-                        </p>
-                    </div>
-                </div>
+                </form>
             </div>
 
-            <!-- Step 2: Financial Situation -->
+            <!-- Step 2: Income Information -->
             <div class="step-content" id="step2">
                 <div class="step-header">
                     <span class="step-icon">💰</span>
-                    <h2 class="step-title">Your Financial Situation</h2>
+                    <h2 class="step-title">Tell us about your income</h2>
                     <p class="step-description">
-                        Help us understand your current financial position to provide 
-                        accurate budgeting recommendations and goal calculations
+                        This helps us create realistic budgets and savings goals
+                    </p>
+                </div>
+
+                <form class="form-section">
+                    <div class="form-group">
+                        <label for="income" class="form-label">
+                            Monthly Income (after tax) <span class="required">*</span>
+                        </label>
+                        <div class="currency-input-wrapper">
+                            <span class="currency-symbol" id="currencySymbol">$</span>
+                            <input type="number" id="income" class="form-input currency-input" placeholder="5,000" min="0" step="100" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Employment Status <span class="required">*</span>
+                        </label>
+                        <div class="choice-grid">
+                            <div class="choice-card" data-value="employed">
+                                <span class="choice-card-icon">💼</span>
+                                <div class="choice-card-title">Employed</div>
+                                <div class="choice-card-description">Full-time or part-time job</div>
+                            </div>
+                            <div class="choice-card" data-value="self-employed">
+                                <span class="choice-card-icon">🚀</span>
+                                <div class="choice-card-title">Self-Employed</div>
+                                <div class="choice-card-description">Freelancer or business owner</div>
+                            </div>
+                            <div class="choice-card" data-value="student">
+                                <span class="choice-card-icon">🎓</span>
+                                <div class="choice-card-title">Student</div>
+                                <div class="choice-card-description">Currently studying</div>
+                            </div>
+                            <div class="choice-card" data-value="retired">
+                                <span class="choice-card-icon">🏖️</span>
+                                <div class="choice-card-title">Retired</div>
+                                <div class="choice-card-description">Living on pension/savings</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expenses" class="form-label">
+                            Estimated Monthly Expenses
+                        </label>
+                        <div class="currency-input-wrapper">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="expenses" class="form-input currency-input" placeholder="3,000" min="0" step="100">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 3: Financial Goals -->
+            <div class="step-content" id="step3">
+                <div class="step-header">
+                    <span class="step-icon">🎯</span>
+                    <h2 class="step-title">What are your financial goals?</h2>
+                    <p class="step-description">
+                        Select your top priorities so we can help you achieve them faster
+                    </p>
+                </div>
+
+                <form class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Primary Financial Goals (select up to 3)
+                        </label>
+                        <div class="choice-grid">
+                            <div class="choice-card" data-value="emergency">
+                                <span class="choice-card-icon">🚨</span>
+                                <div class="choice-card-title">Emergency Fund</div>
+                                <div class="choice-card-description">Build 3-6 months of expenses</div>
+                            </div>
+                            <div class="choice-card" data-value="house">
+                                <span class="choice-card-icon">🏠</span>
+                                <div class="choice-card-title">Buy a Home</div>
+                                <div class="choice-card-description">Save for house deposit</div>
+                            </div>
+                            <div class="choice-card" data-value="debt">
+                                <span class="choice-card-icon">💳</span>
+                                <div class="choice-card-title">Pay Off Debt</div>
+                                <div class="choice-card-description">Eliminate credit card/loan debt</div>
+                            </div>
+                            <div class="choice-card" data-value="retirement">
+                                <span class="choice-card-icon">🏖️</span>
+                                <div class="choice-card-title">Retirement</div>
+                                <div class="choice-card-description">Long-term retirement savings</div>
+                            </div>
+                            <div class="choice-card" data-value="investment">
+                                <span class="choice-card-icon">📈</span>
+                                <div class="choice-card-title">Invest</div>
+                                <div class="choice-card-description">Build investment portfolio</div>
+                            </div>
+                            <div class="choice-card" data-value="vacation">
+                                <span class="choice-card-icon">✈️</span>
+                                <div class="choice-card-title">Travel/Vacation</div>
+                                <div class="choice-card-description">Save for dream vacation</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timeframe" class="form-label">
+                            Primary Goal Timeframe
+                        </label>
+                        <select id="timeframe" class="form-input form-select">
+                            <option value="">Select timeframe</option>
+                            <option value="6months">Within 6 months</option>
+                            <option value="1year">Within 1 year</option>
+                            <option value="2years">Within 2 years</option>
+                            <option value="5years">Within 5 years</option>
+                            <option value="10years">10+ years</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="goalAmount" class="form-label">
+                            Target Amount (optional)
+                        </label>
+                        <div class="currency-input-wrapper">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="goalAmount" class="form-input currency-input" placeholder="10,000" min="0" step="500">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 4: Preferences -->
+            <div class="step-content" id="step4">
+                <div class="step-header">
+                    <span class="step-icon">📊</span>
+                    <h2 class="step-title">Financial preferences</h2>
+                    <p class="step-description">
+                        Customize your experience based on your financial style
+                    </p>
+                </div>
+
+                <form class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Risk Tolerance
+                        </label>
+                        <div class="choice-grid">
+                            <div class="choice-card" data-value="conservative">
+                                <span class="choice-card-icon">🛡️</span>
+                                <div class="choice-card-title">Conservative</div>
+                                <div class="choice-card-description">Prefer stability and low risk</div>
+                            </div>
+                            <div class="choice-card" data-value="moderate">
+                                <span class="choice-card-icon">⚖️</span>
+                                <div class="choice-card-title">Moderate</div>
+                                <div class="choice-card-description">Balanced risk and return</div>
+                            </div>
+                            <div class="choice-card" data-value="aggressive">
+                                <span class="choice-card-icon">🚀</span>
+                                <div class="choice-card-title">Aggressive</div>
+                                <div class="choice-card-description">Higher risk for higher returns</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Budgeting Style
+                        </label>
+                        <div class="choice-grid">
+                            <div class="choice-card" data-value="detailed">
+                                <span class="choice-card-icon">📝</span>
+                                <div class="choice-card-title">Detailed</div>
+                                <div class="choice-card-description">Track every expense category</div>
+                            </div>
+                            <div class="choice-card" data-value="simple">
+                                <span class="choice-card-icon">📊</span>
+                                <div class="choice-card-title">Simple</div>
+                                <div class="choice-card-description">Basic categories and totals</div>
+                            </div>
+                            <div class="choice-card" data-value="automated">
+                                <span class="choice-card-icon">🤖</span>
+                                <div class="choice-card-title">Automated</div>
+                                <div class="choice-card-description">Let AI handle the details</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Notification Preferences
+                        </label>
+                        <div class="choice-grid">
+                            <div class="choice-card" data-value="daily">
+                                <span class="choice-card-icon">📱</span>
+                                <div class="choice-card-title">Daily Updates</div>
+                                <div class="choice-card-description">Daily spending summaries</div>
+                            </div>
+                            <div class="choice-card" data-value="weekly">
+                                <span class="choice-card-icon">📅</span>
+                                <div class="choice-card-title">Weekly Reports</div>
+                                <div class="choice-card-description">Weekly financial insights</div>
+                            </div>
+                            <div class="choice-card" data-value="important">
+                                <span class="choice-card-icon">⚠️</span>
+                                <div class="choice-card-title">Important Only</div>
+                                <div class="choice-card-description">Critical alerts only</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Step 5: Completion -->
+            <div class="step-content" id="step5">
+                <div class="success-animation">
+                    <div class="success-icon">🎉</div>
+                    <h2 class="success-title">Profile Setup Complete!</h2>
+                    <p class="success-description">
+                        Your personalized financial profile is ready. Let's start building your financial future together!
+                    </p>
+                    <button class="btn-next" onclick="completeSetup()">
+                        🚀 Launch Dashboard
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <button class="btn-back" id="backBtn" onclick="previousStep()" disabled>
+                    ← Back
+                </button>
+                <button class="btn-next" id="nextBtn" onclick="nextStep()">
+                    Next →
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Setting up your profile...</h3>
+            <p id="loadingStatus">Initializing AI recommendations</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Profile setup state management
+        class ProfileSetup {
+            constructor() {
+                this.currentStep = 1;
+                this.totalSteps = 5;
+                this.formData = {
+                    personal: {},
+                    income: {},
+                    goals: {},
+                    preferences: {}
+                };
+                this.selectedGoals = new Set();
+                this.maxGoals = 3;
+                
+                this.init();
+            }
+
+            init() {
+                this.updateProgress();
+                this.bindEvents();
+                this.loadUserCountry();
+                this.setupChoiceCards();
+            }
+
+            // Event bindings
+            bindEvents() {
+                // Form input validation
+                document.querySelectorAll('.form-input').forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('input', () => this.clearFieldError(input));
+                });
+
+                // Real-time validation for specific fields
+                document.getElementById('email')?.addEventListener('input', (e) => {
+                    this.validateEmail(e.target);
+                });
+
+                // Currency symbol update based on country
+                document.getElementById('country')?.addEventListener('change', (e) => {
+                    this.updateCurrencySymbol(e.target.value);
+                });
+
+                // Income/expense relationship validation
+                document.getElementById('income')?.addEventListener('input', () => {
+                    this.validateIncomeExpenses();
+                });
+                document.getElementById('expenses')?.addEventListener('input', () => {
+                    this.validateIncomeExpenses();
+                });
+            }
+
+            // Country detection and setup
+            loadUserCountry() {
+                // Try to detect user's country based on timezone or previous selection
+                const savedCountry = localStorage.getItem('smartfinance_country');
+                if (savedCountry) {
+                    document.getElementById('country').value = savedCountry;
+                    this.updateCurrencySymbol(savedCountry);
+                } else {
+                    // Basic timezone-based detection
+                    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    let detectedCountry = 'US'; // Default
+                    
+                    if (timezone.includes('Auckland') || timezone.includes('Wellington')) {
+                        detectedCountry = 'NZ';
+                    } else if (timezone.includes('Sydney') || timezone.includes('Melbourne')) {
+                        detectedCountry = 'AU';
+                    } else if (timezone.includes('London')) {
+                        detectedCountry = 'GB';
+                    } else if (timezone.includes('Toronto') || timezone.includes('Vancouver')) {
+                        detectedCountry = 'CA';
+                    }
+                    
+                    document.getElementById('country').value = detectedCountry;
+                    this.updateCurrencySymbol(detectedCountry);
+                }
+            }
+
+            // Currency symbol management
+            updateCurrencySymbol(country) {
+                const currencyMap = {
+                    'NZ': '$',
+                    'AU': '$',
+                    'US': '$',
+                    'CA': '$',
+                    'GB': '£'
+                };
+                
+                const symbol = currencyMap[country] || '$';
+                document.querySelectorAll('.currency-symbol').forEach(el => {
+                    el.textContent = symbol;
+                });
+            }
+
+            // Choice card setup and management
+            setupChoiceCards() {
+                document.querySelectorAll('.choice-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const section = card.closest('.step-content');
+                        const isGoalCard = section.id === 'step3' && card.closest('[data-value]');
+                        
+                        if (isGoalCard) {
+                            this.handleGoalSelection(card);
+                        } else {
+                            this.handleSingleChoice(card);
+                        }
+                    });
+                });
+            }
+
+            // Goal selection with limit
+            handleGoalSelection(card) {
+                const value = card.dataset.value;
+                
+                if (card.classList.contains('selected')) {
+                    // Deselect
+                    card.classList.remove('selected');
+                    this.selectedGoals.delete(value);
+                } else if (this.selectedGoals.size < this.maxGoals) {
+                    // Select if under limit
+                    card.classList.add('selected');
+                    this.selectedGoals.add(value);
+                } else {
+                    // Show limit message
+                    this.showNotification(`You can select up to ${this.maxGoals} goals`, 'warning');
+                }
+                
+                this.updateGoalCounter();
+            }
+
+            // Single choice selection
+            handleSingleChoice(card) {
+                const section = card.closest('.form-group');
+                section.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+            }
+
+            // Goal counter update
+            updateGoalCounter() {
+                const counterEl = document.querySelector('.goal-counter');
+                if (counterEl) {
+                    counterEl.textContent = `${this.selectedGoals.size}/${this.maxGoals} selected`;
+                }
+            }
+
+            // Field validation
+            validateField(field) {
+                const value = field.value.trim();
+                let isValid = true;
+                let errorMessage = '';
+
+                // Remove existing error state
+                field.classList.remove('error');
+
+                // Required field validation
+                if (field.hasAttribute('required') && !value) {
+                    isValid = false;
+                    errorMessage = 'This field is required';
+                }
+
+                // Email validation
+                if (field.type === 'email' && value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Please enter a valid email address';
+                    }
+                }
+
+                // Age validation
+                if (field.id === 'age' && value) {
+                    const age = parseInt(value);
+                    if (age < 18 || age > 100) {
+                        isValid = false;
+                        errorMessage = 'Age must be between 18 and 100';
+                    }
+                }
+
+                // Income validation
+                if (field.id === 'income' && value) {
+                    const income = parseFloat(value);
+                    if (income < 0) {
+                        isValid = false;
+                        errorMessage = 'Income cannot be negative';
+                    }
+                }
+
+                if (!isValid) {
+                    field.classList.add('error');
+                    this.showFieldError(field, errorMessage);
+                } else {
+                    this.clearFieldError(field);
+                }
+
+                return isValid;
+            }
+
+            // Email validation
+            validateEmail(field) {
+                const email = field.value.trim();
+                if (email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (emailRegex.test(email)) {
+                        field.classList.remove('error');
+                        this.clearFieldError(field);
+                        // Could add email availability check here
+                    }
+                }
+            }
+
+            // Income vs expenses validation
+            validateIncomeExpenses() {
+                const income = parseFloat(document.getElementById('income')?.value || 0);
+                const expenses = parseFloat(document.getElementById('expenses')?.value || 0);
+                
+                if (income > 0 && expenses > income) {
+                    this.showNotification('Your expenses are higher than your income. Consider adjusting your budget.', 'warning');
+                }
+            }
+
+            // Error display
+            showFieldError(field, message) {
+                let errorEl = field.parentNode.querySelector('.error-message');
+                if (!errorEl) {
+                    errorEl = document.createElement('div');
+                    errorEl.className = 'error-message';
+                    field.parentNode.appendChild(errorEl);
+                }
+                errorEl.textContent = message;
+                errorEl.classList.add('visible');
+            }
+
+            clearFieldError(field) {
+                const errorEl = field.parentNode.querySelector('.error-message');
+                if (errorEl) {
+                    errorEl.classList.remove('visible');
+                }
+                field.classList.remove('error');
+            }
+
+            // Step validation
+            validateCurrentStep() {
+                const currentStepEl = document.getElementById(`step${this.currentStep}`);
+                const requiredFields = currentStepEl.querySelectorAll('[required]');
+                let isValid = true;
+
+                // Validate required fields
+                requiredFields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                // Step-specific validation
+                switch (this.currentStep) {
+                    case 1:
+                        // Check if relationship status is selected
+                        const relationshipSelected = currentStepEl.querySelector('.choice-card.selected');
+                        if (!relationshipSelected) {
+                            this.showNotification('Please select your relationship status', 'error');
+                            isValid = false;
+                        }
+                        break;
+                    
+                    case 2:
+                        // Check if employment status is selected
+                        const employmentSelected = currentStepEl.querySelector('.choice-card.selected');
+                        if (!employmentSelected) {
+                            this.showNotification('Please select your employment status', 'error');
+                            isValid = false;
+                        }
+                        break;
+                    
+                    case 3:
+                        // Check if at least one goal is selected
+                        if (this.selectedGoals.size === 0) {
+                            this.showNotification('Please select at least one financial goal', 'error');
+                            isValid = false;
+                        }
+                        break;
+                    
+                    case 4:
+                        // Check if all preference categories are selected
+                        const preferenceGroups = currentStepEl.querySelectorAll('.form-group');
+                        let allSelected = true;
+                        
+                        preferenceGroups.forEach(group => {
+                            const selected = group.querySelector('.choice-card.selected');
+                            if (!selected && group.querySelector('.choice-card')) {
+                                allSelected = false;
+                            }
+                        });
+                        
+                        if (!allSelected) {
+                            this.showNotification('Please make a selection for all preference categories', 'error');
+                            isValid = false;
+                        }
+                        break;
+                }
+
+                return isValid;
+            }
+
+            // Collect form data
+            collectStepData() {
+                const currentStepEl = document.getElementById(`step${this.currentStep}`);
+                
+                switch (this.currentStep) {
+                    case 1:
+                        this.formData.personal = {
+                            firstName: document.getElementById('firstName')?.value || '',
+                            lastName: document.getElementById('lastName')?.value || '',
+                            email: document.getElementById('email')?.value || '',
+                            age: parseInt(document.getElementById('age')?.value || 0),
+                            country: document.getElementById('country')?.value || '',
+                            relationshipStatus: currentStepEl.querySelector('.choice-card.selected')?.dataset.value || ''
+                        };
+                        break;
+                    
+                    case 2:
+                        this.formData.income = {
+                            monthlyIncome: parseFloat(document.getElementById('income')?.value || 0),
+                            monthlyExpenses: parseFloat(document.getElementById('expenses')?.value || 0),
+                            employmentStatus: currentStepEl.querySelector('.choice-card.selected')?.dataset.value || ''
+                        };
+                        break;
+                    
+                    case 3:
+                        this.formData.goals = {
+                            primaryGoals: Array.from(this.selectedGoals),
+                            timeframe: document.getElementById('timeframe')?.value || '',
+                            targetAmount: parseFloat(document.getElementById('goalAmount')?.value || 0)
+                        };
+                        break;
+                    
+                    case 4:
+                        const riskTolerance = currentStepEl.querySelector('[data-value="conservative"].selected, [data-value="moderate"].selected, [data-value="aggressive"].selected')?.dataset.value || '';
+                        const budgetingStyle = currentStepEl.querySelector('[data-value="detailed"].selected, [data-value="simple"].selected, [data-value="automated"].selected')?.dataset.value || '';
+                        const notifications = currentStepEl.querySelector('[data-value="daily"].selected, [data-value="weekly"].selected, [data-value="important"].selected')?.dataset.value || '';
+                        
+                        this.formData.preferences = {
+                            riskTolerance,
+                            budgetingStyle,
+                            notifications
+                        };
+                        break;
+                }
+            }
+
+            // Progress management
+            updateProgress() {
+                const progressPercentage = ((this.currentStep - 1) / (this.totalSteps - 1)) * 100;
+                document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+                document.getElementById('progressPercentage').textContent = `${Math.round(progressPercentage)}%`;
+                
+                // Update step indicators
+                document.querySelectorAll('.step-item').forEach((item, index) => {
+                    const stepNum = index + 1;
+                    item.classList.remove('active', 'completed', 'pending');
+                    
+                    if (stepNum < this.currentStep) {
+                        item.classList.add('completed');
+                    } else if (stepNum === this.currentStep) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.add('pending');
+                    }
+                });
+            }
+
+            // Step navigation
+            nextStep() {
+                if (!this.validateCurrentStep()) {
+                    return;
+                }
+                
+                this.collectStepData();
+                
+                if (this.currentStep < this.totalSteps) {
+                    this.showStep(this.currentStep + 1);
+                }
+            }
+
+            previousStep() {
+                if (this.currentStep > 1) {
+                    this.showStep(this.currentStep - 1);
+                }
+            }
+
+            showStep(stepNumber) {
+                // Hide current step
+                document.querySelectorAll('.step-content').forEach(step => {
+                    step.classList.remove('active');
+                });
+                
+                // Show target step
+                document.getElementById(`step${stepNumber}`).classList.add('active');
+                
+                this.currentStep = stepNumber;
+                this.updateProgress();
+                this.updateNavigationButtons();
+                
+                // Auto-save progress
+                this.saveProgress();
+            }
+
+            updateNavigationButtons() {
+                const backBtn = document.getElementById('backBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                
+                // Back button
+                backBtn.disabled = this.currentStep === 1;
+                
+                // Next button
+                if (this.currentStep === this.totalSteps) {
+                    nextBtn.style.display = 'none';
+                } else {
+                    nextBtn.style.display = 'flex';
+                    nextBtn.textContent = this.currentStep === this.totalSteps - 1 ? 'Complete Setup' : 'Next →';
+                }
+            }
+
+            // Data persistence
+            saveProgress() {
+                const progressData = {
+                    currentStep: this.currentStep,
+                    formData: this.formData,
+                    selectedGoals: Array.from(this.selectedGoals),
+                    timestamp: new Date().toISOString()
+                };
+                
+                localStorage.setItem('smartfinance_profile_setup', JSON.stringify(progressData));
+            }
+
+            loadProgress() {
+                const saved = localStorage.getItem('smartfinance_profile_setup');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        this.formData = data.formData || {};
+                        this.selectedGoals = new Set(data.selectedGoals || []);
+                        
+                        // Populate form fields
+                        this.populateFormFields();
+                        
+                        return data.currentStep || 1;
+                    } catch (e) {
+                        console.warn('Failed to load saved progress:', e);
+                    }
+                }
+                return 1;
+            }
+
+            populateFormFields() {
+                // Populate personal info
+                if (this.formData.personal) {
+                    Object.keys(this.formData.personal).forEach(key => {
+                        const field = document.getElementById(key);
+                        if (field) {
+                            field.value = this.formData.personal[key];
+                        }
+                    });
+                }
+                
+                // Populate income info
+                if (this.formData.income) {
+                    Object.keys(this.formData.income).forEach(key => {
+                        const field = document.getElementById(key === 'monthlyIncome' ? 'income' : key === 'monthlyExpenses' ? 'expenses' : key);
+                        if (field) {
+                            field.value = this.formData.income[key];
+                        }
+                    });
+                }
+                
+                // Repopulate selected goals
+                this.selectedGoals.forEach(goal => {
+                    const card = document.querySelector(`[data-value="${goal}"]`);
+                    if (card) {
+                        card.classList.add('selected');
+                    }
+                });
+            }
+
+            // Completion
+            async completeSetup() {
+                this.showLoading('Finalizing your profile...');
+                
+                try {
+                    // Simulate API call to save profile
+                    await this.saveProfileToServer();
+                    
+                    // Generate AI recommendations
+                    await this.generateInitialRecommendations();
+                    
+                    // Clear saved progress
+                    localStorage.removeItem('smartfinance_profile_setup');
+                    
+                    // Redirect to dashboard
+                    window.location.href = '/core/dashboard.html';
+                    
+                } catch (error) {
+                    this.hideLoading();
+                    this.showNotification('Failed to complete setup. Please try again.', 'error');
+                    console.error('Setup completion failed:', error);
+                }
+            }
+
+            async saveProfileToServer() {
+                // Simulate API call
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log('Profile saved:', this.formData);
+                        resolve();
+                    }, 1500);
+                });
+            }
+
+            async generateInitialRecommendations() {
+                this.updateLoadingStatus('Generating AI recommendations...');
+                
+                // Simulate AI processing
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log('AI recommendations generated');
+                        resolve();
+                    }, 1000);
+                });
+            }
+
+            // UI helpers
+            showLoading(message) {
+                document.getElementById('loadingStatus').textContent = message;
+                document.getElementById('loadingOverlay').classList.add('visible');
+            }
+
+            hideLoading() {
+                document.getElementById('loadingOverlay').classList.remove('visible');
+            }
+
+            updateLoadingStatus(message) {
+                document.getElementById('loadingStatus').textContent = message;
+            }
+
+            showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 2rem;
+                    right: 2rem;
+                    background: ${type === 'error' ? 'var(--gradient-danger)' : type === 'warning' ? 'var(--gradient-warning)' : 'var(--gradient-primary)'};
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 1rem;
+                    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+                    z-index: 10000;
+                    font-weight: 600;
+                    max-width: 350px;
+                    animation: slideInRight 0.4s ease;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                // Auto-remove after 4 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOutRight 0.4s ease';
+                    setTimeout(() => notification.remove(), 400);
+                }, 4000);
+            }
+        }
+
+        // Global functions for navigation buttons
+        let profileSetup;
+
+        function nextStep() {
+            profileSetup.nextStep();
+        }
+
+        function previousStep() {
+            profileSetup.previousStep();
+        }
+
+        function completeSetup() {
+            profileSetup.completeSetup();
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            profileSetup = new ProfileSetup();
+            
+            // Load any saved progress
+            const savedStep = profileSetup.loadProgress();
+            if (savedStep > 1) {
+                profileSetup.showStep(savedStep);
+            }
+            
+            console.log('🧠 SmartFinanceAI Profile Setup initialized');
+        });
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
