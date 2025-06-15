@@ -3,7 +3,7 @@
 
 // Supabase Configuration
 const supabaseUrl = 'https://gzznuwtxyyaqlbbrxsuz.supabase.co'
-const supabaseKey = 'YOUR_FULL_API_KEY_HERE' // Replace with your complete API key from Supabase dashboard
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6em51d3R4eXlhcWxiYnJ4c3V6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk5ODE1NzgsImV4cCI6MjA2NTU1NzU3OH0.u-9MqMTAvSIf2V6qnt8oriNH-Sx-UXU0R6K3gsj5MSw' // Replace with your complete API key from Supabase dashboard
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
 // App Configuration
