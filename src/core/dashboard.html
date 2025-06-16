@@ -535,4 +535,20 @@ PWA Status Debug:
                     const userData = JSON.parse(user);
                     const loginTime = new Date(userData.loginTime);
                     const now = new Date();
-                    const hoursSinceLogin = (now - loginTime) / (1000 * 60
+                    const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+                    
+                    if (hoursSinceLogin > 24) {
+                        alert('Your session has expired. Please log in again.');
+                        logout();
+                    }
+                } catch (error) {
+                    console.error('Error checking session expiry:', error);
+                }
+            }
+        }
+
+        // Check session every 5 minutes
+        setInterval(checkSessionExpiry, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
