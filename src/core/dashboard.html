@@ -469,7 +469,27 @@ PWA Status Debug:
         // Install Button Click
         installButton.addEventListener('click', async () => {
             if (!deferredPrompt) {
-                alert('❌ Install prompt not available.\n\nTry:\n1. Open in Chrome/Edge\n2. Visit via HTTPS\n3. Wait a few seconds\n4. Check if already installed');
+                // Manual install instructions if prompt isn't available
+                const instructions = `
+📱 Manual Install Instructions:
+
+For Chrome/Edge Mobile:
+1. Tap the menu (⋮) in browser
+2. Select "Add to Home screen"
+3. Confirm installation
+
+For Safari iOS:
+1. Tap the Share button (↗)
+2. Scroll down and tap "Add to Home Screen"
+3. Tap "Add"
+
+For Chrome Desktop:
+1. Click the install icon (⊕) in address bar
+2. Or go to Menu > Install SmartFinanceAI
+
+Your PWA is ready! Try these steps.
+                `;
+                alert(instructions);
                 return;
             }
             
