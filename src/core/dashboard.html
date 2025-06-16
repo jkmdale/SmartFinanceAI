@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <!-- Manifest and PWA support -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00bfa6" />
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="/SmartFinanceAI/manifest.json">
+<meta name="theme-color" content="#667eea" />
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik05NiA0OEM4Mi43NDUyIDQ4IDcyIDU4Ljc0NTIgNzIgNzJWMTIwQzcyIDEzMy4yNTUgODIuNzQ1MiAxNDQgOTYgMTQ0UzEyMCAxMzMuMjU1IDEyMCAxMjBWNzJDMTIwIDU4Ljc0NTIgMTA5LjI1NSA0OCA5NiA0OFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNOTYgODBDMTAwLjQxOCA4MCAxMDQgODMuNTgyIDEwNCA4OFYxMDRDMTA0IDEwOC40MTggMTAwLjQxOCAxMTIgOTYgMTEyUzkxLjU4MiAxMDguNDE4IDg4IDEwNFY4OEM4OCA4My41ODIgOTEuNTgyIDgwIDk2IDgwWiIgZmlsbD0iIzY2N2VlYSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDBfbGluZWFyXzFfMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMTkyIiB5Mj0iMTkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiM2NjdlZWEiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNzY0YmEyIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - SmartFinanceAI</title>
@@ -203,6 +204,68 @@
             100% { opacity: 1; }
         }
 
+        /* PWA Debug Button */
+        .pwa-debug {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        /* Network Status */
+        .network-status {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 9999;
+        }
+
+        .network-status.online {
+            background: rgba(72, 187, 120, 0.2);
+            color: #22543d;
+            border: 1px solid rgba(72, 187, 120, 0.4);
+        }
+
+        .network-status.offline {
+            background: rgba(229, 62, 62, 0.2);
+            color: #742a2a;
+            border: 1px solid rgba(229, 62, 62, 0.4);
+        }
+
+        /* Install Button */
+        .install-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .install-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
         @media (max-width: 768px) {
             .dashboard-container {
                 padding: 30px 20px;
@@ -223,6 +286,15 @@
     </style>
 </head>
 <body>
+    <!-- Network Status Indicator -->
+    <div class="network-status" id="networkStatus">🟢 Online</div>
+    
+    <!-- PWA Debug Button -->
+    <button class="pwa-debug" onclick="checkPWAStatus()">PWA Debug</button>
+    
+    <!-- Install Button -->
+    <button class="install-button" id="installButton">📱 Install App</button>
+
     <div class="dashboard-container">
         <div class="header">
             <h1>SmartFinanceAI</h1>
@@ -286,11 +358,35 @@
     </div>
 
     <script>
+        // PWA Debug Information
+        console.log('=== PWA DEBUG INFO ===');
+        console.log('- HTTPS:', location.protocol === 'https:');
+        console.log('- Service Worker Support:', 'serviceWorker' in navigator);
+        console.log('- Manifest Link:', document.querySelector('link[rel="manifest"]'));
+        console.log('- Display Mode:', window.matchMedia('(display-mode: standalone)').matches);
+        console.log('- User Agent:', navigator.userAgent);
+        
+        // Check manifest accessibility
+        fetch('/SmartFinanceAI/manifest.json')
+            .then(response => {
+                console.log('- Manifest Status:', response.status);
+                return response.json();
+            })
+            .then(manifest => {
+                console.log('- Manifest Content:', manifest);
+            })
+            .catch(error => {
+                console.error('- Manifest Error:', error);
+            });
+
+        // PWA Variables
+        let deferredPrompt;
+        let installButton = document.getElementById('installButton');
+
         // Check if user is logged in
         function checkAuth() {
             const user = localStorage.getItem('smartfinance_user');
             if (!user) {
-                // No user data, redirect to login
                 window.location.href = '../auth/login.html';
                 return;
             }
@@ -303,7 +399,6 @@
                 document.getElementById('loginTime').textContent = loginTime.toLocaleString();
             } catch (error) {
                 console.error('Error parsing user data:', error);
-                // Clear corrupted data and redirect
                 localStorage.removeItem('smartfinance_user');
                 window.location.href = '../auth/login.html';
             }
@@ -311,14 +406,9 @@
 
         // Logout function
         function logout() {
-            // Clear all stored data
             localStorage.removeItem('smartfinance_user');
             localStorage.clear();
-            
-            // Show confirmation
             alert('You have been logged out successfully!');
-            
-            // Redirect to login page
             window.location.href = '../auth/login.html';
         }
 
@@ -327,12 +417,117 @@
             alert(`🚧 ${feature} feature is coming soon!\n\nThis will be implemented in the next development phase.`);
         }
 
-        // Initialize dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
+        // PWA Functions
+        function checkPWAStatus() {
+            const info = `
+PWA Status Debug:
+━━━━━━━━━━━━━━━━━━━
+🔒 HTTPS: ${location.protocol === 'https:'}
+🔧 Service Worker: ${'serviceWorker' in navigator}
+📱 Install Prompt: ${deferredPrompt ? 'Available' : 'Not Available'}
+🖥️ Standalone: ${window.matchMedia('(display-mode: standalone)').matches}
+📋 Manifest: ${document.querySelector('link[rel="manifest"]') ? 'Found' : 'Missing'}
+🌐 Protocol: ${location.protocol}
+📍 URL: ${location.href}
+🔍 User Agent: ${navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'}
+            `;
+            alert(info);
+        }
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/SmartFinanceAI/sw.js')
+                    .then((registration) => {
+                        console.log('✅ SW registered:', registration);
+                        
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    if (confirm('New version available! Refresh to update?')) {
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch((registrationError) => {
+                        console.log('❌ SW registration failed:', registrationError);
+                    });
+            });
+        }
+
+        // Install Prompt Handler
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('🎯 Install prompt triggered');
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.style.display = 'block';
         });
 
-        // Optional: Auto-logout after 24 hours
+        // Install Button Click
+        installButton.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                alert('❌ Install prompt not available.\n\nTry:\n1. Open in Chrome/Edge\n2. Visit via HTTPS\n3. Wait a few seconds\n4. Check if already installed');
+                return;
+            }
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`👤 User ${outcome} the install prompt`);
+            
+            if (outcome === 'accepted') {
+                installButton.style.display = 'none';
+            }
+            
+            deferredPrompt = null;
+        });
+
+        // App Installed Handler
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('🎉 App successfully installed');
+            installButton.style.display = 'none';
+            alert('📱 SmartFinanceAI installed successfully!');
+        });
+
+        // Check if already installed
+        function isAppInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches || 
+                   window.navigator.standalone === true;
+        }
+
+        if (isAppInstalled()) {
+            console.log('✅ App is already installed');
+            installButton.style.display = 'none';
+        }
+
+        // Network Status
+        function updateNetworkStatus() {
+            const isOnline = navigator.onLine;
+            const statusElement = document.getElementById('networkStatus');
+            
+            if (statusElement) {
+                statusElement.textContent = isOnline ? '🟢 Online' : '🔴 Offline';
+                statusElement.className = `network-status ${isOnline ? 'online' : 'offline'}`;
+            }
+            
+            if (!isOnline) {
+                alert('📡 You\'re offline. Some features may be limited.');
+            }
+        }
+
+        // Network Event Listeners
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            updateNetworkStatus();
+        });
+
+        // Auto-logout after 24 hours
         function checkSessionExpiry() {
             const user = localStorage.getItem('smartfinance_user');
             if (user) {
@@ -340,372 +535,4 @@
                     const userData = JSON.parse(user);
                     const loginTime = new Date(userData.loginTime);
                     const now = new Date();
-                    const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
-                    
-                    if (hoursSinceLogin > 24) {
-                        alert('Your session has expired. Please log in again.');
-                        logout();
-                    }
-                } catch (error) {
-                    console.error('Error checking session expiry:', error);
-                }
-            }
-        }
-
-        // Check session every 5 minutes
-        setInterval(checkSessionExpiry, 5 * 60 * 1000);
-    </script>
-// PWA Registration and Installation Script
-// Add this to your main HTML files (dashboard.html, login.html, etc.)
-
-// Register Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/SmartFinanceAI/sw.js')
-      .then((registration) => {
-        console.log('SW registered: ', registration);
-        
-        // Check for updates
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // New content available, refresh
-              if (confirm('New version available! Refresh to update?')) {
-                window.location.reload();
-              }
-            }
-          });
-        });
-      })
-      .catch((registrationError) => {
-        console.log('SW registration failed: ', registrationError);
-      });
-  });
-}
-
-// PWA Install Prompt
-let deferredPrompt;
-let installButton = null;
-
-// Create install button dynamically
-function createInstallButton() {
-  if (installButton) return;
-  
-  installButton = document.createElement('button');
-  installButton.textContent = '📱 Install App';
-  installButton.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    z-index: 1000;
-    transition: all 0.3s ease;
-  `;
-  
-  installButton.addEventListener('mouseenter', () => {
-    installButton.style.transform = 'translateY(-2px)';
-    installButton.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
-  });
-  
-  installButton.addEventListener('mouseleave', () => {
-    installButton.style.transform = 'translateY(0)';
-    installButton.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
-  });
-  
-  installButton.addEventListener('click', installPWA);
-  document.body.appendChild(installButton);
-}
-
-// Listen for install prompt
-window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('PWA: Install prompt triggered');
-  e.preventDefault();
-  deferredPrompt = e;
-  createInstallButton();
-});
-
-// Install PWA function
-async function installPWA() {
-  if (!deferredPrompt) {
-    console.log('PWA: No install prompt available');
-    return;
-  }
-  
-  // Show install prompt
-  deferredPrompt.prompt();
-  
-  // Wait for user response
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log(`PWA: User ${outcome} the install prompt`);
-  
-  if (outcome === 'accepted') {
-    // Hide install button
-    if (installButton) {
-      installButton.style.display = 'none';
-    }
-  }
-  
-  deferredPrompt = null;
-}
-
-// Handle successful installation
-window.addEventListener('appinstalled', (evt) => {
-  console.log('PWA: App successfully installed');
-  
-  // Hide install button
-  if (installButton) {
-    installButton.style.display = 'none';
-  }
-  
-  // Optional: Show success message
-  if (typeof showStatus === 'function') {
-    showStatus('📱 SmartFinanceAI installed successfully!', 'success');
-  }
-});
-
-// Check if app is already installed
-function isAppInstalled() {
-  return window.matchMedia('(display-mode: standalone)').matches || 
-         window.navigator.standalone === true;
-}
-
-// Hide install button if already installed
-if (isAppInstalled()) {
-  console.log('PWA: App is already installed');
-  // Don't show install button
-} else {
-  console.log('PWA: App is running in browser');
-}
-
-// Network status detection
-function updateNetworkStatus() {
-  const isOnline = navigator.onLine;
-  const statusElement = document.querySelector('.network-status');
-  
-  if (statusElement) {
-    statusElement.textContent = isOnline ? '🟢 Online' : '🔴 Offline';
-    statusElement.className = `network-status ${isOnline ? 'online' : 'offline'}`;
-  }
-  
-  // Show offline notification
-  if (!isOnline && typeof showStatus === 'function') {
-    showStatus('📡 You\'re offline. Some features may be limited.', 'info');
-  }
-}
-
-// Listen for network changes
-window.addEventListener('online', updateNetworkStatus);
-window.addEventListener('offline', updateNetworkStatus);
-
-// Initial network status check
-document.addEventListener('DOMContentLoaded', updateNetworkStatus);
-
-// PWA loading optimization
-function optimizePWALoading() {
-  // Preload critical resources
-  const criticalResources = [
-    '/SmartFinanceAI/src/core/dashboard.html',
-    '/SmartFinanceAI/src/auth/login.html'
-  ];
-  
-  criticalResources.forEach(resource => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href = resource;
-    link.as = 'document';
-    document.head.appendChild(link);
-  });
-}
-
-// Initialize PWA optimizations
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', optimizePWALoading);
-} else {
-  optimizePWALoading();
-}
-// PWA Registration and Installation Script
-// Add this to your main HTML files (dashboard.html, login.html, etc.)
-
-// Register Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/SmartFinanceAI/sw.js')
-      .then((registration) => {
-        console.log('SW registered: ', registration);
-        
-        // Check for updates
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // New content available, refresh
-              if (confirm('New version available! Refresh to update?')) {
-                window.location.reload();
-              }
-            }
-          });
-        });
-      })
-      .catch((registrationError) => {
-        console.log('SW registration failed: ', registrationError);
-      });
-  });
-}
-
-// PWA Install Prompt
-let deferredPrompt;
-let installButton = null;
-
-// Create install button dynamically
-function createInstallButton() {
-  if (installButton) return;
-  
-  installButton = document.createElement('button');
-  installButton.textContent = '📱 Install App';
-  installButton.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    z-index: 1000;
-    transition: all 0.3s ease;
-  `;
-  
-  installButton.addEventListener('mouseenter', () => {
-    installButton.style.transform = 'translateY(-2px)';
-    installButton.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
-  });
-  
-  installButton.addEventListener('mouseleave', () => {
-    installButton.style.transform = 'translateY(0)';
-    installButton.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)';
-  });
-  
-  installButton.addEventListener('click', installPWA);
-  document.body.appendChild(installButton);
-}
-
-// Listen for install prompt
-window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('PWA: Install prompt triggered');
-  e.preventDefault();
-  deferredPrompt = e;
-  createInstallButton();
-});
-
-// Install PWA function
-async function installPWA() {
-  if (!deferredPrompt) {
-    console.log('PWA: No install prompt available');
-    return;
-  }
-  
-  // Show install prompt
-  deferredPrompt.prompt();
-  
-  // Wait for user response
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log(`PWA: User ${outcome} the install prompt`);
-  
-  if (outcome === 'accepted') {
-    // Hide install button
-    if (installButton) {
-      installButton.style.display = 'none';
-    }
-  }
-  
-  deferredPrompt = null;
-}
-
-// Handle successful installation
-window.addEventListener('appinstalled', (evt) => {
-  console.log('PWA: App successfully installed');
-  
-  // Hide install button
-  if (installButton) {
-    installButton.style.display = 'none';
-  }
-  
-  // Optional: Show success message
-  if (typeof showStatus === 'function') {
-    showStatus('📱 SmartFinanceAI installed successfully!', 'success');
-  }
-});
-
-// Check if app is already installed
-function isAppInstalled() {
-  return window.matchMedia('(display-mode: standalone)').matches || 
-         window.navigator.standalone === true;
-}
-
-// Hide install button if already installed
-if (isAppInstalled()) {
-  console.log('PWA: App is already installed');
-  // Don't show install button
-} else {
-  console.log('PWA: App is running in browser');
-}
-
-// Network status detection
-function updateNetworkStatus() {
-  const isOnline = navigator.onLine;
-  const statusElement = document.querySelector('.network-status');
-  
-  if (statusElement) {
-    statusElement.textContent = isOnline ? '🟢 Online' : '🔴 Offline';
-    statusElement.className = `network-status ${isOnline ? 'online' : 'offline'}`;
-  }
-  
-  // Show offline notification
-  if (!isOnline && typeof showStatus === 'function') {
-    showStatus('📡 You\'re offline. Some features may be limited.', 'info');
-  }
-}
-
-// Listen for network changes
-window.addEventListener('online', updateNetworkStatus);
-window.addEventListener('offline', updateNetworkStatus);
-
-// Initial network status check
-document.addEventListener('DOMContentLoaded', updateNetworkStatus);
-
-// PWA loading optimization
-function optimizePWALoading() {
-  // Preload critical resources
-  const criticalResources = [
-    '/SmartFinanceAI/src/core/dashboard.html',
-    '/SmartFinanceAI/src/auth/login.html'
-  ];
-  
-  criticalResources.forEach(resource => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href = resource;
-    link.as = 'document';
-    document.head.appendChild(link);
-  });
-}
-
-// Initialize PWA optimizations
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', optimizePWALoading);
-} else {
-  optimizePWALoading();
-}
-</body>
-</html>
+                    const hoursSinceLogin = (now - loginTime) / (1000 * 60
