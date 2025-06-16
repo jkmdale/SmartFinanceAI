@@ -1,16 +1,16 @@
 {
-  "name": "SmartFinanceAI",
-  "short_name": "FinanceAI",
-  "description": "Your intelligent financial assistant for managing money, tracking expenses, and achieving financial goals",
-  "start_url": "/",
+  "name": "SmartFinanceAI - Intelligent Finance Manager",
+  "short_name": "SmartFinanceAI",
+  "description": "Your AI-powered personal finance management platform",
+  "start_url": "/SmartFinanceAI/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#00bfa6",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
   "orientation": "portrait-primary",
-  "scope": "/",
+  "scope": "/SmartFinanceAI/",
+  "categories": ["finance", "productivity", "business"],
   "lang": "en",
   "dir": "ltr",
-  "categories": ["finance", "productivity", "business"],
   "icons": [
     {
       "src": "icons/icon-72.png",
@@ -63,44 +63,19 @@
   ],
   "shortcuts": [
     {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "View your financial dashboard",
-      "url": "/dashboard",
-      "icons": [
-        {
-          "src": "icons/dashboard-icon.png",
-          "sizes": "96x96"
-        }
-      ]
-    },
-    {
       "name": "Add Transaction",
       "short_name": "Add Transaction",
-      "description": "Quick add a new transaction",
-      "url": "/add-transaction",
-      "icons": [
-        {
-          "src": "icons/add-icon.png",
-          "sizes": "96x96"
-        }
-      ]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "screenshots/desktop-dashboard.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Dashboard view on desktop"
+      "description": "Quickly add a new transaction",
+      "url": "/SmartFinanceAI/src/core/dashboard.html#add-transaction",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "src": "screenshots/mobile-dashboard.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Dashboard view on mobile"
+      "name": "View Goals",
+      "short_name": "Goals",
+      "description": "Check your financial goals",
+      "url": "/SmartFinanceAI/src/core/dashboard.html#goals",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
