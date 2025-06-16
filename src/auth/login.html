@@ -4,26 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | SmartFinanceAI</title>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="../assets/img/logo-primary.svg" type="image/svg+xml" />
 </head>
 <body class="auth-page">
 
-  <div class="auth-container">
-    <div class="auth-card glass-effect">
+  <main class="auth-container">
+    <section class="auth-card glass-effect">
       <img src="../assets/img/logo-primary.svg" alt="SmartFinanceAI Logo" class="auth-logo" />
 
       <h1 class="auth-title">Welcome Back</h1>
-      <p class="auth-subtitle">Login to manage your finances smarter.</p>
+      <p class="auth-subtitle">Sign in to manage your finances smarter.</p>
 
-      <form id="login-form">
+      <form id="login-form" autocomplete="on">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required placeholder="you@example.com" />
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="you@example.com"
+            class="form-control"
+            autocomplete="email"
+          />
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" required placeholder="••••••••" />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="••••••••"
+            class="form-control"
+            autocomplete="current-password"
+          />
         </div>
 
         <button type="submit" class="btn-executive full-width">Login</button>
@@ -35,12 +56,14 @@
         </button>
 
         <p class="auth-footer">
-          Don’t have an account? <a href="signup.html">Sign up here</a>
+          Don’t have an account?
+          <a href="signup.html" class="link-accent">Sign up here</a>
         </p>
       </form>
-    </div>
-  </div>
+    </section>
+  </main>
 
+  <!-- Scripts -->
   <script src="../js/supabase/supabaseClient.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/login.js"></script>
