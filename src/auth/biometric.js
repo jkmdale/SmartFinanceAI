@@ -1,5 +1,5 @@
 // src/auth/biometric.js
-import { loginUser } from './auth-manager.js';
+import { supabase } from '../js/supabase/supabaseClient.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const biometricBtn = document.getElementById('biometric-login');
@@ -7,23 +7,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   biometricBtn.addEventListener('click', async () => {
     try {
-      const email = localStorage.getItem('biometricEmail');
-      const password = localStorage.getItem('biometricPassword');
+      // Start WebAuthn login
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: '', // optional — can be empty if stored in session
+        options: {
+          flowType: 'passkey'
+        }
+      });
 
-      if (!email || !password) {
-        alert('No saved credentials found. Please login manually first.');
+      if (error) {
+        console.error(error);
+        alert('Biometric login failed.');
         return;
       }
 
-      const { error } = await loginUser(email, password);
-      if (error) {
-        alert('Biometric login failed.');
-      } else {
-        window.location.href = '../dashboard/index.html';
-      }
+      // Success
+      window.location.href = '../dashboard/index.html';
     } catch (err) {
-      console.error('Biometric login error:', err);
-      alert('Biometric login error');
+      console.error('Biometric error:', err);
+      alert('Something went wrong with biometric login.');
     }
   });
 });
