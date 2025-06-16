@@ -1,519 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | SmartFinanceAI</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - SmartFinanceAI</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .register-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 400px;
-            padding: 40px;
-            animation: slideIn 0.6s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 15px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .logo-subtitle {
-            font-size: 14px;
-            color: #666;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-input.error {
-            border-color: #ff4757;
-            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.1);
-        }
-
-        .error-message {
-            color: #ff4757;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .password-strength {
-            margin-top: 8px;
-            font-size: 12px;
-        }
-
-        .strength-bar {
-            height: 4px;
-            background: #e1e5e9;
-            border-radius: 2px;
-            overflow: hidden;
-            margin-top: 5px;
-        }
-
-        .strength-fill {
-            height: 100%;
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-
-        .terms-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .terms-checkbox input[type="checkbox"] {
-            margin-top: 2px;
-        }
-
-        .terms-text {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .terms-text a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .terms-text a:hover {
-            text-decoration: underline;
-        }
-
-        .register-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .register-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .register-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .loading-spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .divider {
-            text-align: center;
-            margin: 25px 0;
-            color: #666;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #e1e5e9;
-        }
-
-        .divider span {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 0 15px;
-            font-size: 14px;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .login-link a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .alert {
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .alert.success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-
-        .alert.error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-
-        @media (max-width: 480px) {
-            .register-container {
-                margin: 20px;
-                padding: 30px 20px;
-            }
-        }
-    </style>
+  <!-- Styles -->
+  <link rel="stylesheet" href="../styles/main.css" />
+  <link rel="icon" href="../assets/img/logo-primary.svg" type="image/svg+xml" />
 </head>
-<body>
-    <div class="register-container">
-        <div class="logo">
-            <div class="logo-icon">SF</div>
-            <div class="logo-text">SmartFinanceAI</div>
-            <div class="logo-subtitle">Create Your Account</div>
+<body class="auth-page">
+
+  <main class="auth-container">
+    <section class="auth-card glass-effect">
+      <img src="../assets/img/logo-primary.svg" alt="SmartFinanceAI Logo" class="auth-logo" />
+
+      <h1 class="auth-title">Create Your Account</h1>
+      <p class="auth-subtitle">Join SmartFinanceAI and take control of your money.</p>
+
+      <form id="signup-form" autocomplete="on">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="you@example.com"
+            class="form-control"
+            autocomplete="email"
+          />
         </div>
 
-        <div id="alert" class="alert"></div>
-
-        <form id="registerForm" novalidate>
-            <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" class="form-input" required>
-                <div class="error-message" id="nameError">Please enter your full name</div>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" class="form-input" required>
-                <div class="error-message" id="emailError">Please enter a valid email address</div>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" class="form-input" required>
-                <div class="password-strength">
-                    <div class="strength-bar">
-                        <div class="strength-fill" id="strengthFill"></div>
-                    </div>
-                    <div id="strengthText">Password strength: Weak</div>
-                </div>
-                <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
-            </div>
-
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" class="form-input" required>
-                <div class="error-message" id="confirmError">Passwords do not match</div>
-            </div>
-
-            <div class="terms-checkbox">
-                <input type="checkbox" id="terms" required>
-                <label for="terms" class="terms-text">
-                    I agree to the <a href="#" onclick="showTerms()">Terms of Service</a> and <a href="#" onclick="showPrivacy()">Privacy Policy</a>
-                </label>
-            </div>
-
-            <button type="submit" class="register-btn" id="registerBtn">
-                <span class="loading-spinner" id="loadingSpinner"></span>
-                <span id="btnText">Create Account</span>
-            </button>
-        </form>
-
-        <div class="divider">
-            <span>Already have an account?</span>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Create a secure password"
+            class="form-control"
+            autocomplete="new-password"
+          />
         </div>
 
-        <div class="login-link">
-            <a href="login.html">Sign in here</a>
-        </div>
-    </div>
+        <button type="submit" class="btn-executive full-width">Create Account</button>
 
-    <script>
-        const form = document.getElementById('registerForm');
-        const nameInput = document.getElementById('fullName');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const termsCheckbox = document.getElementById('terms');
-        const registerBtn = document.getElementById('registerBtn');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const btnText = document.getElementById('btnText');
-        const alert = document.getElementById('alert');
+        <p class="auth-footer">
+          Already have an account?
+          <a href="login.html" class="link-accent">Login here</a>
+        </p>
+      </form>
+    </section>
+  </main>
 
-        // Real-time validation
-        nameInput.addEventListener('blur', validateName);
-        emailInput.addEventListener('blur', validateEmail);
-        passwordInput.addEventListener('input', validatePassword);
-        confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
-
-        function validateName() {
-            const name = nameInput.value.trim();
-            const nameError = document.getElementById('nameError');
-            
-            if (name.length < 2) {
-                showFieldError(nameInput, nameError, 'Name must be at least 2 characters');
-                return false;
-            }
-            
-            hideFieldError(nameInput, nameError);
-            return true;
-        }
-
-        function validateEmail() {
-            const email = emailInput.value.trim();
-            const emailError = document.getElementById('emailError');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (!emailRegex.test(email)) {
-                showFieldError(emailInput, emailError, 'Please enter a valid email address');
-                return false;
-            }
-            
-            hideFieldError(emailInput, emailError);
-            return true;
-        }
-
-        function validatePassword() {
-            const password = passwordInput.value;
-            const passwordError = document.getElementById('passwordError');
-            const strengthFill = document.getElementById('strengthFill');
-            const strengthText = document.getElementById('strengthText');
-            
-            // Password strength calculation
-            let strength = 0;
-            let strengthLabel = 'Very Weak';
-            let strengthColor = '#ff4757';
-            
-            if (password.length >= 8) strength += 25;
-            if (password.match(/[a-z]/)) strength += 25;
-            if (password.match(/[A-Z]/)) strength += 25;
-            if (password.match(/[0-9]/)) strength += 25;
-            
-            if (strength >= 100) {
-                strengthLabel = 'Strong';
-                strengthColor = '#2ed573';
-            } else if (strength >= 75) {
-                strengthLabel = 'Good';
-                strengthColor = '#ffa502';
-            } else if (strength >= 50) {
-                strengthLabel = 'Fair';
-                strengthColor = '#ff6348';
-            }
-            
-            strengthFill.style.width = strength + '%';
-            strengthFill.style.background = strengthColor;
-            strengthText.textContent = `Password strength: ${strengthLabel}`;
-            
-            if (password.length < 8) {
-                showFieldError(passwordInput, passwordError, 'Password must be at least 8 characters');
-                return false;
-            }
-            
-            hideFieldError(passwordInput, passwordError);
-            return true;
-        }
-
-        function validateConfirmPassword() {
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-            const confirmError = document.getElementById('confirmError');
-            
-            if (password !== confirmPassword) {
-                showFieldError(confirmPasswordInput, confirmError, 'Passwords do not match');
-                return false;
-            }
-            
-            hideFieldError(confirmPasswordInput, confirmError);
-            return true;
-        }
-
-        function showFieldError(input, errorElement, message) {
-            input.classList.add('error');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-        }
-
-        function hideFieldError(input, errorElement) {
-            input.classList.remove('error');
-            errorElement.style.display = 'none';
-        }
-
-        function showAlert(message, type) {
-            alert.className = `alert ${type}`;
-            alert.textContent = message;
-            alert.style.display = 'block';
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    alert.style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validate all fields
-            const isNameValid = validateName();
-            const isEmailValid = validateEmail();
-            const isPasswordValid = validatePassword();
-            const isConfirmValid = validateConfirmPassword();
-            const isTermsChecked = termsCheckbox.checked;
-            
-            if (!isTermsChecked) {
-                showAlert('Please accept the Terms of Service and Privacy Policy', 'error');
-                return;
-            }
-            
-            if (!isNameValid || !isEmailValid || !isPasswordValid || !isConfirmValid) {
-                showAlert('Please fix the errors above', 'error');
-                return;
-            }
-            
-            // Show loading state
-            registerBtn.disabled = true;
-            loadingSpinner.style.display = 'inline-block';
-            btnText.textContent = 'Creating Account...';
-            
-            // Simulate registration process
-            setTimeout(() => {
-                // In a real app, you'd send this to your server
-                const userData = {
-                    fullName: nameInput.value.trim(),
-                    email: emailInput.value.trim(),
-                    registrationDate: new Date().toISOString()
-                };
-                
-                // Store user data (in a real app, this would be handled by your backend)
-                localStorage.setItem('smartfinance_registered_users', JSON.stringify([userData]));
-                
-                // Show success message
-                showAlert('Account created successfully! Redirecting to login...', 'success');
-                
-                // Redirect to login page
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-                
-            }, 2000);
-        });
-
-        function showTerms() {
-            alert('Terms of Service:\n\n1. Use this app responsibly\n2. Keep your login credentials secure\n3. This is a demo application\n4. Your data is stored locally\n\n(In a real app, this would link to actual terms)');
-        }
-
-        function showPrivacy() {
-            alert('Privacy Policy:\n\n1. Your data is stored locally on your device\n2. We do not collect personal information\n3. This is a demo application\n4. No data is sent to external servers\n\n(In a real app, this would link to actual privacy policy)');
-        }
-
-        // Prevent form submission on Enter key in specific fields
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.type !== 'submit') {
-                e.preventDefault();
-            }
-        });
-    </script>
+  <!-- Scripts -->
+  <script src="../js/supabase/supabaseClient.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/signup.js"></script>
 </body>
 </html>
