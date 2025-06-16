@@ -408,7 +408,7 @@
                     
                     // Redirect to dashboard
                     setTimeout(() => {
-                        window.location.href = '../platform/dashboard.html'
+                        window.location.href = 'src/core/dashboard.html'
                     }, 2000)
                 }
             } catch (error) {
@@ -424,7 +424,12 @@
             if (session) {
                 showStatus(`You're already signed in as ${session.user.email}`, 'success')
                 setTimeout(() => {
-                    window.location.href = '../platform/dashboard.html'
+                    // Try different possible paths
+                    window.location.href = 'dashboard.html' // Same folder
+                    // Alternative paths if above doesn't work:
+                    // window.location.href = '../dashboard.html' // Parent folder  
+                    // window.location.href = '../platform/dashboard.html' // Platform folder
+                    // window.location.href = './dashboard.html' // Current folder
                 }, 2000)
             }
         }
