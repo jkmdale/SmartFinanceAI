@@ -1,360 +1,169 @@
-/**
- * SmartFinanceAI Service Worker
- * Handles caching, offline functionality, and background sync
- */
-
-const CACHE_NAME = 'smartfinance-v1.0.0';
-const STATIC_CACHE = 'smartfinance-static-v1.0.0';
-const DYNAMIC_CACHE = 'smartfinance-dynamic-v1.0.0';
-
-// Files to cache immediately when service worker installs
-const STATIC_FILES = [
-  '/',
-  '/index.html',
-  '/dashboard.html',
-  '/transactions.html',
-  '/goals.html',
-  '/settings.html',
-  '/styles.css',
-  '/responsive.css',
-  '/app.js',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/manifest.json'
+// SmartFinanceAI Service Worker
+const CACHE_NAME = 'smartfinanceai-v1.0.0';
+const urlsToCache = [
+  '/SmartFinanceAI/',
+  '/SmartFinanceAI/index.html',
+  '/SmartFinanceAI/src/core/dashboard.html',
+  '/SmartFinanceAI/src/auth/login.html',
+  '/SmartFinanceAI/src/auth/signup.html',
+  '/SmartFinanceAI/manifest.json',
+  // Add your CSS files
+  '/SmartFinanceAI/styles/global.css',
+  '/SmartFinanceAI/styles/auth.css',
+  // Add your JS files
+  '/SmartFinanceAI/core/config.js',
+  '/SmartFinanceAI/auth/biometric.js',
+  // Icons
+  '/SmartFinanceAI/icons/icon-192.png',
+  '/SmartFinanceAI/icons/icon-512.png'
 ];
 
-// Files to cache on first request
-const CACHE_ON_REQUEST = [
-  '/api/',
-  '/data/',
-  '/images/'
-];
-
-/**
- * Service Worker Installation
- * Cache static files immediately
- */
-self.addEventListener('install', event => {
-  console.log('🔧 Service Worker Installing...');
-  
+// Install Service Worker
+self.addEventListener('install', (event) => {
+  console.log('Service Worker: Installing...');
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then(cache => {
-        console.log('📦 Caching static files...');
-        return cache.addAll(STATIC_FILES);
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Service Worker: Caching files');
+        return cache.addAll(urlsToCache);
       })
-      .then(() => {
-        console.log('✅ Static files cached successfully');
-        return self.skipWaiting(); // Activate immediately
-      })
-      .catch(error => {
-        console.error('❌ Failed to cache static files:', error);
+      .catch((error) => {
+        console.log('Service Worker: Cache failed', error);
       })
   );
 });
 
-/**
- * Service Worker Activation
- * Clean up old caches
- */
-self.addEventListener('activate', event => {
-  console.log('🚀 Service Worker Activating...');
-  
+// Activate Service Worker
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Activating...');
   event.waitUntil(
-    caches.keys()
-      .then(cacheNames => {
-        return Promise.all(
-          cacheNames.map(cacheName => {
-            // Delete old caches that don't match current version
-            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-              console.log('🗑️ Deleting old cache:', cacheName);
-              return caches.delete(cacheName);
-            }
-          })
-        );
-      })
-      .then(() => {
-        console.log('✅ Service Worker activated successfully');
-        return self.clients.claim(); // Take control of all pages
-      })
-      .catch(error => {
-        console.error('❌ Service Worker activation failed:', error);
-      })
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Service Worker: Deleting old cache', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
 
-/**
- * Fetch Event Handler
- * Implements Cache First strategy with network fallback
- */
-self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
-  
+// Fetch Event - Cache First Strategy
+self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
-  if (request.method !== 'GET') {
+  if (event.request.method !== 'GET') {
     return;
   }
-  
-  // Skip external URLs (CDN, APIs, etc.)
-  if (url.origin !== location.origin) {
+
+  // Skip external requests (like Supabase, CDN, etc.)
+  if (!event.request.url.startsWith(self.location.origin)) {
     return;
   }
-  
+
   event.respondWith(
-    caches.match(request)
-      .then(cachedResponse => {
-        // Return cached version if available
-        if (cachedResponse) {
-          console.log('📱 Serving from cache:', request.url);
-          return cachedResponse;
+    caches.match(event.request)
+      .then((response) => {
+        // Return cached version or fetch from network
+        if (response) {
+          console.log('Service Worker: Serving from cache', event.request.url);
+          return response;
         }
-        
-        // Fetch from network and cache for future
-        return fetch(request)
-          .then(networkResponse => {
-            // Don't cache error responses
-            if (!networkResponse || networkResponse.status !== 200) {
-              return networkResponse;
+
+        console.log('Service Worker: Fetching from network', event.request.url);
+        return fetch(event.request)
+          .then((response) => {
+            // Check if valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
             }
-            
-            // Cache dynamic content
-            const responseClone = networkResponse.clone();
-            caches.open(DYNAMIC_CACHE)
-              .then(cache => {
-                cache.put(request, responseClone);
-                console.log('💾 Cached new resource:', request.url);
+
+            // Clone the response
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
               });
-            
-            return networkResponse;
+
+            return response;
           })
-          .catch(() => {
-            // Offline fallback
-            if (request.destination === 'document') {
-              return caches.match('/offline.html') || 
-                     new Response('You are offline. Please check your connection.');
-            }
+          .catch((error) => {
+            console.log('Service Worker: Fetch failed', error);
             
-            // Fallback for other resources
-            return new Response('Resource not available offline', {
-              status: 503,
-              statusText: 'Service Unavailable'
-            });
+            // Return offline page if available
+            if (event.request.destination === 'document') {
+              return caches.match('/SmartFinanceAI/offline.html');
+            }
           });
       })
   );
 });
 
-/**
- * Background Sync
- * Handle offline form submissions and data sync
- */
-self.addEventListener('sync', event => {
-  console.log('🔄 Background sync triggered:', event.tag);
-  
-  if (event.tag === 'financial-data-sync') {
-    event.waitUntil(syncFinancialData());
-  }
-  
-  if (event.tag === 'transaction-sync') {
-    event.waitUntil(syncPendingTransactions());
+// Background Sync for offline functionality
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'background-sync') {
+    console.log('Service Worker: Background sync triggered');
+    event.waitUntil(doBackgroundSync());
   }
 });
 
-/**
- * Push Notification Handler
- * Handle financial alerts and reminders
- */
-self.addEventListener('push', event => {
-  console.log('📱 Push notification received');
+// Push Notifications
+self.addEventListener('push', (event) => {
+  console.log('Service Worker: Push received');
   
   const options = {
-    body: event.data ? event.data.text() : 'New financial update available',
-    icon: '/icons/icon-192.png',
-    badge: '/icons/badge-72.png',
-    vibrate: [200, 100, 200],
-    tag: 'financial-notification',
+    body: event.data ? event.data.text() : 'New financial update available!',
+    icon: '/SmartFinanceAI/icons/icon-192.png',
+    badge: '/SmartFinanceAI/icons/icon-72.png',
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: '1'
+    },
     actions: [
       {
-        action: 'view',
+        action: 'explore',
         title: 'View Details',
-        icon: '/icons/view-icon.png'
+        icon: '/SmartFinanceAI/icons/icon-192.png'
       },
       {
-        action: 'dismiss',
-        title: 'Dismiss',
-        icon: '/icons/dismiss-icon.png'
+        action: 'close',
+        title: 'Close',
+        icon: '/SmartFinanceAI/icons/icon-192.png'
       }
-    ],
-    data: {
-      url: '/dashboard',
-      timestamp: Date.now()
-    }
+    ]
   };
-  
+
   event.waitUntil(
     self.registration.showNotification('SmartFinanceAI', options)
   );
 });
 
-/**
- * Notification Click Handler
- */
-self.addEventListener('notificationclick', event => {
-  console.log('🖱️ Notification clicked:', event.action);
+// Notification Click Handler
+self.addEventListener('notificationclick', (event) => {
+  console.log('Service Worker: Notification clicked');
   
   event.notification.close();
   
-  if (event.action === 'view') {
+  if (event.action === 'explore') {
     event.waitUntil(
-      clients.openWindow(event.notification.data.url || '/dashboard')
+      clients.openWindow('/SmartFinanceAI/src/core/dashboard.html')
     );
   }
 });
 
-/**
- * Sync Financial Data
- * Background sync for financial data when back online
- */
-async function syncFinancialData() {
+// Background sync function
+async function doBackgroundSync() {
   try {
-    console.log('💰 Syncing financial data...');
+    // Sync offline transactions, goals, etc.
+    console.log('Service Worker: Performing background sync');
     
-    // Get pending data from IndexedDB
-    const pendingData = await getPendingFinancialData();
-    
-    if (pendingData.length > 0) {
-      // Send to server
-      const response = await fetch('/api/sync/financial-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(pendingData)
-      });
-      
-      if (response.ok) {
-        // Clear pending data
-        await clearPendingFinancialData();
-        console.log('✅ Financial data synced successfully');
-        
-        // Notify user
-        self.registration.showNotification('Data Synced', {
-          body: 'Your financial data has been synchronized.',
-          icon: '/icons/icon-192.png',
-          tag: 'sync-success'
-        });
-      }
-    }
-  } catch (error) {
-    console.error('❌ Financial data sync failed:', error);
-  }
-}
-
-/**
- * Sync Pending Transactions
- * Background sync for offline transaction submissions
- */
-async function syncPendingTransactions() {
-  try {
-    console.log('💳 Syncing pending transactions...');
-    
-    // Implementation for syncing transactions
-    // This would integrate with your app's transaction management
+    // Add your sync logic here
+    // Example: sync pending transactions to Supabase
     
   } catch (error) {
-    console.error('❌ Transaction sync failed:', error);
-  }
-}
-
-/**
- * Helper function to get pending financial data
- * Replace with your actual IndexedDB implementation
- */
-async function getPendingFinancialData() {
-  // Placeholder - implement based on your data storage strategy
-  return [];
-}
-
-/**
- * Helper function to clear pending financial data
- * Replace with your actual IndexedDB implementation
- */
-async function clearPendingFinancialData() {
-  // Placeholder - implement based on your data storage strategy
-  return true;
-}
-
-/**
- * Message Handler
- * Handle messages from the main app
- */
-self.addEventListener('message', event => {
-  console.log('📨 Message received:', event.data);
-  
-  if (event.data && event.data.type) {
-    switch (event.data.type) {
-      case 'SKIP_WAITING':
-        self.skipWaiting();
-        break;
-        
-      case 'CACHE_FINANCIAL_DATA':
-        cacheFinancialData(event.data.data);
-        break;
-        
-      case 'GET_CACHE_STATUS':
-        getCacheStatus().then(status => {
-          event.ports[0].postMessage(status);
-        });
-        break;
-        
-      default:
-        console.log('🤷‍♂️ Unknown message type:', event.data.type);
-    }
-  }
-});
-
-/**
- * Cache financial data for offline use
- */
-async function cacheFinancialData(data) {
-  try {
-    const cache = await caches.open(DYNAMIC_CACHE);
-    const response = new Response(JSON.stringify(data), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'max-age=86400' // 24 hours
-      }
-    });
-    
-    await cache.put('/data/financial-cache', response);
-    console.log('💾 Financial data cached for offline use');
-  } catch (error) {
-    console.error('❌ Failed to cache financial data:', error);
-  }
-}
-
-/**
- * Get cache status and size
- */
-async function getCacheStatus() {
-  try {
-    const cacheNames = await caches.keys();
-    let totalSize = 0;
-    
-    for (const cacheName of cacheNames) {
-      const cache = await caches.open(cacheName);
-      const keys = await cache.keys();
-      totalSize += keys.length;
-    }
-    
-    return {
-      caches: cacheNames.length,
-      totalFiles: totalSize,
-      lastUpdated: Date.now()
-    };
-  } catch (error) {
-    console.error('❌ Failed to get cache status:', error);
-    return null;
+    console.log('Service Worker: Background sync failed', error);
   }
 }
