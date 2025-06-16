@@ -1,443 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartFinanceAI - Secure Login</title>
-    
-    <!-- External Dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Internal Stylesheets -->
-    <link rel="stylesheet" href="../styles/global.css">
-    <link rel="stylesheet" href="../styles/auth.css">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .auth-container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 
-                0 8px 32px 0 rgba(31, 38, 135, 0.37),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo h1 {
-            color: white;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .logo p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        .nav-links {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 600;
-            margin: 0 15px;
-            padding: 5px 0;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.3s ease;
-        }
-        
-        .nav-links a:hover,
-        .nav-links a.active {
-            border-bottom-color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: white;
-        }
-        
-        input[type="email"]::placeholder,
-        input[type="password"]::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        
-        .btn-primary {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-        
-        .btn-biometric {
-            background: rgba(72, 187, 120, 0.2);
-            backdrop-filter: blur(10px);
-            color: white;
-            border: 1px solid rgba(72, 187, 120, 0.4);
-        }
-        
-        .btn-biometric:hover {
-            transform: translateY(-2px);
-            background: rgba(72, 187, 120, 0.3);
-            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
-        }
-        
-        .btn-biometric:disabled {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .divider {
-            text-align: center;
-            margin: 25px 0;
-            position: relative;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-        }
-        
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.3);
-            z-index: 1;
-        }
-        
-        .divider span {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 0 15px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .status-message {
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .status-success {
-            background: rgba(72, 187, 120, 0.2);
-            color: white;
-            border-color: rgba(72, 187, 120, 0.4);
-        }
-        
-        .status-error {
-            background: rgba(229, 62, 62, 0.2);
-            color: white;
-            border-color: rgba(229, 62, 62, 0.4);
-        }
-        
-        .status-info {
-            background: rgba(102, 126, 234, 0.2);
-            color: white;
-            border-color: rgba(102, 126, 234, 0.4);
-        }
-        
-        .device-info {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 13px;
-            margin-top: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .auth-links {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .auth-links a {
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            font-weight: 600;
-            display: block;
-            margin: 10px 0;
-        }
-        
-        .auth-links a:hover {
-            text-decoration: underline;
-        }
-        
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        
-        .biometric-icon {
-            font-size: 20px;
-        }
-        
-        @media (max-width: 480px) {
-            .auth-container {
-                padding: 30px 20px;
-                margin: 10px;
-            }
-            
-            .logo h1 {
-                font-size: 24px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | SmartFinanceAI</title>
+  <link rel="stylesheet" href="../styles/main.css" />
 </head>
-<body>
-    <div class="auth-container">
-        <!-- Logo & Branding -->
-        <div class="logo">
-            <h1>💰 SmartFinanceAI</h1>
-            <p>Your Intelligent Finance Manager</p>
-        </div>
-        
-        <!-- Navigation -->
-        <div class="nav-links">
-            <a href="login.html" class="active">Sign In</a>
-            <a href="signup.html">Sign Up</a>
-        </div>
-        
-        <!-- Status Messages -->
-        <div id="statusMessage"></div>
-        
-        <!-- Login Form -->
-        <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" required placeholder="your@email.com">
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" required placeholder="Enter your password">
-            </div>
-            
-            <button type="submit" class="btn btn-primary" id="loginButton">
-                🔑 Sign In
-            </button>
-        </form>
-        
-        <!-- Biometric Authentication Section -->
-        <div id="biometricSection">
-            <div class="divider">
-                <span>or use biometric login</span>
-            </div>
-            
-            <button class="btn btn-biometric" id="setupBiometric" onclick="setupBiometric()" style="display: none;">
-                <span class="biometric-icon">👆</span>
-                Set Up Biometric Login
-            </button>
-            
-            <button class="btn btn-biometric" id="biometricLogin" onclick="biometricLogin()" style="display: none;">
-                <span class="biometric-icon">🔒</span>
-                Login with Face ID / Touch ID
-            </button>
-            
-            <div class="device-info" id="deviceInfo">
-                Checking biometric support...
-            </div>
-        </div>
-        
-        <!-- Additional Auth Links -->
-        <div class="auth-links">
-            <a href="reset-password.html">Forgot your password?</a>
-            <a href="signup.html">Don't have an account? Sign up</a>
-            <a href="../index.html">← Back to homepage</a>
-        </div>
-    </div>
+<body class="auth-page">
 
-    <!-- Scripts -->
-    <script src="../core/config.js"></script>
-    <script src="../auth/biometric.js"></script>
-    <script>
-        // Initialize app
-        window.onload = function() {
-            initializeBiometrics()
-            checkExistingSession()
-        }
-        
-        function showStatus(message, type = 'info') {
-            const statusDiv = document.getElementById('statusMessage')
-            statusDiv.innerHTML = `<div class="status-message status-${type}">${message}</div>`
-            
-            // Auto-hide success messages after 5 seconds
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusDiv.innerHTML = ''
-                }, 5000)
-            }
-        }
-        
-        function setLoading(loading) {
-            const container = document.querySelector('.auth-container')
-            if (loading) {
-                container.classList.add('loading')
-            } else {
-                container.classList.remove('loading')
-            }
-        }
-        
-        async function handleLogin(event) {
-            event.preventDefault()
-            
-            const email = document.getElementById('email').value
-            const password = document.getElementById('password').value
-            
-            if (!email || !password) {
-                showStatus('Please enter both email and password', 'error')
-                return
-            }
-            
-            setLoading(true)
-            showStatus('Signing you in...', 'info')
-            
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                })
-                
-                if (error) {
-                    showStatus(error.message, 'error')
-                } else {
-                    showStatus(`🎉 Welcome back, ${data.user.email}!`, 'success')
-                    
-                    // Store user data for dashboard
-                    const userData = {
-                        id: data.user.id,
-                        email: data.user.email,
-                        full_name: data.user.user_metadata?.full_name || data.user.email,
-                        loginTime: new Date().toISOString()
-                    }
-                    localStorage.setItem('smartfinance_user', JSON.stringify(userData))
-                    
-                    // Redirect to dashboard - using absolute path to ensure correct navigation
-                    setTimeout(() => {
-                        window.location.href = '/SmartFinanceAI/src/core/dashboard.html'
-                    }, 2000)
-                }
-            } catch (error) {
-                showStatus('An unexpected error occurred. Please try again.', 'error')
-                console.error('Login error:', error)
-            }
-            
-            setLoading(false)
-        }
-        
-        async function checkExistingSession() {
-            const { data: { session } } = await supabase.auth.getSession()
-            if (session) {
-                showStatus(`You're already signed in as ${session.user.email}`, 'success')
-                setTimeout(() => {
-                    // Try different possible paths
-                    window.location.href = 'dashboard.html' // Same folder
-                    // Alternative paths if above doesn't work:
-                    // window.location.href = '../dashboard.html' // Parent folder  
-                    // window.location.href = '../platform/dashboard.html' // Platform folder
-                    // window.location.href = './dashboard.html' // Current folder
-                }, 2000)
-            }
-        }
-        
-        function showBiometricSetupOption() {
-            document.getElementById('setupBiometric').style.display = 'block'
-            showStatus('💡 Set up biometric login for faster access next time!', 'info')
-        }
-    </script>
+  <div class="auth-container">
+    <div class="auth-card glass-effect">
+      <img src="../assets/img/logo-primary.svg" alt="SmartFinanceAI Logo" class="auth-logo" />
+
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-subtitle">Login to manage your finances smarter.</p>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="••••••••" />
+        </div>
+
+        <button type="submit" class="btn-executive full-width">Login</button>
+
+        <div class="divider">or</div>
+
+        <button type="button" id="biometric-login" class="btn-outline full-width">
+          Login with Face ID / Fingerprint
+        </button>
+
+        <p class="auth-footer">
+          Don’t have an account? <a href="signup.html">Sign up here</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/supabase/supabaseClient.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/login.js"></script>
 </body>
 </html>
