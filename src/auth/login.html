@@ -406,9 +406,9 @@
                     }
                     localStorage.setItem('smartfinance_user', JSON.stringify(userData))
                     
-                    // Redirect to dashboard
+                    // Redirect to dashboard - using absolute path to ensure correct navigation
                     setTimeout(() => {
-                        window.location.href = '../core/dashboard.html'
+                        window.location.href = '/SmartFinanceAI/src/core/dashboard.html'
                     }, 2000)
                 }
             } catch (error) {
