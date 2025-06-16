@@ -2,7 +2,7 @@
   "name": "SmartFinanceAI - Intelligent Finance Manager",
   "short_name": "SmartFinanceAI",
   "description": "Your AI-powered personal finance management platform",
-  "start_url": "/SmartFinanceAI/",
+  "start_url": "/SmartFinanceAI/?utm_source=pwa",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
@@ -12,6 +12,12 @@
   "lang": "en",
   "dir": "ltr",
   "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik05NiA0OEM4Mi43NDUyIDQ4IDcyIDU4Ljc0NTIgNzIgNzJWMTIwQzcyIDEzMy4yNTUgODIuNzQ1MiAxNDQgOTYgMTQ0UzEyMCAxMzMuMjU1IDEyMCAxMjBWNzJDMTIwIDU4Ljc0NTIgMTA5LjI1NSA0OCA5NiA0OFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNOTYgODBDMTAwLjQxOCA4MCAxMDQgODMuNTgyIDEwNCA4OFYxMDRDMTA0IDEwOC40MTggMTAwLjQxOCAxMTIgOTYgMTEyUzkxLjU4MiAxMDguNDE4IDg4IDEwNFY4OEM4OCA4My41ODIgOTEuNTgyIDgwIDY2IDgwWiIgZmlsbD0iIzY2N2VlYSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDBfbGluZWFyXzFfMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMTkyIiB5Mj0iMTkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiM2NjdlZWEiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNzY0YmEyIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
+      "sizes": "72x72",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik05NiA0OEM4Mi43NDUyIDQ4IDcyIDU4Ljc0NTIgNzIgNzJWMTIwQzcyIDEzMy4yNTUgODIuNzQ1MiAxNDQgOTYgMTQ0UzEyMCAxMzMuMjU1IDEyMCAxMjBWNzJDMTIwIDU4Ljc0NTIgMTA5LjI1NSA0OCA5NiA0OFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8cGF0aCBkPSJNOTYgODBDMTAwLjQxOCA4MCAxMDQgODMuNTgyIDEwNCA4OFYxMDRDMTA0IDEwOC40MTggMTAwLjQxOCAxMTIgOTYgMTEyUzkxLjU4MiAxMDguNDE4IDg4IDEwNFY4OEM4OCA4My41ODIgOTEuNTgyIDgwIDk2IDgwWiIgZmlsbD0iIzY2N2VlYSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDBfbGluZWFyXzFfMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMTkyIiB5Mj0iMTkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiM2NjdlZWEiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNzY0YmEyIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
       "sizes": "192x192",
@@ -34,10 +40,14 @@
     },
     {
       "name": "View Goals",
-      "short_name": "Goals",
+      "short_name": "Goals", 
       "description": "Check your financial goals",
       "url": "/SmartFinanceAI/src/core/dashboard.html#goals"
     }
   ],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
