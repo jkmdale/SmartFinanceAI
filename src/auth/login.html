@@ -7,8 +7,6 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="../styles/main.css" />
-
-  <!-- Favicon (optional) -->
   <link rel="icon" href="../assets/img/logo-primary.svg" type="image/svg+xml" />
 </head>
 <body class="auth-page">
@@ -57,15 +55,14 @@
 
         <p class="auth-footer">
           Don’t have an account?
-          <a href="signup.html" class="link-accent">Sign up here</a>
+          <a href="register.html" class="link-accent">Sign up here</a>
         </p>
       </form>
     </section>
   </main>
 
   <!-- Scripts -->
-  <script src="../js/supabase/supabaseClient.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/login.js"></script>
+  <script type="module" src="./auth-manager.js"></script>
+  <script type="module" src="./login.js"></script>
 </body>
 </html>
