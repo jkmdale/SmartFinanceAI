@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (error) {
         alert(error.message || 'Login failed. Please try again.');
       } else {
-        window.location.href = '../dashboard/index.html';
+        window.location.href = '../src/core/dashboard.html';
       }
     } catch (err) {
       console.error('Login error:', err);
