@@ -1,13 +1,14 @@
-// src/auth/biometric.js
+// src/auth/biometric-setup.js
 import { supabase } from '../js/supabase/supabaseClient.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const biometricBtn = document.getElementById('biometric-login');
-  if (!biometricBtn) return;
+  const form = document.getElementById('biometric-setup-form');
+  if (!form) return;
 
-  biometricBtn.addEventListener('click', async () => {
-    // Prompt user for their email (can be replaced with a saved value)
-    const email = prompt('Enter your email to log in with Face ID / Fingerprint:');
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const email = form.email.value.trim();
 
     if (!email || !email.includes('@')) {
       alert('Please enter a valid email address.');
@@ -15,24 +16,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email: email,
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
         options: {
-          flowType: 'passkey' // triggers biometric login using WebAuthn
+          flowType: 'passkey', // 🔐 WebAuthn biometric registration
         }
       });
 
       if (error) {
-        console.error('Biometric login failed:', error.message);
-        alert(error.message || 'Biometric login failed.');
+        alert(error.message || 'Biometric registration failed.');
         return;
       }
 
-      // Success - redirect to dashboard
-      window.location.href = '../dashboard/index.html';
+      alert('✅ Biometric authentication registered successfully!');
+      window.location.href = 'login.html';
     } catch (err) {
-      console.error('Unexpected biometric login error:', err);
-      alert('Something went wrong with biometric login.');
+      console.error('Unexpected biometric setup error:', err);
+      alert('Something went wrong with biometric setup.');
     }
   });
 });
