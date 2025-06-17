@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   logoutBtn.addEventListener('click', async () => {
     try {
       await signOutUser();
-      window.location.href = '../auth/login.html';
+      window.location.href = '/SmartFinanceAI/auth/login.html';
     } catch (error) {
       console.error('Logout failed:', error);
       alert('Something went wrong during logout.');
