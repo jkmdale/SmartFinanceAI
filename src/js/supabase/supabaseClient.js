@@ -1,5 +1,4 @@
-// src/js/supabase/supabaseClient.js
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const SUPABASE_URL = 'https://gzznuwtxyyaqlbbrxsuz.supabase.co';
 const SUPABASE_ANON_KEY =
@@ -10,6 +9,6 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    storage: localStorage, // Ensures login persists across reloads
+    storage: localStorage,
   },
 });
