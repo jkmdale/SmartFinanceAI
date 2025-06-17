@@ -20,18 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const { error } = await loginUser(email, password);
 
       if (error) {
-        console.error('Login failed:', error.message);
         alert(error.message || 'Login failed. Please check your credentials.');
         return;
       }
 
-      // ✅ Redirect on successful login
-      window.location.href = '../index.html';
+      window.location.href = '/SmartFinanceAI/index.html';
     } catch (err) {
-      console.error('Unexpected login error:', err);
+      console.error('Login error:', err);
       alert('Something went wrong. Please try again.');
     } finally {
-      // Optional: clear password field only
       form.password.value = '';
     }
   });
