@@ -15,7 +15,7 @@ export async function redirectIfLoggedIn(to = '../src/core/dashboard.html') {
 /**
  * Requires the user to be logged in. If not, redirects to login.
  */
-export async function requireLogin(redirectTo = '../auth/login.html') {
+export async function requireLogin(redirectTo = '../src/auth/login.html') {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     window.location.href = redirectTo;
