@@ -2,23 +2,29 @@
 import { supabase } from '../js/supabase/supabaseClient.js';
 
 /**
- * Checks if the user is already logged in and redirects to the dashboard if so.
- * @param {string} to - The URL to redirect to. Defaults to the dashboard.
+ * Protect pages that require a logged-in user
  */
-export async function redirectIfLoggedIn(to = '../src/core/dashboard.html') {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (user) {
-    window.location.href = to;
+export async function requireLogin(redirectTo = './auth/login.html') {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Immediate session (works most of the time)
+  if (session) return;
+
+  // Wait briefly for Supabase to restore session (especially on page refresh)
+  await new Promise((resolve) => setTimeout(resolve, 500)); // give Supabase time
+
+  const checkAgain = await supabase.auth.getSession();
+  if (!checkAgain.data.session) {
+    window.location.href = redirectTo;
   }
 }
 
 /**
- * Requires the user to be logged in. If not, redirects to login.
+ * Redirect to dashboard if user is already logged in
  */
-export async function requireLogin(redirectTo = '../src/auth/login.html') {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    window.location.href = redirectTo;
-    throw new Error('User not logged in');
+export async function redirectIfLoggedIn(to = '../index.html') {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    window.location.href = to;
   }
 }
