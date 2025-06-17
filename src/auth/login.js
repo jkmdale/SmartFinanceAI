@@ -1,7 +1,5 @@
-import { loginUser } from '/SmartFinanceAI/src/auth/auth-manager.js';
-import { supabase } from '/SmartFinanceAI/src/js/supabase/supabaseClient.js';
-
-console.log('✅ login.js is loaded');
+// src/auth/login.js
+import { loginUser } from './auth-manager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('login-form');
@@ -9,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    console.log('🚀 Login form submitted');
 
     const email = form.email.value.trim();
     const password = form.password.value.trim();
@@ -20,26 +17,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const { error, data } = await loginUser(email, password);
-      console.log('🔐 Login response:', { error, data });
+      const { error } = await loginUser(email, password);
 
       if (error) {
+        console.error('Login failed:', error.message);
         alert(error.message || 'Login failed. Please check your credentials.');
         return;
       }
 
-      const { data: sessionData } = await supabase.auth.getSession();
-      console.log('🔐 Session after login:', sessionData);
-
-      if (!sessionData.session) {
-        alert('Login succeeded but session not established. Please try again.');
-        return;
-      }
-
-      window.location.href = '/SmartFinanceAI/src/core/dashboard.html';
+      // ✅ Redirect on successful login
+      window.location.href = '../index.html';
     } catch (err) {
-      console.error('⚠️ Login error:', err);
-      alert('Unexpected error during login. Please try again.');
+      console.error('Unexpected login error:', err);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      // Optional: clear password field only
+      form.password.value = '';
     }
   });
 });
