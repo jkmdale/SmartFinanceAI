@@ -15,20 +15,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
 
       if (error) {
-        console.error('Password update failed:', error.message);
         alert(error.message || 'Failed to update password.');
         return;
       }
 
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData?.session) {
+        alert('Password updated, but session expired. Please log in again.');
+        window.location.href = '/SmartFinanceAI/auth/login.html';
+        return;
+      }
+
       alert('✅ Password updated successfully!');
-      window.location.href = '../index.html'; // Redirect to dashboard
+      window.location.href = '/SmartFinanceAI/index.html';
     } catch (err) {
-      console.error('Unexpected error:', err);
+      console.error('Error updating password:', err);
       alert('Something went wrong while updating your password.');
     }
   });
