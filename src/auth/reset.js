@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'https://yourdomain.com/auth/update-password.html' // replace this
+        redirectTo: 'https://jkmdale.github.io/SmartFinanceAI/src/auth/update-password.html' // 
       });
 
       if (error) {
