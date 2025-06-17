@@ -11,7 +11,7 @@ export async function requireLogin(redirectTo = '../auth/login.html') {
 }
 
 // Call this at the top of login/register pages to redirect if already logged in
-export async function redirectIfLoggedIn(to = '../src/core/dashboard/index.html') {
+export async function redirectIfLoggedIn(to = '../src/core/dashboard') {
   const { data: { session } } = await supabase.auth.getSession();
 
   if (session) {
