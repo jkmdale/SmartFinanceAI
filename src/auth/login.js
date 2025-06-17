@@ -17,19 +17,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const { error } = await loginUser(email, password);
+      const { error, session } = await loginUser(email, password);
 
       if (error) {
         alert(error.message || 'Login failed. Please check your credentials.');
         return;
       }
 
+      if (!session) {
+        alert('Login failed: no active session returned.');
+        return;
+      }
+
+      // ✅ Clear only after success
+      form.password.value = '';
+
+      // ✅ Redirect safely
       window.location.href = '/SmartFinanceAI/index.html';
     } catch (err) {
       console.error('Login error:', err);
       alert('Something went wrong. Please try again.');
-    } finally {
-      form.password.value = '';
     }
   });
 });
