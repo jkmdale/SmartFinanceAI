@@ -1,43 +1,50 @@
 // biometric-login.js import { supabase } from '../auth/supabase-client.js';
 
-const biometricLoginButton = document.getElementById('biometric-login');
+console.log('✅ biometric-login.js loaded');
 
-// Check for WebAuthn support const supportsWebAuthn = window.PublicKeyCredential !== undefined;
+document.addEventListener('DOMContentLoaded', () => { const bioBtn = document.getElementById('biometric-login'); if (!bioBtn) { console.warn('❌ biometric-login button not found'); return; }
 
-biometricLoginButton.style.display = supportsWebAuthn ? 'block' : 'none';
+// Show the button regardless (for debugging) bioBtn.style.display = 'block'; console.log('👁️ Showing biometric login button');
 
-biometricLoginButton.addEventListener('click', async () => { try { const storedCredentialId = localStorage.getItem('biometricCredentialId'); if (!storedCredentialId) { alert('No biometric login set up on this device.'); return; }
+bioBtn.addEventListener('click', async () => { console.log('👆 biometric-login button clicked');
 
-const assertion = await navigator.credentials.get({
-  publicKey: {
-    challenge: Uint8Array.from(window.crypto.getRandomValues(new Uint8Array(32))),
-    allowCredentials: [
-      {
-        id: Uint8Array.from(atob(storedCredentialId), c => c.charCodeAt(0)),
-        type: 'public-key',
-      },
-    ],
-    timeout: 60000,
-    userVerification: 'preferred',
-  },
-});
-
-// Decode assertion and authenticate user
-// NOTE: This step normally verifies signature server-side
-// For demo: assume valid and call Supabase magic link or session
+const storedId = localStorage.getItem('biometricCredentialId');
 const email = localStorage.getItem('biometricEmail');
-if (!email) {
-  alert('Stored email missing. Please log in manually once and enable biometrics again.');
+
+if (!storedId || !email) {
+  alert('No biometric registration found. Please set it up first.');
   return;
 }
 
-const { error } = await supabase.auth.signInWithOtp({ email });
-if (error) {
-  alert('Biometric login failed. Try regular login.');
-  return;
+try {
+  const assertion = await navigator.credentials.get({
+    publicKey: {
+      challenge: new Uint8Array(32),
+      allowCredentials: [
+        {
+          id: Uint8Array.from(atob(storedId), c => c.charCodeAt(0)),
+          type: 'public-key'
+        }
+      ],
+      timeout: 60000,
+      userVerification: 'preferred'
+    }
+  });
+
+  console.log('✅ Biometric assertion success:', assertion);
+
+  const { error } = await supabase.auth.signInWithOtp({ email });
+  if (error) {
+    console.error('❌ Supabase magic link error:', error);
+    alert('Biometric login failed. Try logging in manually.');
+    return;
+  }
+
+  alert('✅ Face ID login success — check your email for login link');
+} catch (err) {
+  console.error('❌ WebAuthn error:', err);
+  alert('Biometric login failed or was cancelled.');
 }
 
-alert('✅ Login link sent. Check your email to complete login.');
-
-} catch (err) { console.error('Biometric login error:', err); alert('Something went wrong with biometric login.'); } });
+}); });
 
