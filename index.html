@@ -15,3 +15,11 @@
     <p>🔄 Redirecting to SmartFinanceAI dashboard...</p>
   </body>
 </html>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/SmartFinanceAI/service-worker.js", { scope: "/SmartFinanceAI/" })
+      .then((reg) => console.log("Service Worker registered ✅", reg))
+      .catch((err) => console.error("Service Worker failed ❌", err));
+  });
+}
