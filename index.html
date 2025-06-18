@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <!-- App Icons -->
+  <!-- App Icons and Manifest -->
   <link rel="manifest" href="/SmartFinanceAI/manifest.json" />
   <link rel="icon" href="/SmartFinanceAI/public/icons/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="icon" href="/SmartFinanceAI/public/icons/favicon-16.png" sizes="16x16" type="image/png" />
@@ -21,12 +21,16 @@
 </head>
 <body>
   <h1>Welcome to SmartFinanceAI</h1>
+  <p>Loading dashboard...</p>
+
+  <!-- Register Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/SmartFinanceAI/service-worker.js')
-        .then(reg => console.log('Service Worker registered:', reg.scope))
-        .catch(err => console.error('Service Worker registration failed:', err));
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/SmartFinanceAI/sw.js')
+          .then(reg => console.log('✅ Service worker registered:', reg))
+          .catch(err => console.error('❌ Service worker registration failed:', err));
+      });
     }
   </script>
 </body>
