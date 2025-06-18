@@ -1,50 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- ✅ biometric-setup.html --><!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register Biometric | SmartFinanceAI</title>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="../styles/main.css" />
   <link rel="icon" href="../assets/img/logo-primary.svg" type="image/svg+xml" />
 </head>
 <body class="auth-page">
-
   <main class="auth-container">
     <section class="auth-card glass-effect">
       <img src="../assets/img/logo-primary.svg" alt="SmartFinanceAI Logo" class="auth-logo" />
-
       <h1 class="auth-title">Enable Face ID / Fingerprint</h1>
-      <p class="auth-subtitle">Register biometrics for easy login next time.</p>
+      <p class="auth-subtitle">Register biometrics for easy login next time.</p><form id="biometric-setup-form">
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        placeholder="you@example.com"
+        class="form-control"
+        autocomplete="email"
+      />
+    </div>
 
-      <form id="biometric-setup-form">
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="you@example.com"
-            class="form-control"
-            autocomplete="email"
-          />
-        </div>
+    <button type="submit" class="btn-executive full-width">
+      Register Biometric
+    </button>
 
-        <button type="submit" class="btn-executive full-width">
-          Register Biometric
-        </button>
+    <p class="auth-footer">
+      Already registered?
+      <a href="login.html" class="link-accent">Log in instead</a>
+    </p>
+  </form>
+</section>
 
-        <p class="auth-footer">
-          Already registered?
-          <a href="login.html" class="link-accent">Log in instead</a>
-        </p>
-      </form>
-    </section>
-  </main>
-
-  <!-- Scripts -->
-  <script type="module" src="./biometric-setup.js"></script>
-</body>
-</html>
+  </main>  <script type="module" src="./biometric-setup.js"></script></body>
+</html><!-- ✅ login.html (include biometric-login.js) --><!-- Add this line before </body> in your existing login.html --><script type="module" src="./biometric-login.js"></script><!-- And ensure you have a biometric login button like this: --><button id="biometric-login" class="btn-secondary full-width" style="display: none;">
+  Login with Face ID / Fingerprint
+</button>
