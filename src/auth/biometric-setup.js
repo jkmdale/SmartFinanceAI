@@ -1,62 +1,65 @@
+// biometric-setup.js
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('biometric-setup-form');
-  const emailInput = document.getElementById('email');
-
-  // Autofill email if previously saved
-  const savedEmail = localStorage.getItem('smartfinance_email');
-  if (savedEmail) {
-    emailInput.value = savedEmail;
-  }
+  if (!form) return;
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const email = emailInput.value.trim();
+    const email = form.email.value.trim();
     if (!email) {
-      alert('Please enter your email to set up biometrics.');
+      alert('Please enter a valid email address.');
       return;
     }
 
-    const userId = email; // or generate a stable hash/userId
+    // Check for WebAuthn support
+    if (!window.PublicKeyCredential) {
+      alert('Biometric authentication is not supported on this device.');
+      return;
+    }
 
     try {
-      // Save email for future use
-      localStorage.setItem('smartfinance_email', email);
-
-      if (!window.PublicKeyCredential) {
-        alert('Biometric login is not supported on this device.');
-        return;
-      }
-
-      const cred = await navigator.credentials.create({
+      // Create new WebAuthn credentials
+      const credential = await navigator.credentials.create({
         publicKey: {
-          challenge: new Uint8Array(32), // in production, get from server
-          rp: { name: "SmartFinanceAI" },
+          challenge: new Uint8Array(32),
+          rp: {
+            name: "SmartFinanceAI"
+          },
           user: {
-            id: new TextEncoder().encode(userId),
+            id: Uint8Array.from(email, c => c.charCodeAt(0)),
             name: email,
             displayName: email
           },
-          pubKeyCredParams: [{ alg: -7, type: "public-key" }],
+          pubKeyCredParams: [
+            { type: "public-key", alg: -7 },    // ES256
+            { type: "public-key", alg: -257 }   // RS256
+          ],
           authenticatorSelection: {
-            authenticatorAttachment: "platform", // fingerprint/Face ID
-            userVerification: "preferred"
+            authenticatorAttachment: "platform",
+            userVerification: "required"
           },
           timeout: 60000,
           attestation: "none"
         }
       });
 
-      console.log("✅ Biometric credential created:", cred);
+      if (!credential) {
+        alert('Biometric registration was cancelled or failed.');
+        return;
+      }
 
-      // Store a local flag to enable biometric login later
-      localStorage.setItem('smartfinance_biometric_ready', 'true');
-      alert('✅ Biometric login enabled! You can now use Face ID or fingerprint to log in.');
+      // Store credential ID and email locally
+      const credId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
+      localStorage.setItem('biometricCredentialId', credId);
+      localStorage.setItem('biometricEmail', email);
 
-      window.location.href = '/SmartFinanceAI/src/core/dashboard.html';
+      alert('✅ Biometric setup successful. You can now use Face ID / Fingerprint to log in!');
+      window.location.href = '/SmartFinanceAI/src/auth/login.html';
     } catch (err) {
-      console.error('❌ Biometric setup failed:', err);
-      alert('Something went wrong setting up biometric login.');
+      console.error('Biometric setup failed:', err);
+      alert('Biometric setup failed. Please try again.');
     }
   });
 });
