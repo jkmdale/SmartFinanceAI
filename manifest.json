@@ -1,40 +1,29 @@
 {
-  "name": "SmartFinanceAI - Intelligent Finance Manager",
-  "short_name": "SmartFinanceAI",
-  "description": "Your AI-powered personal finance management platform",
-  "start_url": "/SmartFinanceAI/index.html?utm_source=pwa",
+  "name": "SmartFinanceAI",
+  "short_name": "FinanceAI",
+  "start_url": "/SmartFinanceAI/index.html",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#667eea",
-  "orientation": "portrait-primary",
-  "scope": "/SmartFinanceAI/",
-  "categories": ["finance", "productivity", "business"],
-  "lang": "en",
-  "dir": "ltr",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#ffffff",
+  "theme_color": "#8b5cf6",
+  "description": "Your personal AI-powered finance assistant",
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,...",  // existing icon data
-      "sizes": "72x72",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "data:image/svg+xml;base64,...",  // existing icon data
+      "src": "/SmartFinanceAI/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "data:image/svg+xml;base64,...",  // existing icon data
+      "src": "/SmartFinanceAI/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
   "shortcuts": [
     {
       "name": "Add Transaction",
-      "short_name": "Add Transaction",
+      "short_name": "Add",
       "description": "Quickly add a new transaction",
       "url": "/SmartFinanceAI/src/core/dashboard.html#add-transaction"
     },
@@ -45,9 +34,5 @@
       "url": "/SmartFinanceAI/src/core/dashboard.html#goals"
     }
   ],
-  "prefer_related_applications": false,
-  "display_override": ["window-controls-overlay", "standalone"],
-  "edge_side_panel": {
-    "preferred_width": 400
-  }
+  "prefer_related_applications": false
 }
