@@ -41,8 +41,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const loginTime = new Date();
       localStorage.setItem('smartfinance_user', JSON.stringify({ email, loginTime }));
 
-      // ✅ Redirect to dashboard
-      window.location.href = '/SmartFinanceAI/src/core/dashboard.html';
+      // ✅ Store email for biometric use
+      localStorage.setItem('biometricEmail', email);
+
+      // ✅ Decide where to send them next
+      const alreadyRegistered = localStorage.getItem('biometricCredentialId');
+
+      if (!alreadyRegistered) {
+        console.log('🔐 No biometric credential found. Redirecting to setup...');
+        window.location.href = '/SmartFinanceAI/src/auth/biometric-setup.html';
+      } else {
+        console.log('🔐 Biometric already registered. Redirecting to dashboard...');
+        window.location.href = '/SmartFinanceAI/src/core/dashboard.html';
+      }
+
     } catch (err) {
       console.error('⚠️ Login error:', err);
       alert('Unexpected error during login. Please try again.');
