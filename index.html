@@ -1,53 +1,17 @@
-<!-- login.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login | SmartFinanceAI</title>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="/SmartFinanceAI/styles/main.css" />
-  <link rel="icon" href="/SmartFinanceAI/assets/img/logo-primary.svg" type="image/svg+xml" />
-</head>
-<body class="auth-page">
-  <main class="auth-container">
-    <section class="auth-card glass-effect">
-      <img src="/SmartFinanceAI/assets/img/logo-primary.svg" alt="SmartFinanceAI Logo" class="auth-logo" />
-
-      <h1 class="auth-title">Welcome Back</h1>
-      <p class="auth-subtitle">Sign in to manage your finances smarter.</p>
-
-      <form id="login-form" autocomplete="on">
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" name="email" required placeholder="you@example.com" class="form-control" autocomplete="email" />
-        </div>
-
-        <div class="form-group">
-          <label for="password">
-            Password
-            <a href="/SmartFinanceAI/src/auth/forgot-password.html" class="link-accent float-right">Forgot password?</a>
-          </label>
-          <input type="password" id="password" name="password" required placeholder="••••••••" class="form-control" autocomplete="current-password" />
-        </div>
-
-        <button type="submit" class="btn-executive full-width">Login</button>
-        <div class="divider">or</div>
-        <button type="button" id="biometric-login" class="btn-outline full-width">Login with Face ID / Fingerprint</button>
-
-        <p class="auth-footer">
-          Don’t have an account?
-          <a href="/SmartFinanceAI/src/auth/register.html" class="link-accent">Sign up here</a>
-        </p>
-      </form>
-    </section>
-  </main>
-
-  <!-- Scripts with absolute paths -->
-  <script type="module" src="/SmartFinanceAI/src/js/supabase/supabaseClient.js"></script>
-  <script type="module" src="/SmartFinanceAI/src/auth/auth-manager.js"></script>
-  <script type="module" src="/SmartFinanceAI/src/auth/login.js"></script>
-  <script type="module" src="/SmartFinanceAI/src/auth/biometric.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>SmartFinanceAI Redirect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="refresh" content="0; url=/SmartFinanceAI/src/core/dashboard.html" />
+    <link rel="manifest" href="/SmartFinanceAI/manifest.json" />
+    <meta name="theme-color" content="#667eea" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  </head>
+  <body>
+    <p>🔄 Redirecting to SmartFinanceAI dashboard...</p>
+  </body>
 </html>
