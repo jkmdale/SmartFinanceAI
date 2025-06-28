@@ -2,6 +2,7 @@
 module.exports = {
   environment: 'testing',
   
+  
   // API Configuration
   api: {
     baseUrl: 'http://localhost:3001/api/test',
